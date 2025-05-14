@@ -1,0 +1,76 @@
+import random
+
+from dnabyte.encode import Encode
+from dnabyte.auxiliary import split_string_into_chunks_poly_chain, find_closest_string, sort_lists_by_first_n_entries, reduce_to_n_most_used_elements, transpose_matrix
+
+class ProcessPolyBinom(Encode):
+    """
+    This class implements data preprosessing for the binomial encoding before decoding.
+    """
+    def __init__(self, params, logger=None):
+        self.params = params
+        self.logger = logger
+
+    def process_poly_binom(self, data):
+        sequenceddata = data.data
+        
+        DNAs = sorted(self.params.library.messages)
+
+        generic = self.params.library.generic
+        position = self.params.library.position
+        oligo_length = len(DNAs[0])
+        generic_length = len(generic[0])
+        position_length = len(position[0])
+        
+        separated = []
+        for i in range(len(sequenceddata)):
+
+
+            fivetothreeend = sequenceddata[i][0]
+
+            if len(position) % 2==0:
+                lengthofcorrect = (len(position) - 1) * (oligo_length + 2 * generic_length) + (len(position)) * position_length
+            else:
+                lengthofcorrect = (len(position) - 1) * (oligo_length + 2 * generic_length) + (len(position) - 1) * position_length
+            bases = ['A', 'C', 'T', 'G']
+           
+            
+            while len(fivetothreeend) < lengthofcorrect:
+                # Randomly choose a position to insert a base
+                insert_position = random.randint(self.params.dna_barcode_length, len(fivetothreeend))
+                # Randomly choose a base to insert
+                base_to_insert = random.choice(bases)
+                # Insert the base at the chosen position
+                fivetothreeend = fivetothreeend[:insert_position] + base_to_insert + fivetothreeend[insert_position:]
+            
+            while len(fivetothreeend) > lengthofcorrect:
+                # Randomly choose a position to delete a base
+                delete_position = random.randint(0, len(fivetothreeend) - 1)
+                # Delete the base at the chosen position
+                fivetothreeend = fivetothreeend[:delete_position] + fivetothreeend[delete_position + 1:]
+            
+            
+            listofinfooligos = split_string_into_chunks_poly_chain(fivetothreeend,generic_length,position_length,oligo_length)
+            correctedlistofinfooligos = []
+            for singularinformationoligo in listofinfooligos:
+                correctedlistofinfooligos.append(find_closest_string(singularinformationoligo, DNAs))
+            for j in range(self.params.dna_barcode_length):
+                correctedlistofinfooligos[j] = DNAs.index(correctedlistofinfooligos[j])
+            separated.append(correctedlistofinfooligos)
+        listssorted = sort_lists_by_first_n_entries(separated, self.params.dna_barcode_length,theory = self.params.theory) 
+        for i in range(len(listssorted)):
+            for j in range(len(listssorted[i])):
+                for k in range(self.params.dna_barcode_length):
+                    listssorted[i][j].pop(0)
+        listoflikley = []
+        for evrycodeword in listssorted:
+
+            listoflikley.append(reduce_to_n_most_used_elements(evrycodeword, self.params.sigma_amount))
+
+        transposeinfo = []
+        for i in range(len(listoflikley)):
+            transposeinfo.append(transpose_matrix(listoflikley[i]))
+
+        info = {}
+
+        return transposeinfo, info

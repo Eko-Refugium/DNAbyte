@@ -1,0 +1,107 @@
+import galois
+import numpy as np
+
+class RScoderKaya(object):
+    
+    def __init__(self,n,k):
+        """
+        Initialize the Reed-Solomon encoder/decoder.
+
+        This method initializes the Reed-Solomon encoder/decoder with a given codeword length and message length.
+
+        Args:
+            n (int): The length of the codeword.
+            k (int): The length of the message.
+
+        Raises:
+        ValueError: If n or k are not positive, if n is not less than 256, or if k is not less than n.
+        """
+            
+        GF = galois.GF(2**8, irreducible_poly="x^8 + x^4 + x^3 + x + 1",compile="jit-calculate")
+        if n < 0 or k < 0:
+            raise ValueError("n and k must be positive")
+        if not n < 256:
+            raise ValueError("n must be at most 255")
+        if not k < n:
+            raise ValueError("Codeword length n must be greater than message"
+                    " length k")
+        self.n = n
+        self.k = k
+
+        # Generate the generator polynomial for RS codes
+        # g(x) = (x-α^1)(x-α^2)...(x-α^(n-k))
+        # α is 3, a generator for GF(2^8)
+        g = GF(1)
+        
+        for alpha in range(1,n-k+1):
+            p = galois.Poly([1, GF(3)**alpha],field=GF)
+            
+            
+            g = g * p
+            
+            
+        self.g = g
+       
+        # h(x) = (x-α^(n-k+1))...(x-α^n)
+        h = GF([1])
+        for alpha in range(n-k+1,n+1):
+            p = galois.Poly([1, GF(3)**alpha],field=GF)
+            
+            h = h * p
+        self.h = h
+
+       
+    def base_convert(self,i, b):
+        result = []
+        while i > 0:
+            result.insert(0, i % b)
+            i = i // b
+        while len(result)!=4:
+            result.insert(0,0)
+        return result
+
+
+    def encode(self, message):
+        """
+            Encode a message using Reed-Solomon encoding.
+
+            This function takes a message, encodes it using Reed-Solomon encoding, and returns the encoded message.
+
+            Args:
+                message (str): The message to encode.
+
+            Returns:
+                list: The encoded message as a list of coefficients.
+
+            Raises:
+                ValueError: If the length of the message is greater than k*4.
+        """
+        GF=galois.GF(2**8, irreducible_poly="x^8 + x^4 + x^3 + x + 1",compile="jit-calculate")
+        n = self.n
+        k = self.k
+        if (len(message))>k*4:
+            raise ValueError("Message length is max %d. Message was %d" % (k,
+                len(message)))
+        
+        mtemp = 0
+        coefs = []
+        m = galois.Poly(message, field=GF)
+        
+        # Shift polynomial up by n-k by multiplying by x^(n-k)
+        xshift=[1]
+        for i in range(n-k): #MAYBE AN ERROR HERE POLYNOME ONLY GOES TO 254 WITHOUT THE 1
+            xshift.append(0)
+        mprime = m * galois.Poly(xshift,field=GF)
+
+        # mprime = q*g + b for some q
+        # so let's find b:
+        b = divmod(mprime, self.g)[1]
+        c = mprime - b
+        ccof=c.coeffs
+        coefstemp=[]
+        
+        for i in range(len(ccof)):
+           
+            coefstemp.append(int(ccof[i]))
+            
+        return coefstemp
