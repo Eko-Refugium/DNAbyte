@@ -22,3 +22,8 @@
 
 * The [Reference](reference.md) section offers comprehensive documentation for all functions and classes within the DNAbyte module.
 
+---
+
+Eko Refugium is part of the MI-DNA DISC consortium. (www.midnadisc.eu)
+MI-DNA DISC was funded by the EU Commission in the framework of the Horizon Europe – EIC Pathfinder Challenges programme. Grant Agreement 101115215
+![EU Logo](assets/EU_logo.png)

@@ -1,0 +1,43 @@
+site_name: DNAbyte Documentation
+site_url: https://yourusername.github.io/DNAbyte
+repo_url: https://github.com/Eko-Refugium/DNAbyte
+repo_name: Eko-Refugium/DNAbyte
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - Simulation: simulation.md
+  - Concepts: concepts.md
+  - Reference: reference.md
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - icons
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Eko-Refugium
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/96306392/
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - codehilite
+
+extra:
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/Eko-Refugium
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/96306392/
+  footer:
+    html: |
+      <img src="/figures/EU_logo.png" alt="EU Logo" style="height: 50px; margin-bottom: 10px;">
