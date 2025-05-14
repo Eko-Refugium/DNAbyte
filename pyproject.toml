@@ -18,9 +18,7 @@ dependencies = [
   "biopython",
   "reedsolo",
   "matplotlib",
-  "pandas",
-  "itertools",
-  "random"
+  "pandas"
 ]
 
 [project.optional-dependencies]
