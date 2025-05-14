@@ -13,18 +13,19 @@ authors = [
   { name = "Fabian Schroeder", email = "fabian.schroeder@ekorefugium.com" }
 ]
 dependencies = [
-scipy,
-numpy,
-itertools,
-random
+  "scipy",
+  "numpy",
+  "biopython",
+  "reedsolo",
+  "matplotlib",
+  "pandas",
+  "itertools",
+  "random"
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "sphinx", "black"]
 
 [tool.setuptools]
-package-dir = {"" = "dnabyte"}
 packages = ["dnabyte"]
 
-[tool.setuptools.packages.find]
-where = ["dnabyte"]
