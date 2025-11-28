@@ -2,8 +2,3 @@ site/
 dist/
 *.egg-info/
 
-/dnabyte/encoding/linear_chain/
-/dnabyte/encoding/linear_binom/
-/dnabyte/encoding/poly_chain/
-/dnabyte/encoding/poly_binom/
-
