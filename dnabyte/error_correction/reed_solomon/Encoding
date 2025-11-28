@@ -1,0 +1,180 @@
+import random
+import math as m
+import numpy as np
+
+DNABases=np.array(4)
+DNABases=['A','G','C','T','M','R','S','K'] #iupac code M=A+C, K=G+C
+
+
+def convertDNA(num):
+    DNABases=['A','G','C','T','M','R','S','K'] #iupac code M=A+C, K=G+C
+    octalDigit = 0
+    count = 1
+    i = 0
+    pos = 0
+    digitcountnum=num
+    digitcount=0
+    while digitcountnum != 0:
+        digitcountnum //= 10
+        digitcount += 1
+    octalArray = [0] * int(int(digitcount/3)+1)
+    octalDNAArray=[0] * int(int(digitcount/3)+1)
+
+
+    while num != 0:
+        digit = num % 10
+        octalDigit += digit * pow(2, i)
+        i += 1
+        num //= 10
+
+        # placing current octal-sum for 3 pair in array index position
+        octalArray[pos] = octalDigit
+        octalDNAArray[pos]=DNABases[octalDigit]
+
+        # whenever we have read next 3 digits
+        # setting values to default
+        # increasing pos so next values can be placed at next array index
+        if count % 3 == 0:
+            octalDigit = 0
+            i = 0
+            pos += 1
+
+        count += 1
+    
+    pointer=0
+    length=len(octalArray)-1
+    while pointer < length: 
+        octalArray[pointer], octalArray[length] = octalArray[length], octalArray[pointer] 
+        pointer += 1
+        length -= 1
+
+    return octalArray
+
+
+def binarycon(octal):
+    i = 0
+    decimal = 0
+    while octal != 0:
+        digit = octal % 10
+        decimal += digit * pow(8, i)
+        octal //= 10
+        i += 1
+    
+    binary = 0
+    rem = 0
+    i = 1
+
+    while decimal != 0:
+        rem = decimal % 2
+        decimal //= 2
+        binary += rem * i
+        i *= 10
+    
+    return binary
+
+
+def revertDNA(outputDNA):
+    outputbin=np.array(outputDNA)
+    for i in range(len(outputDNA)):
+        outputbin[i]=binarycon(outputDNA[i])
+    integer = int("".join([str(x) for x in outputbin]))
+    return integer
+
+
+def createAnsamble(InputDNA, ansmablesize):
+    size=np.size(InputDNA)
+    Ansmble=np.empty((ansmablesize,size))
+    for j in range(ansmablesize):
+        for i in range(len(InputDNA)):
+            Data=np.array(2)
+            if InputDNA[i]==1 or InputDNA[i]==3 or InputDNA[i]==2 or InputDNA[i]==4: 
+                Ansmble[j,i]=InputDNA[i]
+            if InputDNA[i]==5:
+                Data=[3,1]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+            if InputDNA[i]==6:
+                Data=[2,1]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+            if InputDNA[i]==7:
+                Data=[3,4]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+            if InputDNA[i]==8:
+                Data=[2,4]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+    
+    return Ansmble
+
+
+def closest(lst, K):
+    return lst[min(range(len(lst)), key = lambda i: abs(lst[i]-K))]
+
+
+def revertans(Ansamble):
+    list=[0,1,np.size(Ansamble[0,:])]
+    size=np.size(Ansamble[0,:])
+    outputas=np.zeros(size)
+    
+    for i in range(size):
+        unique, counts = np.unique(Ansamble[:,i], return_counts=True)
+        if len(unique)==1:
+            outputas[i]=unique[0]
+
+        if len(unique)!=1:
+            while len(unique)>2:
+                minpos = int(unique.index(min(unique)))
+                
+                del unique[minpos]
+                del counts[minpos]
+            ratio=counts[0]/counts[1]
+            meaningratio=closest(list,ratio)
+            if meaningratio==0:
+                outputas[i]=counts[1]
+            if meaningratio==size:
+                outputas[i]=counts[0]
+            if meaningratio==1:
+                if unique[0]==1 or unique[1]==1:
+                    if unique[0]==2 or unique[1]==2:
+                        outputas[i]=6
+                    else:
+                        outputas[i]=5
+                if unique[0]==4 or unique[1]==4:
+                    if unique[0]==2 or unique[1]==2:
+                        outputas[i]=8
+                    else:
+                        outputas[i]=7 
+    return outputas
+
+
+
+def rho(x,K):
+    rho=0
+    if x==1:
+        rho= 1/K
+    if x>1:
+        rho = 1/(x*(x-1))
+    return rho
+
+
+def tau(x,K,c,delta):
+    S=c*m.ln(K/delta)*m.sqrt(K)
+    Tau=0
+    if x<K/S-1:
+        Tau=S/K*1/delta
+    if x==K/S:
+        Tau=S/K*m.ln(S/delta)
+    if x>K/S:
+        Tau=0
+    return Tau
+
+
+def mu(x,c,delta,K):
+
+    for i in range(K):
+        Z= Z+ rho(i,K)+tau(i,K,c,delta)
+    mu=(rho(x,K)+tau(x,K,c,delta))/Z
+    return mu
+

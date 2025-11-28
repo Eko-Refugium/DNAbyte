@@ -1,0 +1,300 @@
+import random
+import math as m
+import numpy as np
+import matplotlib.pyplot as plt 
+
+DNABases=np.array(4)
+DNABases=['A','G','C','T'] #iupac code M=A+C, K=G+C
+
+def convertDNA(num):
+    DNABases=['A','G','C','T','M','R','S','K'] #iupac code M=A+C, K=G+C
+    octalDigit = 0
+    count = 1
+    i = 0
+    pos = 0
+    digitcountnum=num
+    digitcount=0
+    while digitcountnum != 0:
+        digitcountnum //= 10
+        digitcount += 1
+    octalArray = [0] * int(int(digitcount/3)+1)
+    octalDNAArray=[0] * int(int(digitcount/3)+1)
+
+
+    while num != 0:
+        digit = num % 10
+        octalDigit += digit * pow(2, i)
+        i += 1
+        num //= 10
+
+        # placing current octal-sum for 3 pair in array index position
+        octalArray[pos] = octalDigit
+        octalDNAArray[pos]=DNABases[octalDigit]
+
+        # whenever we have read next 3 digits
+        # setting values to default
+        # increasing pos so next values can be placed at next array index
+        if count % 3 == 0:
+            octalDigit = 0
+            i = 0
+            pos += 1
+
+        count += 1
+
+    pointer=0
+    length=len(octalArray)-1
+    while pointer < length: 
+        octalArray[pointer], octalArray[length] = octalArray[length], octalArray[pointer] 
+        pointer += 1
+        length -= 1
+
+    return octalArray
+
+def binarycon(octal):
+    i = 0
+    decimal = 0
+    while octal != 0:
+        digit = octal % 10
+        decimal += digit * pow(8, i)
+        octal //= 10
+        i += 1
+    
+    binary = 0
+    rem = 0
+    i = 1
+
+    while decimal != 0:
+        rem = decimal % 2
+        decimal //= 2
+        binary += rem * i
+        i *= 10
+
+    return binary
+
+
+def revertDNA(outputDNA):
+    outputbin=np.array(outputDNA)
+    integer=0
+    for i in range(len(outputDNA)):
+        outputbin[i]=int(binarycon(outputDNA[i]))
+        integer=int(str(integer)+str(int(outputbin[i])).zfill(3))
+    return integer
+
+
+def createAnsamble(InputDNA, ansmablesize):
+    size=np.size(InputDNA)
+    Ansmble=np.empty((ansmablesize,size))
+    for j in range(ansmablesize):
+        for i in range(len(InputDNA)):
+            Data=np.array(2)
+            if InputDNA[i]==0 or InputDNA[i]==3 or InputDNA[i]==2 or InputDNA[i]==1: 
+                Ansmble[j,i]=InputDNA[i]
+            if InputDNA[i]==4:
+                Data=[2,0]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+            if InputDNA[i]==5:
+                Data=[1,0]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+            if InputDNA[i]==6:
+                Data=[2,3]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+            if InputDNA[i]==7:
+                Data=[1,3]
+                flip = random.randint(0, 1)
+                Ansmble[j,i]=Data[flip]
+    
+    return Ansmble
+
+
+def closest(lst, K):
+     
+    return lst[min(range(len(lst)), key = lambda i: abs(lst[i]-K))]
+
+def revertans(Ansamble):
+    list=[0,1,np.size(Ansamble[0,:])]
+    size=np.size(Ansamble[0,:])
+    outputas=np.zeros(size)
+    
+    for i in range(size):
+        unique, counts = np.unique(Ansamble[:,i], return_counts=True)
+        if len(unique)==1:
+            outputas[i]=unique[0]
+
+        if len(unique)!=1:
+            while len(unique)>2:
+                minpos = np.where(counts==min(counts))[0][0]
+                unique=np.delete(unique,minpos)
+                counts=np.delete(counts,minpos)
+            ratio=counts[0]/counts[1]
+            meaningratio=closest(list,ratio)
+            if meaningratio==0:
+                outputas[i]=unique[1]
+            if meaningratio==size:
+                outputas[i]=unique[0]
+            if meaningratio==1:
+                if unique[0]==0 or unique[1]==0:
+                    if unique[0]==1 or unique[1]==1:
+                        outputas[i]=5
+                    else:
+                        outputas[i]=4
+                if unique[0]==3 or unique[1]==3:
+                    if unique[0]==1 or unique[1]==1:
+                        outputas[i]=7
+                    else:
+                        outputas[i]=6 
+    return outputas
+
+
+def GCerr(ErrorFuncIns, ErrorFuncDel, ErrorFuncSub, InputDNA): #GCerror calcualtion function
+    DNABases=np.array(4)
+    DNABases=['A','G','C','T']
+    DNABasesn=[0,1,2,3]
+    unique, counts = np.unique(InputDNA, return_counts=True)
+    gind=np.where(unique==1)[0]
+    cind=np.where(unique==2)[0]
+    GCcont=(counts[gind]+counts[cind])/len(InputDNA)
+    ProbIns=ErrorFuncIns(GCcont) #Very simplified rn one would need ro do it iteratively to find the parts of the DNA that actually contains a extrem GC count
+    ProbDel=ErrorFuncDel(GCcont)
+    ProbSub=ErrorFuncSub(GCcont)   
+    
+    OutputDNA=InputDNA
+    endofloop=len(InputDNA)
+    i=0
+    while i<endofloop: #exicuting the acctual errors
+        nIn = random.random()
+        nDel = random.random()
+        nSub = random.random()
+
+        if ProbIns>nIn:
+            random_index = random.randint(0, len(DNABases) - 1)
+            random_element = list(DNABases[random_index])
+            OutputDNA=np.insert(OutputDNA,i,random_element)
+            
+        
+        if ProbDel>nDel:
+            OutputDNA=np.delete(OutputDNA,i)
+            endofloop=endofloop-1
+
+        if ProbSub>nSub:
+            indexofbase=np.where(DNABasesn==InputDNA[i])[0][0]
+            
+            AvalDNA=np.delete(DNABasesn,DNABasesn[indexofbase])
+            random_index = random.randint(0, len(AvalDNA) - 1)
+            random_element = AvalDNA[random_index]
+            OutputDNA[i]=random_element
+            DNABasesn=[0,1,2,3]
+        
+        i += 1
+
+    return OutputDNA
+
+
+def solve( A,  B, stringlen):
+  
+    count = 0
+ 
+    # since, the numbers are less than 2^31
+    # run the loop from '0' to '31' only
+    for i in range(0,stringlen):
+ 
+        # right shift both the numbers by 'i' and
+        # check if the bit at the 0th position is different
+        if ((( A >>  i) & 1) != (( B >>  i) & 1)): 
+             count=count+1
+    return count
+
+
+def averageerrorcor(ErrRateMax,ErrRateMin,Errratespace,stinglen,ansamblezise,samplesize):
+    amount=int((ErrRateMax-ErrRateMin)/Errratespace)
+    vector=np.zeros(amount)
+    def insa(x):
+        return 0
+    def dela(x):
+        return 0
+    def suba(x):
+        return i
+
+    for i in np.arange(ErrRateMin,ErrRateMax,Errratespace):
+        avageingvec=np.zeros(samplesize)
+        for a in range(0,samplesize):
+            decnumbert = random.getrandbits(stinglen)
+            binnumbert = int(format(decnumbert, '0b'))
+            InputDNAfbt=convertDNA(binnumbert)
+            Ansamblet=createAnsamble(InputDNAfbt,ansamblezise)
+            Erroransamblet=np.zeros_like(Ansamblet)
+            for j in range(ansamblezise):
+                Erroransamblet[j,:]=GCerr(insa,dela,suba,Ansamblet[j,:])
+            testansreverrt=revertans(Erroransamblet)
+            Finalerrt=revertDNA(testansreverrt)
+            avageingvec[a]=(solve(binnumbert,Finalerrt,stinglen))/stinglen
+        vector[int(i/Errratespace)]=np.average(avageingvec)
+    return vector
+
+
+def averafeerrcorsize(Assamnlysizemin,Assamblysizemax,Assamblyspace,errorrate,leng,samplesize):
+    amount=int((Assamblysizemax-Assamnlysizemin)/Assamblyspace)
+    vector=np.zeros(amount)
+    def insa(x):
+        return 0
+    def dela(x):
+        return 0
+    def suba(x):
+        return errorrate
+
+    for i in np.arange(Assamnlysizemin,Assamblysizemax,Assamblyspace):
+        avageingvec=np.zeros(samplesize)
+        for a in range(0,samplesize):
+            decnumbert = random.getrandbits(leng)
+            binnumbert = int(format(decnumbert, '0b'))
+            InputDNAfbt=convertDNA(binnumbert)
+            Ansamblet=createAnsamble(InputDNAfbt,i)
+            Erroransamblet=np.zeros_like(Ansamblet)
+            for j in range(i):
+                Erroransamblet[j,:]=GCerr(insa,dela,suba,Ansamblet[j,:])
+            testansreverrt=revertans(Erroransamblet)
+            Finalerrt=revertDNA(testansreverrt)
+            avageingvec[a]=(solve(binnumbert,Finalerrt,leng))/leng
+        vector[int(i/Assamblyspace-1)]=np.average(avageingvec)
+    return vector
+
+
+#some test funtions
+def fInGC(x):
+    return 0
+
+def fDelGC(x):
+    return 0
+
+def fSubGC(x):
+    return 0.5
+
+#random input DNA
+Stringlen=60
+
+decnumber = random.getrandbits(Stringlen)
+binnumber = int(format(decnumber, '0b'))
+InputDNAfb=convertDNA(binnumber)
+ansmablesize=100
+Ansamble=createAnsamble(InputDNAfb,ansmablesize)
+testansrev=revertans(Ansamble)
+
+Erroransamble=Ansamble
+for i in range(ansmablesize):
+    Erroransamble[i,:]=GCerr(fInGC,fDelGC,fSubGC,Ansamble[i,:])
+
+testansreverr=revertans(Erroransamble)
+Final=revertDNA(testansrev)
+Finalerr=revertDNA(testansreverr)
+yaxis=averageerrorcor(1,0,0.01,100,100,100)
+yaxis2=averafeerrcorsize(10,700,10,0.1,100,100)
+xaxis=np.arange(0,1,0.01)
+xaxis2=np.arange(10,700,10)
+plt.plot(xaxis, yaxis) 
+plt.savefig("seaborn_plot.png")
+plt.show() 
+plt.plot(xaxis2, yaxis2) 
+plt.savefig("seaborn_plot2.png")
+plt.show() 

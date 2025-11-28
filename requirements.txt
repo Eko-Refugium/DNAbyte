@@ -1,0 +1,11 @@
+scipy
+numpy
+biopython
+reedsolo
+matplotlib
+pandas
+itertools
+random
+mkdocs
+mkdocs-material
+mkdocstrings[python]

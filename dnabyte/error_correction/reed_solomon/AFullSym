@@ -1,0 +1,134 @@
+import galois
+import binascii
+import rsKaya
+import base64
+import Errorsymsep as err
+import numpy as np
+import math as m
+import base_conversion_kit as bc
+from PIL import Image
+from io import BytesIO
+
+n=255
+k=223
+coder=rsKaya.RScoderKaya(n,k)
+out = BytesIO()
+
+def binary_to_string(bits):
+    return ''.join([chr(int(i, 2)) for i in bits])
+
+def basec4(i, b):
+    result = []
+    while i > 0:
+            result.insert(0, i % b)
+            i = i // b
+    
+    while len(result)!=4:
+        result.insert(0,0)
+    
+    return result
+
+def fInGC(x):
+    return 0
+
+def fDelGC(x):
+    return 0
+
+def fSubGC(x):
+    return 0.01
+
+with open("ramen.jpg", "rb") as f:
+    image = Image.open(f)
+
+with open("ramen.jpg", "rb") as f:
+    encoded_image = base64.b64encode(f.read())
+
+encoded_b2="".join(["{:08b}".format(x) for x in encoded_image])
+new_list = list(encoded_b2)
+encoded_b4=[]
+
+
+for i in range(int(len(new_list)/8)):
+    temstringgrp=''
+    for eight in range(8):
+        temstringgrp=temstringgrp+new_list[i*8+eight]
+    encoded_b4.append(int(temstringgrp))  
+      
+encoded_b10=[]
+for i in range(len(encoded_b4)):
+    encoded_b10.append(int(bc.convert_base(encoded_b4[i],2,10)))
+
+howmanyblocks=m.floor(len(encoded_b10)/k)
+splitup=[]
+tester=[]
+for blockssplit in range(howmanyblocks):
+    tempsplitup=[]
+    for sizeofRS in range(k):
+        tempsplitup.append(encoded_b10[blockssplit*k+sizeofRS])
+    splitup.append(tempsplitup)
+filesize=len(encoded_b10)
+restlen=filesize-(howmanyblocks*k)
+temprest=[]
+for i in range(restlen):
+    #tester.append(howmanyblocks*k+i)
+    temprest.append(encoded_b10[howmanyblocks*k+i])
+splitup.append(temprest)
+RSsplitup=[]
+Errressplit=[]
+erredpic=[]
+fixedpic=[]
+count=0
+for i in range(howmanyblocks+1):
+
+    RSsplitup.append(coder.encode(splitup[i]))
+    Errressplit.append(err.GCerr(fInGC,fDelGC,fSubGC,RSsplitup[i]))
+    fixedpic.append(coder.decode(Errressplit[i]))
+    temprecov=Errressplit[i]
+    for i in range(n-k):
+        temprecov.pop()
+    erredpic.append(temprecov)
+
+
+count=0
+for j in range(len(erredpic)):
+    count=count+len(erredpic[i])
+
+reconstructed=[]
+reconstructederr=[]
+for i in range(len(erredpic)):
+    reconstructederr.extend(erredpic[i])
+    reconstructed.extend(fixedpic[i])
+
+s = [int(bc.convert_base(i,10,2)) for i in reconstructederr]
+sfix = [int(bc.convert_base(i,10,2)) for i in reconstructed]
+base64errpic=[]
+for padding in range(len(s)):
+    s[padding]=str(s[padding]).zfill(8)
+    sfix[padding]=str(sfix[padding]).zfill(8)
+sappend = []
+sappendtemp = ""
+base64errpic=[]
+stringpicerr = binary_to_string(s)
+stringpic = binary_to_string(sfix)
+byte_data = stringpicerr.encode('utf-8')
+byte_datafix = stringpic.encode('utf-8')
+
+base64_string = byte_data
+base64_stringfix = byte_datafix
+try:
+  image = base64.b64decode(base64_string, validate=True)
+  file_to_save = "ramenerr.jpg"
+  with open(file_to_save, "wb") as f:
+    f.write(image)
+except binascii.Error as e:
+  # logger.debug(e)
+  pass
+
+try:
+  image = base64.b64decode(base64_stringfix, validate=True)
+  file_to_save = "ramenfixed.jpg"
+  with open(file_to_save, "wb") as f:
+    f.write(image)
+except binascii.Error as e:
+  # logger.debug(e)
+  pass

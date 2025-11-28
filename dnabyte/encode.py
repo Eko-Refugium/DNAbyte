@@ -1,0 +1,143 @@
+from dnabyte.data_classes.nucleobasecode import NucleobaseCode
+from dnabyte.data_classes.binarycode import BinaryCode
+from dnabyte.data_classes.insilicodna import InSilicoDNA
+from dnabyte.library import Library
+import importlib
+
+class Encode:
+    """
+    This class is responsible for encoding the raw data into sequences of oligos.
+
+    There are three steps involved in encoding:
+    1. Splitting raw data into codewords. This step also includes error correction and barcoding.
+    2. Encoding the codewords into sequences of oligos. 
+    3. Subsetting the blueprint into pooling sequences. 
+    
+    """
+
+    def __init__(self, params, logger=None):
+        
+        self.encoding_method = params.encoding_method
+        self.assembly_structure = params.assembly_structure
+        self.encoding_scheme = params.encoding_scheme
+        self.inner_error_correction = params.inner_error_correction
+        self.outer_error_correction = params.outer_error_correction
+        self.dna_barcode_length = params.dna_barcode_length
+        self.codeword_maxlength_positions = params.codeword_maxlength_positions
+        self.sigma_amount = params.sigma_amount
+        self.codeword_length = params.codeword_length
+        self.percent_of_symbols = params.percent_of_symbols
+        self.index_carry_length = params.index_carry_length
+        self.ltcode_header = params.ltcode_header
+        self.reed_solo_percentage = params.reed_solo_percentage
+        self.library_name = params.library_name
+        if params.assembly_structure != 'synthesis':
+            self.library = params.library
+        self.theory = params.theory
+        self.logger = logger
+        self.params = params
+        self.encoding_plugins = params.encoding_plugins
+        self.debug = params.debug
+
+    def encode(self, data):
+        """
+        Encodes the raw data based on the library structure and encoding scheme.
+
+        This method encodes the provided raw data using the specified encoding scheme
+        and library structure. The encoding scheme and library structure determine
+        which encoding function is used.
+
+        Parameters:
+        data (BinaryCode): The raw data to be encoded. Must be an instance of BinaryCode.
+
+        Returns:
+        NucleobaseCode: A NucleobaseCode object containing the encoded data.
+
+        Raises:
+        TypeError: If data is not an instance of BinaryCode.
+        ValueError: If the encoding scheme or library structure is invalid.
+        """
+        if isinstance(data, BinaryCode):
+            try:
+                print(self.encoding_plugins, 'encoding plugins in encode method')
+                encode_class = self.encoding_plugins[self.encoding_method]
+                print(encode_class, 'encode class in encode method')
+                plugin = encode_class(self.params, logger=self.logger)
+                print(plugin, 'plugin in encode method')
+                encoded_data, info = plugin.encode(data)
+                #print(encoded_data, 'encoded data in encode method')
+                obj = NucleobaseCode(encoded_data)
+                obj.file_paths = data.file_paths
+                return obj, info
+            except KeyError:
+                raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+        else:
+            raise TypeError("data must be an instance of BinaryCode")
+
+
+    def decode(self, data):
+
+        """
+        Decodes the corrected data based on the assembly structure and encoding scheme.
+
+        This method decodes the provided corrected data using the specified assembly structure
+        and encoding scheme. The assembly structure and encoding scheme determine
+        which decoding function is used.
+
+        Parameters:
+        data (NucleobaseCode): The corrected data to be decoded. Must be an instance of NucleobaseCode.
+
+        Returns:
+        BinaryCode: A BinaryCode object containing the decoded data.
+
+        Raises:
+        TypeError: If data is not an instance of NucleobaseCode.
+        ValueError: If the encoding scheme or library structure is invalid.
+        """
+        if isinstance(data, NucleobaseCode):
+            try:
+                encode_class = self.encoding_plugins[self.encoding_method]
+                plugin = encode_class(self.params, logger=self.logger)
+                decoded_data, valid, info = plugin.decode(data=data, params=self.params, logger=self.logger)
+                obj = BinaryCode(decoded_data)
+                obj.file_paths = data.file_paths
+                return obj, valid, info
+            except KeyError:
+                raise ValueError(f"Decode Module for encoding method '{self.encoding_method}' not found in plugins.")
+        else:
+            raise TypeError("data must be an instance of NucleobaseCode")
+
+    def process(self, data):
+        
+        """
+        Processes the sequenced data based on the assembly structure and encoding scheme.
+
+        This method processes the provided sequenced data using the specified assembly structure
+        and encoding scheme. The assembly structure and encoding scheme determine
+        which processing function is used.
+
+        Parameters:
+        data (InSilicoDNA): The sequenced data to be processed. Must be an instance of InSilicoDNA.
+
+        Returns:
+        BinaryCode: A BinaryCode object containing the processed data.
+
+        Raises:
+        TypeError: If data is not an instance of InSilicoDNA.
+        ValueError: If the encoding scheme or library structure is invalid.
+        """
+        if isinstance(data, InSilicoDNA):
+            try:
+                encode_class = self.encoding_plugins[self.encoding_method]
+                plugin = encode_class(self.params, logger=self.logger)
+                processed, info = plugin.process(data=data, params=self.params, logger=self.logger)
+                obj = NucleobaseCode(processed)
+                obj.file_paths = data.file_paths
+                print(data.file_paths, 'data file paths in process method')
+                print(obj, 'processed obj in process method')
+                return obj, info
+            except KeyError:
+                raise ValueError(f"Process Module for encoding method '{self.encoding_method}' not found in plugins.")
+        else:
+            raise TypeError("data must be an instance of InSilicoDNA")
+
