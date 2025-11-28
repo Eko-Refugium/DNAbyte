@@ -25,5 +25,5 @@ dependencies = [
 dev = ["pytest", "sphinx", "black"]
 
 [tool.setuptools]
-packages = ["dnabyte"]
+packages = { find = { where = ["."], include = ["dnabyte*"] } }
 
