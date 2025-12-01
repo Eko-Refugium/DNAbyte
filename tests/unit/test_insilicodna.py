@@ -122,7 +122,7 @@ class TestInSilicoDNA(unittest.TestCase):
         dna.add_sequence("AAATTTGGG")
         
         self.assertEqual(dna.num_sequences, original_count + 1)
-        self.assertEqual(dna.data[-1], "AAATTTGGG")
+        self.assertEqual(dna.data[dna.num_sequences - 1], "AAATTTGGG")
         self.assertGreater(dna.total_length, 32)
     
     def test_add_sequence_invalid(self):
@@ -212,12 +212,12 @@ class TestInSilicoDNA(unittest.TestCase):
         dna = InSilicoDNA(self.valid_sequences)
         
         self.assertEqual(dna[0], "ATCGATCG")
-        self.assertEqual(dna[1], "GCTAGCTA")
+        self.assertEqual(dna[len(dna) - 1], "CCGGCCGG")
 
         print('DNA:')
-        print(dna[-1])
+        print(dna[len(dna) - 1])
 
-        self.assertEqual(dna[-1], "CCGGCCGG")
+        self.assertEqual(dna[3], "CCGGCCGG")
     
     def test_iter(self):
         """Test __iter__ method."""

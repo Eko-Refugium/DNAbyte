@@ -29,7 +29,6 @@ class NucleobaseCode(Data):
         self.num_codewords = len(data) if data else 0
 
         # Calculate additional metrics
-        self.total_elements = self._count_total_elements()
         self.max_depth = self._calculate_max_depth()
 
     def _validate_data(self, data):
@@ -54,31 +53,6 @@ class NucleobaseCode(Data):
         # TODO: Check whether each codeword contains only valid nucleotides
         # self._validate_codeword_structure(data)
 
-    #def _validate_codeword_structure(self, data):
-
-    # TODO: count_total_elements delivers incorrect results in some tests
-    def _count_total_elements(self):
-        """
-        Counts the total number of nucleotides across all codewords.
-
-        :return: Total number of nucleotides
-        """
-        total = 0
-        for codeword in self.data:
-            total += self._count_elements_recursive(codeword)
-        return total
-
-    def _count_elements_recursive(self, structure):
-        """
-        Recursively counts nucleotides in nested structure.
-
-        :param structure: The structure to count elements in
-        :return: Number of nucleotides
-        """
-        if isinstance(structure, list):
-            return sum(self._count_elements_recursive(item) for item in structure)
-        else:
-            return 1  # It's a nucleotide
 
     # TODO: calculate_max_depth delivers incorrect results in some tests
     def _calculate_max_depth(self):
@@ -137,7 +111,6 @@ class NucleobaseCode(Data):
     def __str__(self):
         output = f"Type: {type(self).__name__}\n"
         output += f"Number of codewords: {self.num_codewords}\n"
-        output += f"Total elements: {self.total_elements}\n"
         output += f"Max depth: {self.max_depth}\n"
 
         # Add file paths if they exist

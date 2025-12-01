@@ -4,6 +4,7 @@ from dnabyte.oligopool import OligoPool
 from dnabyte.data_classes.binarycode import BinaryCode
 from dnabyte.data_classes.nucleobasecode import NucleobaseCode
 from dnabyte.data_classes.insilicodna import InSilicoDNA
+from dnabyte.params import Params
 
 from dnabyte.synthesize import SimulateSynthesis
 import itertools
@@ -13,9 +14,19 @@ import math
 class TestAssembly(unittest.TestCase):
 
     def setUp(self):
-        # create Data data object
-        self.binary_code = BinaryCode('101010101')
-        self.nucleobase_code = NucleobaseCode(self.binary_code)
+        data = [[['ACGTTACTAGT', 'TGCATGCAAGTC'], 'CGTACGTAGCTA'],
+                [['GGTACCGTAAGC', 'CCATGGCATGCA'], 'TTAGGCATCGTA'],
+                [['TTAACCGGTAGC', 'AAGGTTCCAAGT'], 'GGCCAATTGGCA']]
+
+        self.nucleobase_code = NucleobaseCode(data)
+
+        # Define motif pair dictionary for complement function
+        self.motif_pair = {
+            'a': 'a*', 'b': 'b*', 'c': 'c*', 'd': 'd*', 'e': 'e*', 'f': 'f*', 'g': 'g*', 'h': 'h*',
+            'a*': 'a', 'b*': 'b', 'c*': 'c', 'd*': 'd', 'e*': 'e', 'f*': 'f', 'g*': 'g', 'h*': 'h',
+            'A': 'A*', 'B': 'B*', 'C': 'C*', 'D': 'D*', 'E': 'E*', 'F': 'F*', 'G': 'G*', 'H': 'H*',
+            'A*': 'A', 'B*': 'B', 'C*': 'C', 'D*': 'D', 'E*': 'E', 'F*': 'F', 'G*': 'G', 'H*': 'H'
+        }
 
         self.nested_list = self.create_random_messages(32, 5)
         self.nucleobase_code.data = self.nested_list
@@ -46,37 +57,22 @@ class TestAssembly(unittest.TestCase):
                     if pos%2 == 0:
                             index1 = (int(pos/2) + 7) % 16
                             index2 = (int(pos/2) + 8) % 16
-                            block.append([(set1[index1], complement(rdm[i][1])), rdm[i], (complement(rdm[i][0]), set2[index2])])
+                            block.append([(set1[index1], complement(rdm[i][1], self.motif_pair)), rdm[i], (complement(rdm[i][0], self.motif_pair), set2[index2])])
 
                     else:
                             index = int(math.ceil(pos/2)) - 1
-                            block.append([(complement(rdm[i][0]), set2[index]), rdm[i], (set1[index],complement(rdm[i][1]))])
+                            block.append([(complement(rdm[i][0], self.motif_pair), set2[index]), rdm[i], (set1[index], complement(rdm[i][1], self.motif_pair))])
 
             data.append(block)
 
         return data
 
-    # test = [
-    #         [('b*','A*'), ('b','B'), ('a','B*'), # pool 1
-    #         ('c*','A*'), ('c','C'), ('a','C*'), 
-    #         ('d*','A*'), ('d','D'), ('a','D*')],
-
-    #         [('a*','C*'), ('c','C'), ('c*','B*'), # pool 2
-    #         ('a*','D*'), ('d','D'), ('d*','B*'), 
-    #         ('a*','E*'), ('e','E'), ('e*','B*')],
-
-    #         [('c', 'B'), ('c*', 'C'), ('b', 'C*'), # pool 3
-    #         ('d', 'B'), ('d*', 'D'), ('b', 'D*'),
-    #         ('e', 'B'), ('e*', 'E'), ('b', 'E*')]
-    # ]
-
-    # test2 = [[[[('b*','A*'), ('b','B'), ('a','B*')], ('a*', 'F')], ('g', 'F*')], ('g*', 'C*'), ('d', 'C')]
-
-
     def test_assembly(self):
         # instantiate the SimulateSynthesis class
-        assembly = SimulateSynthesis(mean=100, std_dev=2, hybridisation_steps=10000)
-        assembled_data = assembly.simulate(self.nucleobase_code, mean=100, std_dev=2, hybridisation_steps=20000)
+        # TODO: fix this test with new params structure
+        params = Params(assembly_structure='synthesis', synthesis_method='mesa', mean=100, std_dev=2, hybridisation_steps=10000)
+        assembly = SimulateSynthesis(params=params)
+        assembled_data = assembly.simulate(self.nucleobase_code)
         self.assertIsInstance(assembled_data, InSilicoDNA)
 
 

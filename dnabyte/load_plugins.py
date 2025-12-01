@@ -24,7 +24,8 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
         binarization_plugins = {}  # Define the plugins dictionary
 
         encoding_method = encoding_method.lower() if encoding_method != None else None
-        synthesis_method = synthesis_method.lower() if synthesis_method != None else None
+        if isinstance(synthesis_method, str):
+            synthesis_method = synthesis_method.lower() if synthesis_method != None else None
 
         if isinstance(storage_conditions, str):
             storage_conditions = storage_conditions.lower() if storage_conditions != None else None
@@ -59,8 +60,8 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                                 break
             except Exception as e:
                 print(f"Error loading encoding plugin '{filename}': {e}")
-        else:
-            raise ValueError("No encoding method specified.")
+        # else:
+        #     raise ValueError("No encoding method specified.")
 
         if sequencing_method != None:
             try:
@@ -153,8 +154,8 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                                 break
             except Exception as e:
                 print(f"Error loading binarization plugin '{module_name}': {e}")
-        else:
-            raise ValueError("No binarization method specified.")
+        # else:
+        #     raise ValueError("No binarization method specified.")
 
 
         return encoding_plugins, synthesis_plugins, storage_plugins, sequencing_plugins, binarization_plugins

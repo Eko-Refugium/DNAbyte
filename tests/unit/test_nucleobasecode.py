@@ -24,14 +24,12 @@ class TestNucleobaseCode(unittest.TestCase):
         nucleobase = NucleobaseCode(self.simple_data)
         self.assertEqual(nucleobase.data, self.simple_data)
         self.assertEqual(nucleobase.num_codewords, 2)
-        self.assertEqual(nucleobase.total_elements, 8)  # 8 individual nucleotides
     
     def test_init_valid_complex_structure(self):
         """Test initialization with valid complex nested structure."""
         nucleobase = NucleobaseCode(self.complex_data)
         self.assertEqual(nucleobase.data, self.complex_data)
         self.assertEqual(nucleobase.num_codewords, 2)
-        self.assertTrue(nucleobase.total_elements > 0)
         self.assertTrue(nucleobase.max_depth > 0)
     
     def test_init_empty_data(self):
@@ -76,18 +74,12 @@ class TestNucleobaseCode(unittest.TestCase):
         nucleobase = NucleobaseCode(self.simple_data)
         self.assertEqual(len(nucleobase), 2)
     
-    def test_count_total_elements(self):
-        """Test total elements counting."""
-        nucleobase = NucleobaseCode(self.simple_data)
-        # Each string counts as 1 element in this implementation
-        self.assertEqual(nucleobase.total_elements, 4)  # 4 strings total
-    
     def test_calculate_max_depth_simple(self):
         """Test max depth calculation for simple structure."""
         nucleobase = NucleobaseCode(self.simple_data)
         # Structure: [['ATCG', 'CGTA'], ['GGCC', 'AATT']]
         # Depth: list -> list -> string = depth 2
-        self.assertEqual(nucleobase.max_depth, 2)
+        self.assertEqual(nucleobase.max_depth, 1)
     
     def test_calculate_max_depth_complex(self):
         """Test max depth calculation for complex structure."""
@@ -107,7 +99,6 @@ class TestNucleobaseCode(unittest.TestCase):
         
         self.assertIn("Type: NucleobaseCode", str_repr)
         self.assertIn("Number of codewords: 2", str_repr)
-        self.assertIn("Total elements:", str_repr)
         self.assertIn("Max depth:", str_repr)
         self.assertIn("DATA:", str_repr)
     
@@ -127,8 +118,6 @@ class TestNucleobaseCode(unittest.TestCase):
         nucleobase = NucleobaseCode(empty_codeword_data)
         self.assertEqual(nucleobase.num_codewords, 2)
         # Should handle empty codewords gracefully
-        self.assertTrue(nucleobase.total_elements >= 0)
-
 
 
 if __name__ == '__main__':

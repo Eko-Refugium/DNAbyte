@@ -79,7 +79,7 @@ class SimulateSynthesis:
         else:
             print(data)
             if isinstance(data, NucleobaseCode):
-                assembly = importlib.import_module(f"dnabyte.encoding.{self.encoding_method}.assembly")
+                assembly = importlib.import_module(f"dnabyte.synthesis.{self.encoding_method}.assembly")
                 assembled_data, info = assembly.assembly(data, self.params)
                 assembled_data = InSilicoDNA(assembled_data)
                 return assembled_data, info
