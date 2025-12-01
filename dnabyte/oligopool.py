@@ -54,7 +54,8 @@ class OligoPool:
     def from_oligo_pools(cls, oligo_pools):
         new_pool_motifs = []
         for pool in oligo_pools:
-            new_pool_motifs.extend(pool.oligo_list)
+            #new_pool_motifs.extend(pool.oligo_list)
+            new_pool_motifs.extend(pool.pool)
         
         new_pool = cls(new_pool_motifs)
         new_pool.pool = [oligo for pool in oligo_pools for oligo in pool.pool]

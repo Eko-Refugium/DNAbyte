@@ -1,10 +1,19 @@
 import unittest
+from dnabyte.library import Library
 from dnabyte.oligo import Oligo
 from dnabyte.oligopool import OligoPool
 
 
 class TestOligoPool(unittest.TestCase):
-        
+    
+    def setUp(self):
+        """Set up test fixtures - runs before each test."""
+        # Option A: From file
+        self.library = Library(
+            structure='linear_assembly',
+            filename='tests/testlibraries/20bp_Lib.csv'
+        )
+
     def test_create_ds_oligo(self):
         """
         Test the creation of a single double stranded oligo by hybridising single stranded oligos in a pool
@@ -12,7 +21,7 @@ class TestOligoPool(unittest.TestCase):
         pool1 = OligoPool([Oligo(('a','A*')), Oligo(('a*','D'))])
         self.assertIsInstance(pool1, OligoPool)
         self.assertEqual(len(pool1.pool), 2)
-        pool1.hybridise(1)
+        pool1.hybridise(1, self.library)
         self.assertEqual(len(pool1.pool), 1)
         
         self.assertIsInstance(pool1, OligoPool)
@@ -27,7 +36,7 @@ class TestOligoPool(unittest.TestCase):
         """
         pool2 = OligoPool([Oligo(('a','A*')), Oligo(('a*','D'))], mean=100, std_dev=5)
         n_before = len(pool2.pool)
-        pool2.hybridise(10000)
+        pool2.hybridise(10000, self.library)
         n_after = len(pool2.pool)
         self.assertIsInstance(pool2, OligoPool)
         self.assertLessEqual(n_after, n_before)
@@ -39,13 +48,13 @@ class TestOligoPool(unittest.TestCase):
         pool3 = OligoPool([Oligo(('b','B')), Oligo(('b*','A*')), Oligo(('a','B*'))], mean=100, std_dev=2)
         self.assertIsInstance(pool3, OligoPool)
 
-        # How can one compare two OligoPools?
+        # TODO: How can one compare two OligoPools?
         #self.assertSetEqual(set(pool3.pool), set([Oligo(('b','B')), Oligo(('b*','A*')), Oligo(('a','B*'))]))
 
         self.assertEqual(len(set(pool3.pool)), 3)
 
         n_before = len(pool3.pool)
-        pool3.hybridise(200000)
+        pool3.hybridise(200000, self.library)
         n_after = len(pool3.pool)
         unique_pool = set(pool3.pool)
 
@@ -71,7 +80,7 @@ class TestOligoPool(unittest.TestCase):
         data_pools = [OligoPool(pool, mean=100, std_dev=2) for pool in data_oligos]
 
         self.assertEqual(all(isinstance(pool, OligoPool) for pool in data_pools), True)
-        data_pools_hybridised = [pool.hybridise(10000) for pool in data_pools]
+        data_pools_hybridised = [pool.hybridise(10000, self.library) for pool in data_pools]
         self.assertEqual(all(isinstance(pool, OligoPool) for pool in data_pools_hybridised), True)
 
         data_pools = OligoPool.from_oligo_pools(data_pools_hybridised)
