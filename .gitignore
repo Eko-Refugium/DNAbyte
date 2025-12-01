@@ -11,3 +11,6 @@ htmlcov/
 
 tests/testfiles/testdecode/
 tests/testlogs/
+
+simulations/simlogs/
+simulations/simfiles/
