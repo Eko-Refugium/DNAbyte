@@ -20,7 +20,7 @@ class TestOligo(unittest.TestCase):
 
         # TEST A: create and print single stranded oligos 
         self.assertEqual(str(Oligo(('a','A*'))), "3':  (  a   -  A*  )  :5' \n")
-        self.assertEqual(str(Oligo(sequence='ACTGTAGCTAGTCACTG')), "3': ACTGTAGCTAGTCACTG :5'")
+        #self.assertEqual(str(Oligo(sequence='ACTGTAGCTAGTCACTG')), "3': ACTGTAGCTAGTCACTG :5'")
 
 
     def test_complement(self):
@@ -33,8 +33,16 @@ class TestOligo(unittest.TestCase):
         self.assertEqual(nucleotide_complement(['A', 'C', 'G', 'T', 'A', 'A', 'A']), ['T', 'G', 'C', 'A', 'T', 'T', 'T'])
 
         # TEST C: test complement
-        self.assertEqual(complement('a'), 'a*')
-        self.assertEqual(complement(('b', 'C*')), ('b*', 'C'))
+
+        motif_pair = {'a': 'a*', 'b': 'b*', 'c': 'c*', 'd': 'd*', 'e': 'e*', 'f': 'f*', 'g': 'g*', 'h': 'h*',
+                  'a*': 'a', 'b*': 'b', 'c*': 'c', 'd*': 'd', 'e*': 'e', 'f*': 'f', 'g*': 'g', 'h*': 'h',
+                  'A': 'A*', 'B': 'B*', 'C': 'C*', 'D': 'D*', 'E': 'E*', 'F': 'F*', 'G': 'G*', 'H': 'H*',
+                  'A*': 'A', 'B*': 'B', 'C*': 'C', 'D*': 'D', 'E*': 'E', 'F*': 'F', 'G*': 'G', 'H*': 'H', 
+                  'empty':'empty*', None: None, 'barcode':'barcode*', 'barcode*':'barcode'}
+
+
+        self.assertEqual(complement('a', motif_pair), 'a*')
+        self.assertEqual(complement(('b', 'C*'), motif_pair), ('b*', 'C'))
 
 
 

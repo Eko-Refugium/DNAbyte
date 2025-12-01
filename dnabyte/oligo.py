@@ -19,9 +19,10 @@ class Oligo:
             Defaults to None.
         """
 
-    def __init__(self, motifs=None, sequence=None):
+    def __init__(self, motifs=None, sequence=None, type=None):
         self.motifs = motifs
         self.sequence = sequence
+        self.type = type
 
         if motifs:
             if isinstance(motifs[0], tuple):
