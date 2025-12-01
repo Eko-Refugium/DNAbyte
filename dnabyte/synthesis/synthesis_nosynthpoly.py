@@ -2,6 +2,19 @@ import numpy as np
 
 from dnabyte.synthesize import SimulateSynthesis
 
+def attributes(params):
+    if 'mean' not in params.__dict__ or params.mean is None:
+        mean = 10
+    else:
+        mean = params.mean
+
+    if 'std_dev' not in params.__dict__ or params.std_dev is None:
+        std_dev = 0
+    else:
+        std_dev = params.std_dev
+        
+    return {"mean": mean, "std_dev": std_dev}
+
 class NoSynthPoly(SimulateSynthesis):
 
 

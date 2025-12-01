@@ -83,32 +83,75 @@ class Params:
         # print(self.sequencing_plugins)
         # print(self.binarization_plugins)
         
-        if self.mean is None:
-            self.mean = 10
-        if self.std_dev is None:
-            self.std_dev = 2
-        if self.vol is None:
-            self.vol = 1e-6
-        if self.hybridisation_steps is None:
-            self.hybridisation_steps = 1000
-        if self.years is None:
-            self.years = 0
+        # if self.mean is None:
+        #     self.mean = 10
+        # if self.std_dev is None:
+        #     self.std_dev = 2
+        # if self.vol is None:
+        #     self.vol = 0
+        # if self.hybridisation_steps is None:
+        #     self.hybridisation_steps = 1000
+        # if self.years is None:
+        #     self.years = 0
 
         print(self.encoding_method,self.encoding_plugins, 'encoding method in params')
         
         if self.encoding_method is None:
-            self.assembly_structure = None
-            self.library = None
-            self.encoding_structure = None
+            raise ValueError("Encoding method must be specified")
         elif self.encoding_method in self.encoding_plugins:
             encoding = importlib.import_module(f"dnabyte.encoding.{self.encoding_method}.encode")
-            self.library, self.library_name, self.encoding_scheme, self.assembly_structure, self.dna_barcode_length, self.codeword_maxlength_positions, self.codeword_length, self.percent_of_symbols, self.index_carry_length, self.sigma_amount, self.ltcode_header, self.reed_solo_percentage = encoding.attributes(self)
+            attributes_synth = encoding.attributes(self) 
+            for keys, value in attributes_synth.items():
+                setattr(self, keys, value)
         else:
             raise ValueError(f"Invalid encoding method: {self.encoding_method}")
+        
+        if self.synthesis_method is None:
+            pass
+        elif 'synthesis_' + self.synthesis_method in self.synthesis_plugins:
+            synthesis = importlib.import_module(f"dnabyte.synthesis.synthesis_{self.synthesis_method}")
+            attributes_synth = synthesis.attributes(self)
+            for keys, value in attributes_synth.items():
+                setattr(self, keys, value)
+        else:
+            raise ValueError(f"Invalid synthesis method: {self.synthesis_method}")
+        print(self.storage_conditions,self.storage_plugins, 'storage method in params')
+        if self.storage_conditions is None:
+            pass
+        elif 'storage_' + self.storage_conditions in self.storage_plugins:
+            storage = importlib.import_module(f"dnabyte.storage.storage_{self.storage_conditions}")
+            attributes_store = storage.attributes(self)
+            for keys, value in attributes_store.items():
+                setattr(self, keys, value)
+        else:
+            raise ValueError(f"Invalid storage conditions: {self.storage_conditions}")
+        
+        if self.sequencing_method is None:
+            pass
+        elif 'sequencing_' + self.sequencing_method in self.sequencing_plugins:
+            sequencing = importlib.import_module(f"dnabyte.sequencing.sequencing_{self.sequencing_method}")
+            attributes_seq = sequencing.attributes(self)
+            for keys, value in attributes_seq.items():
+                setattr(self, keys, value)
+        else:
+            raise ValueError(f"Invalid sequencing method: {self.sequencing_method}")
+        
+        print(self.binarization_method,self.binarization_plugins, 'binarization method in params')
+        if self.binarization_method is None:
+            pass
+        elif self.binarization_method in self.binarization_plugins:
+            binarization = importlib.import_module(f"dnabyte.binarization.{self.binarization_method}")
+            attributes_bin = binarization.attributes(self)
+            for keys, value in attributes_bin.items():
+                setattr(self, keys, value)
+        else:
+            raise ValueError(f"Invalid binarization method: {self.binarization_method}")
 
         # check the validity of the parameters
-        if self.sequencing_method == 'iid':
-            self.iid_error_rate = iid_error_rate
+        # if self.sequencing_method == 'iid':
+        #     self.iid_error_rate = iid_error_rate
+        # elif self.sequencing_method is None:
+        #     pass
         
                 
         # if self.encoding_method not in ['linear_binom', 'linear_chain', 'max_density', 'nohomopolymer','polybinom', 'polychain', None]:

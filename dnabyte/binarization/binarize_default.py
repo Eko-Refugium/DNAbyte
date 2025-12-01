@@ -3,6 +3,14 @@ from dnabyte.data_classes.base import Data
 from dnabyte.binarize import Binarize
 from dnabyte.data_classes.binarycode import BinaryCode
 
+def attributes(params):
+    if 'filename' not in params.__dict__ or params.filename is None:
+        raise ValueError("filename parameter must be specified")
+    else:
+        filename = params.filename
+        
+    return {"filename": filename}
+
 class DefaultBinarize(Binarize):
     """
     DefaultBinarize converts a single file of any type to binary representation by reading raw bytes.

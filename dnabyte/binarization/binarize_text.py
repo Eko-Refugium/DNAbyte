@@ -3,6 +3,19 @@ from dnabyte.data_classes.base import Data
 from dnabyte.data_classes.binarycode import BinaryCode
 from dnabyte.binarize import Binarize
 
+def attributes(params):
+    if 'file_paths' not in params.__dict__ or params.file_paths is None:
+        raise ValueError("file_paths parameter must be specified")
+    else:
+        file_paths = params.file_paths
+
+    if 'text_encoding' not in params.__dict__ or params.text_encoding is None:
+        text_encoding = 'utf-8'
+    else:
+        text_encoding = params.text_encoding
+        
+    return {"file_paths": file_paths, "text_encoding": text_encoding}
+
 class TextBinarize(Binarize):
     """
     TextBinarize converts a single text file to binary representation using UTF-8 encoding.

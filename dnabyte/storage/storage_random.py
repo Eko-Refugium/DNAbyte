@@ -2,6 +2,14 @@ import random
 import math
 from dnabyte.store import SimulateStorage
 
+def attributes(params):
+    if 'years' not in params.__dict__ or params.years is None:
+        years = 100
+    else:
+        years = params.years
+        
+    return {"years": years}
+
 class Random(SimulateStorage):
     # Random: 1 cut/century/100 000 nucleotides
     # This class is for testing purposes mainly.

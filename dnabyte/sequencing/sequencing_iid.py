@@ -1,6 +1,14 @@
 import random
 from dnabyte.sequence import SimulateSequencing
 
+def attributes(params):
+    if 'iid_error_rate' not in params.__dict__ or params.iid_error_rate is None:
+        iid_error_rate = 0.01
+    else:
+        iid_error_rate = params.iid_error_rate
+        
+    return {"iid_error_rate": iid_error_rate}
+
 class IID(SimulateSequencing):
     """
     Simulate sequencing errors using an independent and identically distributed (IID) model.

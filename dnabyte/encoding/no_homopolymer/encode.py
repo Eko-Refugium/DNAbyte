@@ -60,7 +60,7 @@ def attributes(inputparams):
     
 
 
-    return library, library_name, encoding_scheme, assembly_structure, dna_barcode_length, codeword_maxlength_positions, codeword_length, percent_of_symbols, index_carry_length, sigmaamount, ltcode_header, reed_solo_percentage
+    return {"encoding_scheme": encoding_scheme, "assembly_structure": assembly_structure,"library": library, "library_name": library_name, "codeword_length": codeword_length, "dna_barcode_length": dna_barcode_length, "codeword_maxlength_positions": codeword_maxlength_positions, "percent_of_symbols": percent_of_symbols, "index_carry_length": index_carry_length, "sigma_amount": sigmaamount, "ltcode_header": ltcode_header, "reed_solo_percentage": reed_solo_percentage}
 
 
 
