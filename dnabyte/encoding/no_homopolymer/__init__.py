@@ -1,0 +1,1 @@
+"""No homopolymer encoding implementation."""

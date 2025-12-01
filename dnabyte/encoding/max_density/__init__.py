@@ -1,0 +1,1 @@
+"""Maximum density encoding implementation."""
