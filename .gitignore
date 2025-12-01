@@ -2,8 +2,12 @@ site/
 dist/
 *.egg-info/
 app/
-tests/
 .venv/
 __pycache__/
 *.pyc
-.gitignore
+htmlcov/
+.coverage
+*.cover
+
+tests/testfiles/testdecode/
+tests/testlogs/
