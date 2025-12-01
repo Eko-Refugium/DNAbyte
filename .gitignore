@@ -1,4 +1,9 @@
 site/
 dist/
 *.egg-info/
-
+app/
+tests/
+.venv/
+__pycache__/
+*.pyc
+.gitignore

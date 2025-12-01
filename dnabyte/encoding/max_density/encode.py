@@ -147,7 +147,8 @@ class MaxDensity(Encode):
         
         # Step 2: create the binary codewords
         binary_codewords = []
-
+        
+        print('AAAAAAAAAAAAAAAAAAAAAA')
         for block in binary_blocks:
             codeword = str(self.decimal_to_binary(0)).zfill(params.zfill_bits * 2) + block
             binary_codewords.append(codeword)
