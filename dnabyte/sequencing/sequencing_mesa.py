@@ -1,7 +1,6 @@
 import os
 import json
 import numpy as np
-from flask import current_app
 
 from dnabyte.sequence import SimulateSequencing
 from dnabyte.sequencing.simulator_api import Graph

@@ -4,8 +4,11 @@ biopython
 reedsolo
 matplotlib
 pandas
-itertools
-random
+pyxdameraulevenshtein
+galois
+networkx
+psycopg2-binary
+regex
 mkdocs
 mkdocs-material
 mkdocstrings[python]

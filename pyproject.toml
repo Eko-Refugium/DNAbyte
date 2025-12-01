@@ -18,7 +18,12 @@ dependencies = [
   "biopython",
   "reedsolo",
   "matplotlib",
-  "pandas"
+  "pandas",
+  "pyxdameraulevenshtein",
+  "galois",
+  "networkx",
+  "psycopg2-binary",
+  "regex"
 ]
 
 [project.optional-dependencies]

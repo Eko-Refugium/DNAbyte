@@ -2,7 +2,6 @@ import os
 import json
 import random
 import numpy as np
-from flask import current_app
 
 from dnabyte.sequencing.simulator_api import Graph
 from dnabyte.sequencing.sequencing_error import SequencingError
