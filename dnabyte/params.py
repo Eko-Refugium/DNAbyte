@@ -38,6 +38,7 @@ class Params:
                  years=None, 
                  storage_conditions=None, 
                  sequencing_method=None, 
+                 mesa_sequencing_id=None,
                  iid_error_rate=None,
                  library_name=None,
                  seed=None, 
@@ -69,6 +70,7 @@ class Params:
         self.years = years
         self.storage_conditions = storage_conditions
         self.sequencing_method = sequencing_method
+        self.mesa_sequencing_id = mesa_sequencing_id
         self.library_name = library_name
         self.seed = seed
         self.debug = debug
@@ -158,7 +160,10 @@ class Params:
             if self.theory is None:
                 raise ValueError("Missing parameters for encoding scheme")
 
-        if self.sequencing_method not in [41, 40, 37, 36, 39, 38, 35,'iid', None]:
+        if self.sequencing_method not in ['mesa', 'iid', 'illumina', 'nanopore', None]:
+            raise ValueError("Invalid sequencing method")
+        
+        if self.mesa_sequencing_id not in [41, 40, 37, 36, 39, 38, 35,'iid', None]:
             raise ValueError("Invalid sequencing method")
         
         if self.synthesis_method not in ['assembly', 'mesa', 'nosynthpoly', None]:
