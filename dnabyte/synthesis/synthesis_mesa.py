@@ -7,6 +7,27 @@ from dnabyte.synthesize import SimulateSynthesis
 from dnabyte.sequencing.simulator_api import Graph
 from dnabyte.sequencing.sequencing_error import SequencingError
 
+def attributes(params):
+    if 'mean' not in params.__dict__ or params.mean is None:
+        mean = 10
+    else:
+        mean = params.mean
+
+    if 'std_dev' not in params.__dict__ or params.std_dev is None:
+        std_dev = 0
+    else:
+        std_dev = params.std_dev
+
+    if 'synthesis_method' not in params.__dict__ or params.synthesis_method is None:
+        synthesis_method = 68
+    else:
+        if params.synthesis_method not in [3, 4, 5, 6, 7, 68, 69, 70, 71, 'nosynthpoly', None]:
+            raise ValueError("Invalid Synthesis Error")
+        else:
+            synthesis_method = params.synthesis_method
+        
+    return {"mean": mean, "std_dev": std_dev, "synthesis_method": synthesis_method}
+
 class MESA(SimulateSynthesis):
     """
     MESA (Molecular Error Simulation Algorithm) is a class that simulates sequencing errors in DNA sequences.

@@ -2,6 +2,9 @@ import numpy as np
 
 from dnabyte.sequence import SimulateSequencing
 
+def attributes(params):
+    return {}
+
 class Nanopore(SimulateSequencing):
     """
     Nanopore sequencing errors are characterized by a higher error rate compared to Illumina sequencing, with a mix of substitution, 

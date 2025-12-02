@@ -2,6 +2,9 @@ import numpy as np
 
 from dnabyte.sequence import SimulateSequencing
 
+def attributes(params):
+    return {}
+
 class Illumina(SimulateSequencing):
     """
     Simulate sequencing errors using Illumina technology.

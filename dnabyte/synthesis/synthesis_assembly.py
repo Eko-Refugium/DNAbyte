@@ -4,6 +4,44 @@ from dnabyte.oligo import Oligo, complement, translate_nested_list, translate_ne
 from dnabyte.oligopool import OligoPool
 from dnabyte.encoding.auxiliary import flatten_at_layer
 
+def attributes(params):
+    if 'library' not in params.__dict__ or params.library is None:
+        raise ValueError("Library must be specified for synthesis assembly.")
+    else:
+        library = params.library
+
+    if 'encoding_scheme' not in params.__dict__ or params.encoding_scheme is None:
+        raise ValueError("Encoding scheme must be specified for synthesis assembly.")
+    else:
+        encoding_scheme = params.encoding_scheme
+
+    if 'assembly_structure' not in params.__dict__ or params.assembly_structure is None:
+        raise ValueError("Assembly structure must be specified for synthesis assembly.")
+    else:
+        assembly_structure = params.assembly_structure
+
+    if 'theory' not in params.__dict__ or params.theory is None:
+        theory = 'no'
+    else:
+        theory = params.theory
+
+    if 'mean' not in params.__dict__ or params.mean is None:
+        mean = 10
+    else:
+        mean = params.mean
+
+    if 'std_dev' not in params.__dict__ or params.std_dev is None:
+        std_dev = 0
+    else:
+        std_dev = params.std_dev
+    
+
+    return {
+        "library": library,
+        "encoding_scheme": encoding_scheme,
+        "assembly_structure": assembly_structure,
+        "theory": theory
+    }
 
 class Assembly(SimulateSynthesis):
     """

@@ -6,6 +6,17 @@ from dnabyte.sequence import SimulateSequencing
 from dnabyte.sequencing.simulator_api import Graph
 from dnabyte.sequencing.sequencing_error import SequencingError
 
+def attributes(params):
+    if 'sequencing_method' not in params.__dict__ or params.sequencing_method is None:
+        sequencing_method = 38
+    else:
+        if params.sequencing_method not in [41, 40, 37, 36, 39, 38, 35,'iid', None]:
+            raise ValueError("Invalid sequencing method")
+        else:
+            sequencing_method = params.sequencing_method
+        
+    return {"sequencing_method": sequencing_method}
+
 class MESA(SimulateSequencing):
     """
     Simulate sequencing errors using the MESA model.

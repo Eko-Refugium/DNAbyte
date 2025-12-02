@@ -1,4 +1,4 @@
-from sequencing_error import SequencingError
+from dnabyte.error_channels.simulators.sequencing.sequencing_error import SequencingError
 import random
 
 
