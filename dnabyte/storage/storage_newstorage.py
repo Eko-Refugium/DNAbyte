@@ -2,6 +2,14 @@ from dnabyte.store import SimulateStorage
 from dnabyte.data_classes.insilicodna import InSilicoDNA
 import random
 
+def attributes(params):
+    if 'years' not in params.__dict__ or params.years is None:
+        years = 100
+    else:
+        years = params.years
+        
+    return {"years": years}
+
 class Newstorage(SimulateStorage):
     def simulate(self, assembled_data):
         """

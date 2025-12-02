@@ -68,9 +68,9 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                 for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/sequencing_plugins') if f.endswith('.py')]:
                     # if filename.startswith('encode_') and filename.endswith('.py'):
                     module_name = filename[:-3] 
-                    if sequencing_method.lower() == module_name.lower():
+                    if 'sequencing_' + sequencing_method.lower() == module_name.lower():
                         # Load the encode module
-                        sequencing_module = importlib.import_module('dnabyte.sequencing_plugins.synthesis_' + f'{module_name}')
+                        sequencing_module = importlib.import_module('dnabyte.sequencing_plugins.' + f'{module_name}')
                         # Find the class definition in the module
                         for name, obj in inspect.getmembers(sequencing_module, inspect.isclass):
                             if issubclass(obj, SimulateSequencing) and obj is not SimulateSequencing:
@@ -87,9 +87,9 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                 for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/synthesis') if f.endswith('.py')]:
                     # if filename.startswith('encode_') and filename.endswith('.py'):
                     module_name = filename[:-3] 
-                    if synthesis_method.lower() == module_name.lower():
+                    if 'synthesis_' + synthesis_method.lower() == module_name.lower():
                         # Load the encode module
-                        synthesis_module = importlib.import_module('dnabyte.synthesis.synthesis_' + f'{module_name}')
+                        synthesis_module = importlib.import_module('dnabyte.synthesis.' + f'{module_name}')
                         # Find the class definition in the module
                         for name, obj in inspect.getmembers(synthesis_module, inspect.isclass):
                             if issubclass(obj, SimulateSynthesis) and obj is not SimulateSynthesis:
@@ -110,11 +110,13 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                     print('filename:', filename)
                     module_name = filename[:-3]
                     print('module_name:', module_name)
+                    print('storage_conditions:', storage_conditions)
+                    print('compare', 'storage_' + storage_conditions.lower() == module_name.lower())
 
                     if isinstance(storage_conditions, str):
-                        if storage_conditions.lower() == module_name.lower():
+                        if 'storage_' + storage_conditions.lower() == module_name.lower():
                             # Load the encode module
-                            storage_module = importlib.import_module('dnabyte.storage.storage_' + f'{module_name}')
+                            storage_module = importlib.import_module('dnabyte.storage.' + f'{module_name}')
                             # Find the class definition in the module
                             for name, obj in inspect.getmembers(storage_module, inspect.isclass):
                                 if issubclass(obj, SimulateStorage) and obj is not SimulateStorage:
@@ -136,6 +138,8 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                 print(f"Error loading storage plugin '{module_name}': {e}")
         else:
             print("No storage conditions specified, skipping storage plugin loading.")
+
+        print('BINARIZATION METHOD:', binarization_method)
 
         if binarization_method != None:
             try:

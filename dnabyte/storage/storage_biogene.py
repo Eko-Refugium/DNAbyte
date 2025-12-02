@@ -1,6 +1,14 @@
 import random
 from dnabyte.store import SimulateStorage
 
+def attributes(params):
+    if 'years' not in params.__dict__ or params.years is None:
+        years = 100
+    else:
+        years = params.years
+
+    return {"years": years}
+
 class Biogene(SimulateStorage):
     # biogene: (anhydrous and anoxic atmosphere maintained inside hermetic capsules)
     # 1E-7/nt/yr =?= 1 cut/century/100 000 nucleotides = 

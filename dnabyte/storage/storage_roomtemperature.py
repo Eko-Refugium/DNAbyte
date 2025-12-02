@@ -1,6 +1,14 @@
 import random
 from dnabyte.store import SimulateStorage
 
+def attributes(params):
+    if 'years' not in params.__dict__ or params.years is None:
+        years = 100
+    else:
+        years = params.years
+        
+    return {"years": years}
+
 class Roomtemperature(SimulateStorage):
     # Reference::
     # half-life of DNA: 521 years => lambda = 0.00133

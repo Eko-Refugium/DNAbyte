@@ -18,22 +18,6 @@ class Encode:
     def __init__(self, params, logger=None):
         
         self.encoding_method = params.encoding_method
-        self.assembly_structure = params.assembly_structure
-        self.encoding_scheme = params.encoding_scheme
-        self.inner_error_correction = params.inner_error_correction
-        self.outer_error_correction = params.outer_error_correction
-        self.dna_barcode_length = params.dna_barcode_length
-        self.codeword_maxlength_positions = params.codeword_maxlength_positions
-        self.sigma_amount = params.sigma_amount
-        self.codeword_length = params.codeword_length
-        self.percent_of_symbols = params.percent_of_symbols
-        self.index_carry_length = params.index_carry_length
-        self.ltcode_header = params.ltcode_header
-        self.reed_solo_percentage = params.reed_solo_percentage
-        self.library_name = params.library_name
-        if params.assembly_structure != 'synthesis':
-            self.library = params.library
-        self.theory = params.theory
         self.logger = logger
         self.params = params
         self.encoding_plugins = params.encoding_plugins
