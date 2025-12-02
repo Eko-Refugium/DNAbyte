@@ -30,6 +30,7 @@ class Params:
                  index_carry_length=None, 
                  reed_solo_percentage=None, 
                  synthesis_method=None, 
+                 mesa_id=3,
                  mean=None, 
                  vol=None, 
                  std_dev=None, 
@@ -60,6 +61,7 @@ class Params:
         self.index_carry_length = index_carry_length
         self.reed_solo_percentage = reed_solo_percentage
         self.synthesis_method = synthesis_method
+        self.mesa_id = mesa_id
         self.mean = mean
         self.vol = vol
         self.std_dev = std_dev
@@ -159,8 +161,11 @@ class Params:
         if self.sequencing_method not in [41, 40, 37, 36, 39, 38, 35,'iid', None]:
             raise ValueError("Invalid sequencing method")
         
-        if self.synthesis_method not in [3, 4, 5, 6, 7, 68, 69, 70, 71, 'nosynthpoly', None]:
-            raise ValueError("Invalid Synthesis Error")
+        if self.synthesis_method not in ['assembly', 'mesa', 'nosynthpoly', None]:
+            raise ValueError("Invalid synthesis method")
+        
+        if self.mesa_id not in [3, 4, 5, 6, 7, 68, 69, 70, 71]:
+            raise ValueError("Invalid MESA ID")
         
         # Validate storage conditions
         if isinstance(self.storage_conditions, list):

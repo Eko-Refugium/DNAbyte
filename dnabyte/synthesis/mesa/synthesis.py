@@ -4,7 +4,7 @@ import random
 import numpy as np
 
 from dnabyte.synthesize import SimulateSynthesis
-from dnabyte.sequencing.simulator_api import Graph
+from dnabyte.synthesis.mesa.simulator import Graph
 from dnabyte.sequencing.sequencing_error import SequencingError
 
 class MESA(SimulateSynthesis):
@@ -22,18 +22,22 @@ class MESA(SimulateSynthesis):
         """
         parent_dir = os.getcwd()
         
-        method_id = self.synthesis_method_id
+        method_id = self.params.mesa_id
 
         # Get the absolute path of the file relative to the parent directory
-        file_path = os.path.join(parent_dir, 'dnabyte', 'error_channels', 'syn_table.json')
+        file_path = os.path.join(parent_dir, 'dnabyte', 'synthesis', 'mesa',  'syn_table.json')
 
         # get the error parameters for the designated method
         # get dictionary of synthesis parameters from JSON file
         with open(file_path, 'r') as f:
             synth_dict = json.load(f)
 
+
         # Subset the dictionary
         method_dict = {item['id']: item for item in synth_dict if item.get('id') == method_id}       
+
+        # print("Method dict:")
+        # print(method_dict)
 
         # get the error parameters for the designated method
         err_rate_syn = method_dict[method_id]['err_data']
