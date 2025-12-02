@@ -1,8 +1,8 @@
 
 from dnabyte.synthesize import SimulateSynthesis
-from dnabyte.oligo import Oligo, complement, translate_nested_list, translate_nested_list_poly,back_translate_nested_list_poly_binom_real, back_translate_nested_list_chain, back_translate_nested_list_poly, back_translate_nested_list, back_translate_nested_list_poly_binom,back_translate_nested_list_real,back_translate_nested_list_chain_real
-from dnabyte.oligopool import OligoPool
-from dnabyte.encoding.auxiliary import flatten_at_layer
+from .oligo import Oligo, complement, translate_nested_list, translate_nested_list_poly,back_translate_nested_list_poly_binom_real, back_translate_nested_list_chain, back_translate_nested_list_poly, back_translate_nested_list, back_translate_nested_list_poly_binom,back_translate_nested_list_real,back_translate_nested_list_chain_real
+from .oligopool import OligoPool
+from .auxiliary import flatten_at_layer
 
 
 class Assembly(SimulateSynthesis):

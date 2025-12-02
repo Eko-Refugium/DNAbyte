@@ -24,6 +24,9 @@ from . import sequencing
 from . import storage
 from . import synthesis
 
+# Import commonly used data classes for convenience
+from .data_classes import BinaryCode, NucleobaseCode, InSilicoDNA
+
 __all__ = [
     "binarize",
     "encode", 
@@ -41,4 +44,7 @@ __all__ = [
     "sequencing",
     "storage",
     "synthesis",
+    "BinaryCode",
+    "NucleobaseCode",
+    "InSilicoDNA",
 ]

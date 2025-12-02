@@ -1,11 +1,10 @@
 import os
 import json
-import random
 import numpy as np
 
 from dnabyte.synthesize import SimulateSynthesis
-from dnabyte.synthesis.mesa.simulator import Graph
-from dnabyte.sequencing.sequencing_error import SequencingError
+from .error_graph import Graph
+from .sequencing_error import SequencingError
 
 class MESA(SimulateSynthesis):
     """

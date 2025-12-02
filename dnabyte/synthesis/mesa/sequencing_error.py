@@ -1,8 +1,11 @@
 #from dnabyte.error_channels.simulators.error_sources.homopolymers import homopolymer
-from dnabyte.synthesis.mesa.homopolymers import homopolymer 
 from time import time
 import numpy as np
 import re
+import networkx as nx
+from .error_graph import Graph
+from .homopolymers import homopolymer 
+
 
 # err_rates and mutation attributes for PacBio (keys 3-6) are based on Attributes based on
 # 10.12688/f1000research.10571.2, for Illumina (key 1&2), they are based on 10.1186/s12859-016-0976-y.

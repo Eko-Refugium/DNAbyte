@@ -6,7 +6,6 @@ This module provides standalone functions without Flask/Werkzeug dependencies.
 import base64
 import json
 import math
-import multiprocessing
 import os
 import uuid
 from math import floor
