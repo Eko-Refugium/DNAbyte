@@ -18,7 +18,10 @@ class SimulateStorage:
     """
     
     def __init__(self, params, logger=None):
-        self.years = params.years
+        if not hasattr(params, 'years') or params.years is None:
+            self.years = 0
+        else:
+            self.years = params.years
         self.storage_conditions = params.storage_conditions
         self.storage_plugins = params.storage_plugins
 

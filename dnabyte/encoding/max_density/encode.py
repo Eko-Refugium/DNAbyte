@@ -12,28 +12,33 @@ def attributes(inputparams):
     library_name = None
     encoding_scheme = 'max_density_encoding'
     assembly_structure = 'synthesis'
-    if inputparams.codeword_length is None:
+    if not hasattr(inputparams, 'codeword_length') or inputparams.codeword_length is None:
         codeword_length = 500
     else:
         codeword_length = inputparams.codeword_length
-    if inputparams.dna_barcode_length is None:
+    if not hasattr(inputparams, 'dna_barcode_length') or inputparams.dna_barcode_length is None:
         dna_barcode_length = m.ceil(codeword_length * 0.15)
     else:
         dna_barcode_length = inputparams.dna_barcode_length
-    if inputparams.codeword_maxlength_positions is None:
+    if not hasattr(inputparams, 'codeword_maxlength_positions') or inputparams.codeword_maxlength_positions is None:
         codeword_maxlength_positions = m.ceil(codeword_length * 0.15)
     else:
         codeword_maxlength_positions = inputparams.codeword_maxlength_positions
-    if inputparams.inner_error_correction == 'ltcode':
-        if inputparams.index_carry_length is None:
+    if not hasattr(inputparams, 'inner_error_correction'):
+        index_carry_length = None
+        ltcode_header = None
+        percent_of_symbols = None        
+        checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
+    elif inputparams.inner_error_correction == 'ltcode':
+        if not hasattr(inputparams, 'index_carry_length') or inputparams.index_carry_length is None:
             index_carry_length = m.ceil(codeword_length * 0.15)
         else:
             index_carry_length = inputparams.index_carry_length
-        if inputparams.ltcode_header is None:
+        if not hasattr(inputparams, 'ltcode_header') or inputparams.ltcode_header is None:
             ltcode_header = m.ceil(codeword_length * 0.15)
         else:
             ltcode_header = inputparams.ltcode_header
-        if inputparams.percent_of_symbols is None:
+        if not hasattr(inputparams, 'percent_of_symbols') or inputparams.percent_of_symbols is None:
             percent_of_symbols = 2
         else:
             percent_of_symbols = inputparams.percent_of_symbols
@@ -44,8 +49,10 @@ def attributes(inputparams):
         percent_of_symbols = None
         checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
     
-    if inputparams.outer_error_correction == 'reedsolomon':
-        if inputparams.reed_solo_percentage is None:
+    if not hasattr(inputparams, 'outer_error_correction'):
+        reed_solo_percentage = None
+    elif inputparams.outer_error_correction == 'reedsolomon':
+        if not hasattr(inputparams, 'reed_solo_percentage') or inputparams.reed_solo_percentage is None:
             reed_solo_percentage = 0.8
         else:
             reed_solo_percentage = inputparams.reed_solo_percentage

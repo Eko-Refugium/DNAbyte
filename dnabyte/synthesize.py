@@ -17,29 +17,21 @@ class SimulateSynthesis:
     def __init__(self, params, logger=None):
             
             self.assembly_structure = params.assembly_structure
-            self.encoding_scheme = params.encoding_scheme
             self.encoding_method = params.encoding_method
-            self.mean = params.mean
-            self.std_dev = params.std_dev
-            self.vol = params.vol
-            self.hybridisation_steps = params.hybridisation_steps
             self.synthesis_method = params.synthesis_method
-            self.theory = params.theory
-            if params.assembly_structure != 'synthesis':
-                self.library = params.library
             self.params = params
             self.synthesis_plugins = params.synthesis_plugins
 
             # To allow simulation with large quantites of oligos, we will scale down the number, perform
             # the simulation, and then scale back up the results.
-            if self.synthesis_method != None:
-                scale = 1
-                while self.mean > 1000:
-                    self.mean = self.mean / 10
-                    self.std_dev = self.std_dev / 10
-                    scale = scale * 10
+            # if self.synthesis_method != None:
+            #     scale = 1
+            #     while self.mean > 1000:
+            #         self.mean = self.mean / 10
+            #         self.std_dev = self.std_dev / 10
+            #         scale = scale * 10
 
-                self.scale = scale
+            #     self.scale = scale
 
     def simulate(self, data):
         """
