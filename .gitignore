@@ -9,6 +9,9 @@ htmlcov/
 .coverage
 *.cover
 
+# macOS
+.DS_Store
+
 tests/testfiles/testdecode/
 tests/testlogs/
 
