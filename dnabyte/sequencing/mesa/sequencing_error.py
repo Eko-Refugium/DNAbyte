@@ -1,7 +1,11 @@
-from dnabyte.error_channels.simulators.error_sources.homopolymers import homopolymer
+#from dnabyte.error_channels.simulators.error_sources.homopolymers import homopolymer
 from time import time
 import numpy as np
 import re
+import networkx as nx
+from .error_graph import Graph
+from .homopolymers import homopolymer 
+
 
 # err_rates and mutation attributes for PacBio (keys 3-6) are based on Attributes based on
 # 10.12688/f1000research.10571.2, for Illumina (key 1&2), they are based on 10.1186/s12859-016-0976-y.
@@ -359,8 +363,6 @@ class SequencingError:
         """
         assert all(ele in ['insertion', 'deletion', 'mismatch'] for ele in
                    mutation_list), 'Supported types of mutation are: "deletion", "mismatch" and "insertion".'
-        
-        error_dict = {}
         for mutation_type in mutation_list:
             if self.error_rates is not None:
                 err_rate = self.error_rates["raw_rate"] * self.error_rates[str(mutation_type)]
@@ -369,15 +371,12 @@ class SequencingError:
             if self.attributes is False:
                 eval('self.' + mutation_type)(err_rate)
             else:
-                counter = 0
                 np.random.seed(self.seed)
                 for n in range((len(self.seq))):
                     if np.random.random() <= err_rate:
                         eval('self.' + mutation_type)()
-                        counter += 1
-                error_dict[mutation_type] = counter
         self.g.graph.nodes[0]['seq'] = self.seq
-        return self.seed, error_dict
+        return self.seed
 
     def manual_mutation(self, error):
         """

@@ -14,6 +14,7 @@ from typing import List, Tuple
 from pyxdameraulevenshtein import damerau_levenshtein_distance
 
 class Params:
+
     def __init__(self, debug=False, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)

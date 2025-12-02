@@ -65,12 +65,13 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
 
         if sequencing_method != None:
             try:
-                for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/sequencing_plugins') if f.endswith('.py')]:
+                for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/sequencing') if f.endswith('.py')]:
                     # if filename.startswith('encode_') and filename.endswith('.py'):
                     module_name = filename[:-3] 
                     if 'sequencing_' + sequencing_method.lower() == module_name.lower():
                         # Load the encode module
-                        sequencing_module = importlib.import_module('dnabyte.sequencing_plugins.' + f'{module_name}')
+                        sequencing_module = importlib.import_module('dnabyte.sequencing.sequencing_' + f'{module_name}')
+
                         # Find the class definition in the module
                         for name, obj in inspect.getmembers(sequencing_module, inspect.isclass):
                             if issubclass(obj, SimulateSequencing) and obj is not SimulateSequencing:

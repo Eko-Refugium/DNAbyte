@@ -1,11 +1,13 @@
-import unittest
-from dnabyte.oligo import Oligo, complement
-from dnabyte.oligopool import OligoPool
-from dnabyte.data_classes.binarycode import BinaryCode
-from dnabyte.data_classes.nucleobasecode import NucleobaseCode
-from dnabyte.data_classes.insilicodna import InSilicoDNA
-from dnabyte.params import Params
+"""
+Comprehensive unit tests for assembly synthesis module.
+"""
 
+import unittest
+from unittest.mock import Mock, MagicMock, patch
+from dnabyte.synthesis.assembly.oligo import Oligo, complement
+from dnabyte.synthesis.assembly.oligopool import OligoPool
+from dnabyte import BinaryCode, NucleobaseCode, InSilicoDNA
+from dnabyte.params import Params
 from dnabyte.synthesize import SimulateSynthesis
 import itertools
 import random

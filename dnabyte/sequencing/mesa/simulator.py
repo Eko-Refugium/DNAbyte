@@ -1,307 +1,162 @@
+"""
+Pure simulation functions for DNA synthesis, storage, and sequencing error modeling.
+This module provides standalone functions without Flask/Werkzeug dependencies.
+"""
+
 import base64
-import copy
-import functools
 import json
 import math
-import multiprocessing
-import traceback
-import uuid
-try:
-    import uwsgidecoratorsfallback
-except ModuleNotFoundError:
-    uwsgidecoratorsfallback = None
-    
-import pickle
-from threading import Thread
-from multiprocessing.pool import ThreadPool
 import os
+import uuid
+from math import floor
+from multiprocessing.pool import ThreadPool
+
 import numpy as np
-from werkzeug.exceptions import HTTPException
-from werkzeug.datastructures import ImmutableMultiDict
 
 try:
     import RNAstructure
-
     rna_imported = True
 except ModuleNotFoundError:
     rna_imported = False
-from flask import jsonify, request, Blueprint, current_app, copy_current_request_context, make_response
-from math import floor
 
-from dnabyte.error_channels.simulators.error_probability import create_error_prob_function
-from dnabyte.error_channels.simulators.error_sources.gc_content import overall_gc_content, windowed_gc_content
-from dnabyte.error_channels.simulators.error_sources.homopolymers import homopolymer
-from dnabyte.error_channels.simulators.error_sources.kmer import kmer_counting
-from dnabyte.error_channels.simulators.error_sources.undesired_subsequences import undesired_subsequences
-from dnabyte.error_channels.simulators.sequencing.sequencing_error import SequencingError
-from dnabyte.error_channels.simulators.error_graph import Graph
+from dnabyte.synthesis.mesa.error_probability import create_error_prob_function
+from dnabyte.synthesis.mesa.gc_content import overall_gc_content, windowed_gc_content
+from dnabyte.synthesis.mesa.homopolymers import homopolymer
+from dnabyte.synthesis.mesa.kmer import kmer_counting
+from dnabyte.synthesis.mesa.undesired_subsequences import undesired_subsequences
+from dnabyte.synthesis.mesa.sequencing_error import SequencingError
+from dnabyte.synthesis.mesa.error_graph import Graph
 
-simulator_api = Blueprint("simulator_api", __name__, template_folder="templates")
-
-
-@simulator_api.errorhandler(Exception)
-def handle_error(ex):
-    code = 500
-
-    text = str(request) + "\n"
-    text += str(request.json) + "\n"
-    text += str(request.args) + "\n"
-    text += str(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
-    if isinstance(ex, HTTPException):
-        code = ex.code
-    exception_recv = current_app.config['EXCEPTION_RECV']
-    if exception_recv is not None and code != 409:  # we do not want to send an email for invalid credentials
-        send_mail(None, [exception_recv], text, subject="[MESA] Exception happened!")
-        raise ex
-    return jsonify({'did_succeed': False, 'code': code}), code
-
-
-@simulator_api.route('/api/homopolymer', methods=['GET', 'POST'])
-#@require_apikey
-def do_homopolymer():
+def calculate_homopolymer_errors(sequence, homopolymer_error_prob):
     """
-    Takes the parameters from an uploaded config file or the website and calculates error probabilities for every base
-    of the sequence based on the occurrence of homopolymers. The error probabilities are either saved as html data or
-    json file.
-    :return: Jsonified homopolymer error probabilities.
+    Calculate homopolymer-based error probabilities for a DNA sequence.
+    
+    Args:
+        sequence: DNA sequence string
+        homopolymer_error_prob: Error probability function parameters
+        
+    Returns:
+        List of error probability dictionaries
     """
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-
-    sequence = r_method.get('sequence')
-    error_prob_func = create_error_prob_function(r_method.get('homopolymer_error_prob'))
-    as_html = r_method.get('asHTML')
-    res = homopolymer(sequence, error_function=error_prob_func)
-    if as_html:
-        return htmlify(res, sequence)
-    return jsonify(res)
+    error_prob_func = create_error_prob_function(homopolymer_error_prob)
+    return homopolymer(sequence, error_function=error_prob_func)
 
 
-@simulator_api.route('/api/gccontent', methods=['GET', 'POST'])
-#@require_apikey
-def do_gc_content():
+def calculate_gc_content_errors(sequence, gc_windowsize=None, gc_error_prob=None):
     """
-    Takes the parameters from an uploaded config file or the website and calculates error probabilities for every base
-    of the sequence based on the gc content in the whole sequence and windows that are set up by the configuration. The
-    error probabilities are either saved as html data or json file.
-    :return: Jsonified gc_content error probabilities.
+    Calculate GC content-based error probabilities for a DNA sequence.
+    
+    Args:
+        sequence: DNA sequence string
+        gc_windowsize: Window size for sliding window analysis (optional)
+        gc_error_prob: Error probability function parameters
+        
+    Returns:
+        List of error probability dictionaries
     """
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-
-    sequence = r_method.get('sequence')
-    window = r_method.get('gc_windowsize')
-    error_prob_func = create_error_prob_function(r_method.get('gc_error_prob'))
-    as_html = r_method.get('asHTML')
-    if window:
+    error_prob_func = create_error_prob_function(gc_error_prob)
+    if gc_windowsize:
         try:
-            res = windowed_gc_content(sequence, int(window), error_function=error_prob_func)
+            return windowed_gc_content(sequence, int(gc_windowsize), error_function=error_prob_func)
         except:
-            res = overall_gc_content(sequence, error_function=error_prob_func)
+            return overall_gc_content(sequence, error_function=error_prob_func)
     else:
-        res = overall_gc_content(sequence, error_function=error_prob_func)
-    if as_html:
-        return htmlify(res, sequence)
-    return jsonify(res)
+        return overall_gc_content(sequence, error_function=error_prob_func)
 
 
-@simulator_api.route('/api/kmer', methods=['GET', 'POST'])
-#@require_apikey
-def do_kmer():
+def calculate_kmer_errors(sequence, kmer_windowsize=None, kmer_error_prob=None):
     """
-    Takes the parameters from an uploaded config file or the website and calculates error probabilities for every base
-    of the sequence based on the occurrence of kmers in windows that are set up by the configuration. The error
-    probabilities are either saved as html data or json file.
-    :return: Jsonified kmer error probabilities.
+    Calculate k-mer-based error probabilities for a DNA sequence.
+    
+    Args:
+        sequence: DNA sequence string
+        kmer_windowsize: Window size for k-mer analysis (optional)
+        kmer_error_prob: Error probability function parameters
+        
+    Returns:
+        List of error probability dictionaries
     """
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-
-    sequence = r_method.get('sequence')
-    window = r_method.get('kmer_windowsize')
-    error_prob_func = create_error_prob_function(r_method.get('kmer_error_prob'))
-    as_html = r_method.get('asHTML')
-    if window:
+    error_prob_func = create_error_prob_function(kmer_error_prob)
+    if kmer_windowsize:
         try:
-            res = kmer_counting(sequence, int(window), error_prob_func)
+            return kmer_counting(sequence, int(kmer_windowsize), error_prob_func)
         except:
-            res = kmer_counting(sequence, error_function=error_prob_func)
+            return kmer_counting(sequence, error_function=error_prob_func)
     else:
-        res = kmer_counting(sequence, error_function=error_prob_func)
-    if as_html:
-        return htmlify(res, sequence)
-    return jsonify(res)
+        return kmer_counting(sequence, error_function=error_prob_func)
 
 
-@simulator_api.route('/api/subsequences', methods=['GET', 'POST'])
-#@require_apikey
-def do_undesired_sequences():
+def calculate_undesired_sequence_errors(sequence, enabled_undesired_seqs=None):
     """
-    Takes the parameters from an uploaded config file or the website and if enabled, calculates error probabilities for
-    every single base of the sequence based on the occurrence of undesired sequences that are set up by the
-    configuration. The error probabilities are either saved as html data or json file.
-    :return: Jsonified undersired_sequences error probabilities.
+    Calculate error probabilities based on undesired subsequences.
+    
+    Args:
+        sequence: DNA sequence string
+        enabled_undesired_seqs: List of dicts with 'enabled', 'sequence', and 'error_prob' keys
+        
+    Returns:
+        List of error probability dictionaries
     """
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-    sequence = r_method.get('sequence')
-    enabled_undesired_seqs = r_method.get('enabledUndesiredSeqs')
-    as_html = r_method.get('asHTML')
-
     if enabled_undesired_seqs:
         try:
             undesired_sequences = {}
             for useq in enabled_undesired_seqs:
-                if useq['enabled']:
+                if useq.get('enabled'):
                     undesired_sequences[useq['sequence']] = float(useq['error_prob'])
-            res = undesired_subsequences(sequence, undesired_sequences)
+            return undesired_subsequences(sequence, undesired_sequences)
         except:
-            res = undesired_subsequences(sequence)
+            return undesired_subsequences(sequence)
     else:
-        res = undesired_subsequences(sequence)
-    if as_html:
-        return htmlify(res, sequence)
-    return jsonify(res)
+        return undesired_subsequences(sequence)
 
 
-@simulator_api.route('/api/fasta_all', methods=['GET', 'POST'])
-#@require_apikey
-def fasta_do_all_wrapper():
-    """
-    This method wraps the do_multiple method (which works with multiline fasta files) to get the app context and allow
-    the usage of mutliple threads to calculate the results faster. If a multiline fasta file is uploaded, the method
-    gets a list with sequences and calls @do_all for every sequence in another thread. Every sequence gets a unique uuid
-    to access the results and an e_mail with all uuids will be sent to the user that uploaded the fasta file.
-    :return:
-    """
-
-    @copy_current_request_context
-    def do_multiple(lst, e_mail, host):
-        with current_app.app_context():
-            cores = 2
-            p = multiprocessing.Pool(cores)
-            owner_id = owner_for_key(r_method['key'])
-            res_lst = p.map(functools.partial(do_all, owner_id=owner_id), lst)
-            p.close()
-        urls = "Access your results at: "
-        fastq_str_list = []
-        for res in res_lst:
-            uuid = list(res.json.values())[0]["uuid"]
-            url = host + "query_sequence?uuid=" + uuid
-            urls = urls + "\n" + url
-            fastq_str_list.append(
-                "@Your MESA sequence at " + url + "\n" +
-                list(res.json.values())[0]["modified_sequence"].replace(" ", "") + "\n+\n" +
-                list(res.json.values())[0]['res']['fastqOr'])
-        fastq_text = "\n".join(fastq_str_list)
-        send_mail(None, [e_mail], urls, subject="[MESA] Your DNA-Simulation finished",
-                  attachment_txt=fastq_text, attachment_name="MESA.fastq")
-
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-    r_uid = r_method.get('uuid')
-    if r_uid is not None:
-        r_res = None
-        try:
-            r_res = read_from_redis(r_uid)
-        except Exception as e:
-            # logger.info("Error while talking to Redis-Server:", e)
-            pass
-        if r_res is not None:
-            return jsonify(json.loads(r_res))
-    # TODO estimate time needed
-    apikey = Apikey.query.filter_by(apikey=r_method.get('key')).first()
-    if apikey.owner_id == 0:
-        return jsonify({'did_succeed': False})
-    user = User.query.filter_by(user_id=apikey.owner_id).first()
-    email = user.email
-    sequence_list = r_method.get('sequence_list')
-    del r_method['sequence_list']
-    try:
-        del r_method['uuid']
-    except:
-        pass
-    tmp_lst = []
-    for x in sequence_list:
-        c_method = copy.deepcopy(r_method)
-        c_method['sequence'] = x
-        tmp_lst.append(c_method)
-    thread = Thread(target=do_multiple, args=(tmp_lst, email, request.host_url))
-    thread.start()
-    return jsonify({"result_by_mail": True, "did_succeed": False})
-
-
-@simulator_api.route('/api/max_expect', methods=['GET', 'POST'])
-#@require_apikey
-def max_expect():
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-    sequence = r_method.get('sequence')
-    redis_retention_time = int(r_method.get('retention_time', 31536000))
-    return jsonify(
-        create_max_expect(sequence, temperature=310.15, max_percent=10, gamma=1, max_structures=1,
-                          window=3, redis_retention_time=redis_retention_time))
-
-
-@simulator_api.route('/api/getIMG', methods=['GET'])
-def get_max_expect_file():
-    content_type = {".svg": "image/svg+xml", ".pdf": "application/pdf", ".ps": "application/postscript",
-                    ".ct": "text/plain", ".dot": "text/plain", ".pfs": "application/octet-stream"}
-    id = request.args.get('id')
-    img_type = "." + request.args.get('type')
-    if img_type not in content_type:
-        return jsonify({"did_succeed": False})
-    try:
-        ret = json.loads(read_from_redis(id))
-        if img_type in ret:
-            response = make_response(base64.standard_b64decode(ret[img_type]))
-            response.headers.set('Content-Type', content_type[img_type])
-            response.headers.set(
-                'Content-Disposition', 'attachment', filename=str(id) + img_type)
-            return response
-    except:
-        pass
-    return jsonify({"did_succeed": False}), 404
 
 
 def create_max_expect(dna_str, basefilename=None, temperature=310.15, max_percent=10, gamma=1, max_structures=1,
-                      window=3, redis_retention_time=31536000):
+                      window=3):
+    """
+    Calculate maximum expected accuracy secondary structure for DNA sequence.
+    
+    Args:
+        dna_str: DNA sequence string
+        basefilename: Base name for output files (optional, will generate UUID if None)
+        temperature: Temperature in Kelvin (default: 310.15)
+        max_percent: Maximum percent for structure prediction
+        gamma: Gamma parameter for MaxExpect
+        max_structures: Maximum number of structures to predict
+        window: Window size for structure prediction
+        
+    Returns:
+        Tuple of (basefilename, file_content_dict) where file_content_dict contains
+        base64-encoded structure files or error messages
+    """
     if not rna_imported:
         return [basefilename, {
-            'plain_dot': "Error: " + "RNAstructure not imported correctly. Secondary Structure calculation not supported."}]
+            'plain_dot': "Error: RNAstructure not imported correctly. Secondary Structure calculation not supported."}]
     if len(dna_str) > 4000:
-        return [basefilename, {'plain_dot': "Error: " + "Sequences longer than 4000 nt not supported"}]
+        return [basefilename, {'plain_dot': "Error: Sequences longer than 4000 nt not supported"}]
+    
     prev_wd = os.getcwd()
     os.chdir("/tmp")
     try:
         p = RNAstructure.RNA.fromString(dna_str, "dna")
     except RuntimeError as ru_e:
         return [basefilename, {'plain_dot': "Error: " + str(ru_e)}]
+    
     p.SetTemperature(temperature=temperature)
-    # MaxExpect partition.pfs MaxExpect.ct --DNA --gamma 1 --percent 10 --structures 20 --window 3
-    # RNA and ProbScan objects are iterable. To iterate over the sequence:
-    # It's also possible to get the pairing information and to manipulate it within python
+    
     if basefilename is None:
         basefilename = uuid.uuid4().hex
+    
     aaa = p.PartitionFunction(basefilename + '.pfs')
     if aaa != 0:
-        exit(aaa)
+        return [basefilename, {'plain_dot': "Error: " + p.GetErrorMessage(aaa)}]
+    
     aaa = p.MaximizeExpectedAccuracy(maxPercent=max_percent, maxStructures=max_structures, window=window, gamma=gamma)
     if aaa != 0:
         return [basefilename, {'plain_dot': "Error: " + p.GetErrorMessage(aaa)}]
-    basedir = "/tmp"  # + os.path.abspath(os.path.dirname(__file__))
+    
+    basedir = "/tmp"
     aaa = p.WriteCt(basedir + "/" + basefilename + ".ct")
     if aaa != 0:
         return [basefilename, {'plain_dot': "Error: " + p.GetErrorMessage(aaa)}]
@@ -309,80 +164,31 @@ def create_max_expect(dna_str, basefilename=None, temperature=310.15, max_percen
     aaa = p.WriteDotBracket(basedir + "/" + basefilename + ".dot")
     if aaa != 0:
         return [basefilename, {'plain_dot': "Error: " + p.GetErrorMessage(aaa)}]
-    pth = os.environ['DATAPATH']
-    if not pth.endswith("/"):
+    
+    pth = os.environ.get('DATAPATH', '')
+    if pth and not pth.endswith("/"):
         pth += "/"
-    my_cmd = pth + '../exe/draw ' + basefilename + '.ct ' + basefilename + '.ps -p ' + basefilename + '.pfs && ps2pdf ' + \
-             basefilename + '.ps && ' + pth + '../exe/draw ' + basefilename + '.ct ' + basefilename + '.svg -p ' + \
-             basefilename + '.pfs --svg -N 1'
+    
+    # Generate structure diagrams if environment is set up
+    if pth:
+        my_cmd = pth + '../exe/draw ' + basefilename + '.ct ' + basefilename + '.ps -p ' + basefilename + '.pfs && ps2pdf ' + \
+                 basefilename + '.ps && ' + pth + '../exe/draw ' + basefilename + '.ct ' + basefilename + '.svg -p ' + \
+                 basefilename + '.pfs --svg -N 1'
 
     file_content = {}
     for ending in [".ps", ".ct", ".svg", ".pdf", ".pfs", ".dot"]:
-        with open(basefilename + ending, 'rb') as infile:
-            content = infile.read()
-            file_content[ending] = base64.standard_b64encode(content).decode("utf-8")
-            if ending == ".dot":
-                file_content['plain_dot'] = content.decode("utf-8").split("\n")[2]
-    if redis_retention_time > 1:
         try:
-            save_to_redis(basefilename, json.dumps(file_content), min(redis_retention_time, 31536000))
-        except redis.exceptions.ConnectionError as ex:
-                pass
+            with open(basefilename + ending, 'rb') as infile:
+                content = infile.read()
+                file_content[ending] = base64.standard_b64encode(content).decode("utf-8")
+                if ending == ".dot":
+                    file_content['plain_dot'] = content.decode("utf-8").split("\n")[2]
+        except FileNotFoundError:
+            # Some files may not exist if draw commands didn't run
+            pass
+    
     os.chdir(prev_wd)
     return [basefilename, file_content]
-
-
-@simulator_api.route('/api/all', methods=['GET', 'POST'])
-#@require_apikey
-def do_all_wrapper():
-    """
-    The method wraps the thread_do_all method to get the app context and allow the usage of another thread for every
-    request. The inner method calls @do_all with the sequence and sends an email with the uuid of the result if enabled.
-    If the uuid already exists the results are taken from the redis server and if the sequence is longer than 1000 bases
-    the calculation may need some time and the user will get an email and won't have to wait for it to finish.
-    :return:
-    """
-
-    print("Starting do_all_wrapper function")
-    @copy_current_request_context
-    def thread_do_all(r_method, owner_id, email, host):
-        res = do_all(r_method, owner_id)
-        uuid = list(res.json.values())[0]["uuid"]
-        send_mail(None, [email],
-                  "Access your result at: " + host + "query_sequence?uuid=" + uuid,
-                  subject="[MESA] Your DNA-Simulation finished")
-
-    if request.method == 'POST':
-        r_method = request.json
-    else:
-        r_method = request.args
-    r_uid = r_method.get('uuid')
-    # if the uuid already exists load the results from redis
-    if r_uid is not None:
-        r_res = None
-        try:
-            r_res = read_from_redis(r_uid)
-        except Exception as e:
-            print("Error while talking to Redis-Server:", e)
-        if r_res is not None:
-            return jsonify(json.loads(r_res))
-        elif 'sequence' not in r_method:
-            return jsonify({"did_succeed": False}), 404
-    # TODO estimate time needed
-    send_via_mail = r_method.get('send_mail')
-    apikey = Apikey.query.filter_by(apikey=r_method.get('key')).first()
-    if (len(r_method.get('sequence')) > 1000 or (send_via_mail and r_uid is None)) and request:
-        # spawn a thread, of do_all and send an email to the user to
-        user = User.query.filter_by(user_id=apikey.owner_id).first()
-        email = user.email
-        if apikey.owner_id == 0:
-            # we are not really logged in, just using the free api-key!
-            email = r_method.get('email')
-        thread = Thread(target=thread_do_all, args=(r_method, apikey.owner_id, email, request.host_url))
-        thread.start()
-        return jsonify({"result_by_mail": True, "did_succeed": False})
-    else:
-        return do_all(r_method, owner_id=apikey.owner_id)
 
 
 def do_all(r_method, owner_id):
