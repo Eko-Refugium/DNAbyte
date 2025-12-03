@@ -5,6 +5,13 @@ class Params:
 
     def __init__(self, debug=False, **kwargs):
 
+        # Set default values for required attributes
+        self.encoding_method = None
+        self.synthesis_method = None
+        self.storage_conditions = None
+        self.sequencing_method = None
+        self.binarization_method = None
+        
         # Set parameters from kwargs
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -13,14 +20,11 @@ class Params:
         # Load plugins
         self.binarization_plugins, self.encoding_plugins, self.synthesis_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.encoding_method, self.synthesis_method, self.storage_conditions, self.sequencing_method, self.binarization_method)
 
-        if self.debug:
-            print(self.encoding_method,self.encoding_plugins, 'encoding method in params')
-        
         # Check binarization parameters
         if self.binarization_method is None:
             pass
         elif self.binarization_method in self.binarization_plugins:
-            binarization = importlib.import_module(f"dnabyte.binarization.{self.binarization_method}")
+            binarization = importlib.import_module(f"dnabyte.binarization.{self.binarization_method}.binarize")
             attributes_bin = binarization.attributes(self)
             for keys, value in attributes_bin.items():
                 setattr(self, keys, value)
@@ -42,7 +46,7 @@ class Params:
         if self.synthesis_method is None:
             pass
         elif 'synthesis_' + self.synthesis_method in self.synthesis_plugins:
-            synthesis = importlib.import_module(f"dnabyte.synthesis.synthesis_{self.synthesis_method}")
+            synthesis = importlib.import_module(f"dnabyte.synthesis.{self.synthesis_method}.synthesize")
             attributes_synth = synthesis.attributes(self)
             for keys, value in attributes_synth.items():
                 setattr(self, keys, value)
@@ -53,7 +57,7 @@ class Params:
         if self.storage_conditions is None:
             pass
         elif 'storage_' + self.storage_conditions in self.storage_plugins:
-            storage = importlib.import_module(f"dnabyte.storage.storage_{self.storage_conditions}")
+            storage = importlib.import_module(f"dnabyte.storage.{self.storage_conditions}.store")
             attributes_store = storage.attributes(self)
             for keys, value in attributes_store.items():
                 setattr(self, keys, value)
@@ -64,13 +68,15 @@ class Params:
         if self.sequencing_method is None:
             pass
         elif 'sequencing_' + self.sequencing_method in self.sequencing_plugins:
-            sequencing = importlib.import_module(f"dnabyte.sequencing.sequencing_{self.sequencing_method}")
+            sequencing = importlib.import_module(f"dnabyte.sequencing.{self.sequencing_method}.sequence")
             attributes_seq = sequencing.attributes(self)
             for keys, value in attributes_seq.items():
                 setattr(self, keys, value)
         else:
             raise ValueError(f"Invalid sequencing method: {self.sequencing_method}")
         
+
+
     def __str__(self):
         output = "Params:\n"
         for key, value in self.__dict__.items():

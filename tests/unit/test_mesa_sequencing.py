@@ -1,4 +1,4 @@
-from dnabyte.sequencing.mesa.sequencing import MESA
+from dnabyte.sequencing.mesa.sequence import MESA
 from dnabyte.params import Params
 from dnabyte.data_classes.insilicodna import InSilicoDNA
 import unittest

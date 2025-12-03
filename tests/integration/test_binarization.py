@@ -10,9 +10,9 @@ from dnabyte.data_classes.base import Data
 from dnabyte.params import Params
 from dnabyte.binarize import Binarize
 from dnabyte.data_classes.binarycode import BinaryCode
-from dnabyte.binarization.binarize_text import TextBinarize
-from dnabyte.binarization.binarize_compressed import ArchiveBinarize
-from dnabyte.binarization.binarize_default import DefaultBinarize
+from dnabyte.binarization.text.binarize_text import TextBinarize
+from dnabyte.binarization.compressed.binarize_compressed import ArchiveBinarize
+from dnabyte.binarization.default.binarize_default import DefaultBinarize
 
 
 class TestTextBinarize(unittest.TestCase):
