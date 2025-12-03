@@ -13,10 +13,13 @@ class SimulateStorage:
     
     def __init__(self, params, logger=None):
         
-        self.years = params.years
-        self.storage_conditions = params.storage_conditions
-        self.storage_plugins = params.storage_plugins
-        self.logger = logger
+        if not hasattr(params, 'storage_conditions') or params.storage_conditions is None:
+            self.storage_conditions = None
+        else:
+            self.years = params.years
+            self.storage_conditions = params.storage_conditions
+            self.storage_plugins = params.storage_plugins
+            self.logger = logger
 
     def simulate(self, data):
         """
@@ -29,7 +32,11 @@ class SimulateStorage:
         if isinstance(data, InSilicoDNA):
             # Dynamically find the appropriate class based on storage_conditions
             try:
-                if isinstance(self.storage_conditions, str):
+                if self.storage_conditions == None:
+                    stored_data = InSilicoDNA(data=data.data)
+                    info = {"degradation_info": {}, "number_of_strand_breaks": 0}
+                    return stored_data, info
+                elif isinstance(self.storage_conditions, str):
                     storage_class = self.storage_plugins[self.storage_conditions.lower()]
                     plugin = storage_class(self)  # Instantiate the plugin class
                     data_sto, info = plugin.simulate(data)
