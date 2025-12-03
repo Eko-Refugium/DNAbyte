@@ -1,4 +1,4 @@
-from dnabyte.synthesis.mesa.synthesis import MESA
+from dnabyte.synthesis.mesa.synthesize import MESA
 from dnabyte.params import Params
 from dnabyte.data_classes.insilicodna import InSilicoDNA
 import unittest
@@ -7,7 +7,7 @@ class TestMESA(unittest.TestCase):
     
     def setUp(self):
         # Initialize MESA synthesis simulator with default parameters
-        params = Params(synthesis_method='mesa', mesa_id=3, mean=100, std_dev=5)
+        params = Params(synthesis_method='mesa', mesa_synthesis_id=3, mean=100, std_dev=5)
         self.mesa_simulator = MESA(params=params)
 
     def test_simulate_synthesis(self):

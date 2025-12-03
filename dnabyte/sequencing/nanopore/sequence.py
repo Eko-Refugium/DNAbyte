@@ -100,5 +100,7 @@ class Nanopore(SimulateSequencing):
         return np.random.choice(bases, p=probabilities)
 
 
+def attributes(params):
+    return {}
 
 

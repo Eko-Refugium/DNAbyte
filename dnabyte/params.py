@@ -17,6 +17,8 @@ class Params:
             setattr(self, key, value)
         self.debug = debug
 
+        print(self)
+
         # Load plugins
         self.binarization_plugins, self.encoding_plugins, self.synthesis_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.encoding_method, self.synthesis_method, self.storage_conditions, self.sequencing_method, self.binarization_method)
 
@@ -47,7 +49,9 @@ class Params:
             pass
         elif 'synthesis_' + self.synthesis_method in self.synthesis_plugins:
             synthesis = importlib.import_module(f"dnabyte.synthesis.{self.synthesis_method}.synthesize")
+            print("Synthesis module loaded:", synthesis)
             attributes_synth = synthesis.attributes(self)
+            print("Synthesis attributes:", attributes_synth)
             for keys, value in attributes_synth.items():
                 setattr(self, keys, value)
         else:

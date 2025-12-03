@@ -1,32 +1,11 @@
 import os
 import json
-import random
 import numpy as np
 
 from dnabyte.synthesize import SimulateSynthesis
-from dnabyte.sequencing.simulator_api import Graph
-from dnabyte.sequencing.sequencing_error import SequencingError
+from .error_graph import Graph
+from .sequencing_error import SequencingError
 
-def attributes(params):
-    if 'mean' not in params.__dict__ or params.mean is None:
-        mean = 10
-    else:
-        mean = params.mean
-
-    if 'std_dev' not in params.__dict__ or params.std_dev is None:
-        std_dev = 0
-    else:
-        std_dev = params.std_dev
-
-    if 'synthesis_method' not in params.__dict__ or params.synthesis_method is None:
-        synthesis_method = 68
-    else:
-        if params.synthesis_method not in [3, 4, 5, 6, 7, 68, 69, 70, 71, 'nosynthpoly', None]:
-            raise ValueError("Invalid Synthesis Error")
-        else:
-            synthesis_method = params.synthesis_method
-        
-    return {"mean": mean, "std_dev": std_dev, "synthesis_method": synthesis_method}
 
 class MESA(SimulateSynthesis):
     """
@@ -43,18 +22,22 @@ class MESA(SimulateSynthesis):
         """
         parent_dir = os.getcwd()
         
-        method_id = self.synthesis_method_id
+        method_id = self.params.mesa_id
 
         # Get the absolute path of the file relative to the parent directory
-        file_path = os.path.join(parent_dir, 'dnabyte', 'error_channels', 'syn_table.json')
+        file_path = os.path.join(parent_dir, 'dnabyte', 'synthesis', 'mesa',  'syn_table.json')
 
         # get the error parameters for the designated method
         # get dictionary of synthesis parameters from JSON file
         with open(file_path, 'r') as f:
             synth_dict = json.load(f)
 
+
         # Subset the dictionary
         method_dict = {item['id']: item for item in synth_dict if item.get('id') == method_id}       
+
+        # print("Method dict:")
+        # print(method_dict)
 
         # get the error parameters for the designated method
         err_rate_syn = method_dict[method_id]['err_data']
@@ -92,3 +75,23 @@ class MESA(SimulateSynthesis):
 
         return sequences_modified, info
         
+def attributes(params):
+    if 'mean' not in params.__dict__ or params.mean is None:
+        mean = 10
+    else:
+        mean = params.mean
+
+    if 'std_dev' not in params.__dict__ or params.std_dev is None:
+        std_dev = 0
+    else:
+        std_dev = params.std_dev
+
+    if 'mesa_synthesis_id' not in params.__dict__ or params.mesa_synthesis_id is None:
+        mesa_synthesis_id = 68
+    else:
+        if params.mesa_synthesis_id not in [3, 4, 5, 6, 7, 68, 69, 70, 71, None]:
+            raise ValueError("Invalid Synthesis ID Error")
+        else:
+            mesa_synthesis_id = params.mesa_synthesis_id
+
+    return {"mean": mean, "std_dev": std_dev, "mesa_synthesis_id": mesa_synthesis_id}
