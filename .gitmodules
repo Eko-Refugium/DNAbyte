@@ -1,12 +1,12 @@
 [submodule "dnabyte/encoding/poly_binom"]
 	path = dnabyte/encoding/poly_binom
-	url = git@github.com:Eko-Refugium/poly_binom.git
+	url = https://github.com/Eko-Refugium/poly_binom.git
 [submodule "dnabyte/encoding/linear_binom"]
 	path = dnabyte/encoding/linear_binom
-	url = git@github.com:Eko-Refugium/linear_binom.git
+	url = https://github.com/Eko-Refugium/linear_binom.git
 [submodule "dnabyte/encoding/linear_chain"]
 	path = dnabyte/encoding/linear_chain
-	url = git@github.com:Eko-Refugium/linear_chain.git
+	url = https://github.com/Eko-Refugium/linear_chain.git
 [submodule "dnabyte/encoding/poly_chain"]
 	path = dnabyte/encoding/poly_chain
-	url = git@github.com:Eko-Refugium/poly_chain.git
+	url = https://github.com/Eko-Refugium/poly_chain.git
