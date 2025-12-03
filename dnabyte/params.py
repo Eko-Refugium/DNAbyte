@@ -17,10 +17,10 @@ class Params:
             setattr(self, key, value)
         self.debug = debug
 
-        print(self)
-
         # Load plugins
-        self.binarization_plugins, self.encoding_plugins, self.synthesis_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.encoding_method, self.synthesis_method, self.storage_conditions, self.sequencing_method, self.binarization_method)
+        self.binarization_plugins, self.encoding_plugins, self.synthesis_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.synthesis_method, self.storage_conditions, self.sequencing_method)
+
+        print(self)
 
         # Check binarization parameters
         if self.binarization_method is None:
@@ -45,9 +45,15 @@ class Params:
             raise ValueError(f"Invalid encoding method: {self.encoding_method}")
         
         # Check synthesis parameters
+
+        print("Synthesis method:")
+        print(self.synthesis_method)
+        print("Synthesis plugins:")
+        print(self.synthesis_plugins)
+
         if self.synthesis_method is None:
             pass
-        elif 'synthesis_' + self.synthesis_method in self.synthesis_plugins:
+        elif self.synthesis_method in self.synthesis_plugins:
             synthesis = importlib.import_module(f"dnabyte.synthesis.{self.synthesis_method}.synthesize")
             print("Synthesis module loaded:", synthesis)
             attributes_synth = synthesis.attributes(self)
@@ -60,7 +66,7 @@ class Params:
         # Check storage parameters
         if self.storage_conditions is None:
             pass
-        elif 'storage_' + self.storage_conditions in self.storage_plugins:
+        elif self.storage_conditions in self.storage_plugins:
             storage = importlib.import_module(f"dnabyte.storage.{self.storage_conditions}.store")
             attributes_store = storage.attributes(self)
             for keys, value in attributes_store.items():
@@ -71,7 +77,7 @@ class Params:
         # Check sequencing parameters
         if self.sequencing_method is None:
             pass
-        elif 'sequencing_' + self.sequencing_method in self.sequencing_plugins:
+        elif self.sequencing_method in self.sequencing_plugins:
             sequencing = importlib.import_module(f"dnabyte.sequencing.{self.sequencing_method}.sequence")
             attributes_seq = sequencing.attributes(self)
             for keys, value in attributes_seq.items():
