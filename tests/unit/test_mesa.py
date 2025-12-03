@@ -7,7 +7,7 @@ class TestMESA(unittest.TestCase):
     
     def setUp(self):
         # Initialize MESA synthesis simulator with default parameters
-        params = Params(synthesis_method='mesa', mesa_synthesis_id=3, mean=100, std_dev=5)
+        params = Params(assembly_structure='synthesis', synthesis_method='mesa', mesa_synthesis_id=3, mean=100, std_dev=5)
         self.mesa_simulator = MESA(params=params)
 
     def test_simulate_synthesis(self):

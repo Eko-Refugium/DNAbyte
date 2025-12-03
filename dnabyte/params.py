@@ -45,19 +45,11 @@ class Params:
             raise ValueError(f"Invalid encoding method: {self.encoding_method}")
         
         # Check synthesis parameters
-
-        print("Synthesis method:")
-        print(self.synthesis_method)
-        print("Synthesis plugins:")
-        print(self.synthesis_plugins)
-
         if self.synthesis_method is None:
             pass
         elif self.synthesis_method in self.synthesis_plugins:
             synthesis = importlib.import_module(f"dnabyte.synthesis.{self.synthesis_method}.synthesize")
-            print("Synthesis module loaded:", synthesis)
             attributes_synth = synthesis.attributes(self)
-            print("Synthesis attributes:", attributes_synth)
             for keys, value in attributes_synth.items():
                 setattr(self, keys, value)
         else:
@@ -85,7 +77,6 @@ class Params:
         else:
             raise ValueError(f"Invalid sequencing method: {self.sequencing_method}")
         
-
 
     def __str__(self):
         output = "Params:\n"

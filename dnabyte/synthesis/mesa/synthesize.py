@@ -22,7 +22,7 @@ class MESA(SimulateSynthesis):
         """
         parent_dir = os.getcwd()
         
-        method_id = self.params.mesa_id
+        method_id = self.params.mesa_synthesis_id
 
         # Get the absolute path of the file relative to the parent directory
         file_path = os.path.join(parent_dir, 'dnabyte', 'synthesis', 'mesa',  'syn_table.json')
@@ -45,7 +45,7 @@ class MESA(SimulateSynthesis):
         method_id = method_dict[method_id].get('id')
 
         # create copies of sequences based on normal distribution
-        sequences_multiples = [seq for seq in data for _ in range(max(1, int(np.random.normal(self.mean, self.std_dev))))]
+        sequences_multiples = [seq for seq in data for _ in range(max(1, int(np.random.normal(self.params.mean, self.params.std_dev))))]
 
         sequences_modified = []
 
@@ -76,6 +76,7 @@ class MESA(SimulateSynthesis):
         return sequences_modified, info
         
 def attributes(params):
+
     if 'mean' not in params.__dict__ or params.mean is None:
         mean = 10
     else:
