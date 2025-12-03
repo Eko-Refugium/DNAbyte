@@ -19,7 +19,7 @@ class Assembly(SimulateSynthesis):
         """
 
         # linear assembly / linear encoding
-        if self.assembly_structure == 'linear_assembly' and  self.encoding_scheme == 'linear_encoding':
+        if self.assembly_structure == 'linear_assembly' and  self.encoding_method == 'linear_encoding':
             
             restructuredlib = translate_nested_list(data, self.library.translationlibleft, self.library.translationlibright)
             
@@ -38,7 +38,7 @@ class Assembly(SimulateSynthesis):
                 retranslated = back_translate_nested_list_chain_real(poolingfinish, self.library.translationlibleft, self.library.translationlibright)
 
         # linear assembly / binomial encoding
-        elif self.assembly_structure == 'linear_assembly' and  self.encoding_scheme == 'binomial_encoding':
+        elif self.assembly_structure == 'linear_assembly' and  self.encoding_method == 'binomial_encoding':
 
             restructuredlib = translate_nested_list(data, self.library.translationlibleft, self.library.translationlibright)
             
@@ -52,7 +52,7 @@ class Assembly(SimulateSynthesis):
                 retranslated = back_translate_nested_list_real(poolingfinish, self.library.translationlibleft, self.library.translationlibright)
                 
         # positional assembly / linear encoding
-        elif self.assembly_structure == 'positional_assembly' and self.encoding_scheme == 'linear_encoding':
+        elif self.assembly_structure == 'positional_assembly' and self.encoding_method == 'linear_encoding':
             restructuredlib = translate_nested_list_poly(data, self.library)
             
             if self.theory == 'yes':
@@ -63,7 +63,7 @@ class Assembly(SimulateSynthesis):
                 retranslated = back_translate_nested_list_poly_binom_real(poolingfinish, self.library)
 
         # positional assembly / binomial encoding
-        elif self.assembly_structure == 'positional_assembly' and self.encoding_scheme == 'binomial_encoding':
+        elif self.assembly_structure == 'positional_assembly' and self.encoding_method == 'binomial_encoding':
             restructuredlib = translate_nested_list_poly(data, self.library)
             if self.theory == 'yes':
                 poolingfinish = self.call_function_repeatedly_therory(restructuredlib, self.library, 'binomial_encoding')
@@ -84,10 +84,10 @@ def attributes(params):
     else:
         library = params.library
 
-    if 'encoding_scheme' not in params.__dict__ or params.encoding_scheme is None:
+    if 'encoding_method' not in params.__dict__ or params.encoding_method is None:
         raise ValueError("Encoding scheme must be specified for synthesis assembly.")
     else:
-        encoding_scheme = params.encoding_scheme
+        encoding_method = params.encoding_method
 
     if 'assembly_structure' not in params.__dict__ or params.assembly_structure is None:
         raise ValueError("Assembly structure must be specified for synthesis assembly.")
@@ -111,7 +111,7 @@ def attributes(params):
     
     return {
         "library": library,
-        "encoding_scheme": encoding_scheme,
+        "encoding_method": encoding_method,
         "assembly_structure": assembly_structure,
         "theory": theory
     }

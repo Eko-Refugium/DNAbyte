@@ -21,7 +21,9 @@ class SimulateSynthesis:
             self.synthesis_method = params.synthesis_method
             self.params = params
             self.synthesis_plugins = params.synthesis_plugins
+            self.logger = logger
 
+            #TODO: implement a scaling strategy
             # To allow simulation with large quantites of oligos, we will scale down the number, perform
             # the simulation, and then scale back up the results.
             # if self.synthesis_method != None:
@@ -30,7 +32,6 @@ class SimulateSynthesis:
             #         self.mean = self.mean / 10
             #         self.std_dev = self.std_dev / 10
             #         scale = scale * 10
-
             #     self.scale = scale
 
     def simulate(self, data):
@@ -41,40 +42,50 @@ class SimulateSynthesis:
         :return: A list of assembled DNA sequences.
         """
         
-        if self.assembly_structure == 'synthesis':
-            if self.synthesis_method == None:
-                assembled_data = InSilicoDNA(data.data)
-                info = {"copy_number": 0}
-                return assembled_data, info
-            else:
-                if isinstance(data, NucleobaseCode):
-                    # Dynamically find the appropriate class based on synthesis_method
-                    try:
-                        if self.params.synthesis_method in [3, 4, 5, 6, 7, 68, 69, 70, 71]:
-                            synthesis_class = self.synthesis_plugins["mesa"]
-                            plugin = synthesis_class(self)
-                        else:
-                            synthesis_class = self.synthesis_plugins[self.synthesis_method.lower()]
-                            plugin = synthesis_class(self)  # Instantiate the plugin class
+        if isinstance(data, NucleobaseCode):
+            try: 
+                synthesis_class = self.synthesis_plugins[self.synthesis_method]
+                plugin = synthesis_class(self.params, logger=self.logger)
+                data, info = plugin.simulate(data.data)
+                obj = InSilicoDNA(data)
+                if hasattr(data, 'file_paths'):
+                    obj.file_paths = data.file_paths
+                return obj, info
 
-                        # Call the simulate method of the plugin class
-                        data_seq, info = plugin.simulate(data.data)
-                        data_seq = InSilicoDNA(data_seq)
-                        # TODO: change the initialization of data_seq to be more elegant
-                        #data_seq.data = data_seq
-                        return data_seq, info
-                        
-                    except KeyError:
-                        raise ValueError(f"Synthesis method '{self.synthesis_method}' not recognized.")
-                else:
-                    raise ValueError("The input data is not an instance of EncodedData.")
+            except KeyError:
+                raise ValueError(f"Synthesis method '{self.synthesis_method}' not recognized.")
         else:
-            print(data)
-            if isinstance(data, NucleobaseCode):
-                assembly = importlib.import_module(f"dnabyte.synthesis.{self.encoding_method}.assembly")
-                assembled_data, info = assembly.assembly(data, self.params)
-                assembled_data = InSilicoDNA(assembled_data)
-                return assembled_data, info
+            raise TypeError("data must be an instance of NucleobaseCode")
+
+        # if self.assembly_structure == 'synthesis':
+        #     if self.synthesis_method == None:
+        #         assembled_data = InSilicoDNA(data.data)
+        #         info = {"copy_number": 0}
+        #         return assembled_data, info
+        #     else:
+        #         if isinstance(data, NucleobaseCode):
+        #             # Dynamically find the appropriate class based on synthesis_method
+        #             try:
+        #                 synthesis_class = self.synthesis_plugins[self.synthesis_method.lower()]
+        #                 plugin = synthesis_class(self)  # Instantiate the plugin class
+
+        #                 # Call the simulate method of the plugin class
+        #                 data_seq, info = plugin.simulate(data.data)
+        #                 data_seq = InSilicoDNA(data_seq)
+        #                 # TODO: change the initialization of data_seq to be more elegant
+        #                 #data_seq.data = data_seq
+        #                 return data_seq, info
+                        
+        #             except KeyError:
+        #                 raise ValueError(f"Synthesis method '{self.synthesis_method}' not recognized.")
+        #         else:
+        #             raise ValueError("The input data is not an instance of EncodedData.")
+        # else:
+        #     if isinstance(data, NucleobaseCode):
+        #         assembly = importlib.import_module(f"dnabyte.synthesis.{self.encoding_method}.assembly")
+        #         assembled_data, info = assembly.assembly(data, self.params)
+        #         assembled_data = InSilicoDNA(assembled_data)
+        #         return assembled_data, info
         
 
     def print_list_structure(self, lst, level=0):

@@ -72,7 +72,7 @@ class TestAssembly(unittest.TestCase):
     def test_assembly(self):
         # instantiate the SimulateSynthesis class
         # TODO: fix this test with new params structure
-        params = Params(assembly_structure='synthesis', synthesis_method='mesa', mean=100, std_dev=2, hybridisation_steps=10000)
+        params = Params(encoding_method='linear_chain', codeword_length=200, dna_barcode_length=20, assembly_structure='assembly', synthesis_method='assembly', mean=100, std_dev=2, hybridisation_steps=10000, library_name='20bp_Lib.csv')
         assembly = SimulateSynthesis(params=params)
         assembled_data = assembly.simulate(self.nucleobase_code)
         self.assertIsInstance(assembled_data, InSilicoDNA)

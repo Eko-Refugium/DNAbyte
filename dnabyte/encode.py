@@ -25,10 +25,10 @@ class Encode:
 
     def encode(self, data):
         """
-        Encodes the raw data based on the library structure and encoding scheme.
+        Encodes the raw data based on the library structure and encoding method.
 
-        This method encodes the provided raw data using the specified encoding scheme
-        and library structure. The encoding scheme and library structure determine
+        This method encodes the provided raw data using the specified encoding method
+        and library structure. The encoding method and library structure determine
         which encoding function is used.
 
         Parameters:
@@ -39,17 +39,13 @@ class Encode:
 
         Raises:
         TypeError: If data is not an instance of BinaryCode.
-        ValueError: If the encoding scheme or library structure is invalid.
+        ValueError: If the encoding method or library structure is invalid.
         """
         if isinstance(data, BinaryCode):
             try:
-                print(self.encoding_plugins, 'encoding plugins in encode method')
                 encode_class = self.encoding_plugins[self.encoding_method]
-                print(encode_class, 'encode class in encode method')
                 plugin = encode_class(self.params, logger=self.logger)
-                print(plugin, 'plugin in encode method')
                 encoded_data, info = plugin.encode(data)
-                #print(encoded_data, 'encoded data in encode method')
                 obj = NucleobaseCode(encoded_data)
                 obj.file_paths = data.file_paths
                 return obj, info
@@ -62,10 +58,10 @@ class Encode:
     def decode(self, data):
 
         """
-        Decodes the corrected data based on the assembly structure and encoding scheme.
+        Decodes the corrected data based on the assembly structure and encoding method.
 
         This method decodes the provided corrected data using the specified assembly structure
-        and encoding scheme. The assembly structure and encoding scheme determine
+        and encoding method. The assembly structure and encoding method determine
         which decoding function is used.
 
         Parameters:
@@ -76,7 +72,7 @@ class Encode:
 
         Raises:
         TypeError: If data is not an instance of NucleobaseCode.
-        ValueError: If the encoding scheme or library structure is invalid.
+        ValueError: If the encoding method or library structure is invalid.
         """
         if isinstance(data, NucleobaseCode):
             try:
@@ -94,10 +90,10 @@ class Encode:
     def process(self, data):
         
         """
-        Processes the sequenced data based on the assembly structure and encoding scheme.
+        Processes the sequenced data based on the assembly structure and encoding method.
 
         This method processes the provided sequenced data using the specified assembly structure
-        and encoding scheme. The assembly structure and encoding scheme determine
+        and encoding method. The assembly structure and encoding method determine
         which processing function is used.
 
         Parameters:
@@ -108,7 +104,7 @@ class Encode:
 
         Raises:
         TypeError: If data is not an instance of InSilicoDNA.
-        ValueError: If the encoding scheme or library structure is invalid.
+        ValueError: If the encoding method or library structure is invalid.
         """
         if isinstance(data, InSilicoDNA):
             try:
