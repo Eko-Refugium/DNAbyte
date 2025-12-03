@@ -1,14 +1,6 @@
 import random
 from dnabyte.store import SimulateStorage
 
-def attributes(params):
-    if 'years' not in params.__dict__ or params.years is None:
-        years = 100
-    else:
-        years = params.years
-        
-    return {"years": years}
-
 class Permafrost(SimulateStorage):
     # permafrost: 5.5E−6/nt/yr
     # Reference:
@@ -33,3 +25,10 @@ class Permafrost(SimulateStorage):
         info = {"number_of_strand_breaks": strand_breaks}
         return remaining_oligos, info
     
+def attributes(params):
+    if 'years' not in params.__dict__ or params.years is None:
+        years = 100
+    else:
+        years = params.years
+        
+    return {"years": years}

@@ -206,8 +206,8 @@ class InSilicoDNA(Data):
 
         Returns:
         --------
-        list
-            List of m random DNA sequences, each of length n
+        InSilicoDNA
+            An InSilicoDNA object containing m random DNA sequences, each of length n
 
         """
         if m <= 0:
@@ -221,7 +221,9 @@ class InSilicoDNA(Data):
             sequence = ''.join(random.choice('ACGT') for _ in range(n))
             sequences.append(sequence)
 
-        return sequences
+        data = InSilicoDNA(sequences)
+
+        return data
 
 
     def __str__(self):

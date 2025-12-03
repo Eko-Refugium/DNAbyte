@@ -1,18 +1,10 @@
 import random
 from dnabyte.store import SimulateStorage
 
-def attributes(params):
-    if 'years' not in params.__dict__ or params.years is None:
-        years = 100
-    else:
-        years = params.years
-        
-    return {"years": years}
-
 class Roomtemperature(SimulateStorage):
     # Reference::
     # half-life of DNA: 521 years => lambda = 0.00133
-    def simulate(self, assembled_data):
+    def simulate(self, data):
         """
         Simulate storage of DNA sequences at room temperature.
         :param assembled_data: An object of class AssembledData.
@@ -21,8 +13,11 @@ class Roomtemperature(SimulateStorage):
         remaining_oligos = []
         strand_breaks = 0
 
-        for oligo in assembled_data:
-            decay_probability = 1 - (1 - 5E-3)**(len(oligo) * self.years)
+        for oligo in data.data:
+            # half-life of DNA: 521 years => lambda = ln(2)/521 ≈ 0.00133 per year
+            # decay rate per nucleotide per year
+            lambda_decay = 0.00133
+            decay_probability = 1 - (1 - lambda_decay)**(len(oligo) * self.years)
             if random.random() > decay_probability:
                 remaining_oligos.append(oligo)
             else:
@@ -30,3 +25,11 @@ class Roomtemperature(SimulateStorage):
 
         info = {"number_of_strand_breaks": strand_breaks}
         return remaining_oligos, info
+
+def attributes(params):
+    if 'years' not in params.__dict__ or params.years is None:
+        years = 100
+    else:
+        years = params.years
+        
+    return {"years": years}
