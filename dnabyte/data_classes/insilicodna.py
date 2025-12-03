@@ -1,3 +1,4 @@
+import random
 from .base import Data
 
 class InSilicoDNA(Data):
@@ -190,6 +191,38 @@ class InSilicoDNA(Data):
         """
         self._validate_dna_data(self.data)
         return True
+
+
+    def generate_random_sequences(m, n):
+        """
+        Generate m random nucleotide sequences of length n.
+
+        Parameters:
+        -----------
+        m : int
+            Number of sequences to generate
+        n : int
+            Length of each sequence
+
+        Returns:
+        --------
+        list
+            List of m random DNA sequences, each of length n
+
+        """
+        if m <= 0:
+            raise ValueError("Number of sequences (m) must be positive")
+        if n <= 0:
+            raise ValueError("Sequence length (n) must be positive")
+
+        sequences = []
+
+        for _ in range(m):
+            sequence = ''.join(random.choice('ACGT') for _ in range(n))
+            sequences.append(sequence)
+
+        return sequences
+
 
     def __str__(self):
         output = f"Type: {type(self).__name__}\n"

@@ -42,7 +42,7 @@ class SimulateStorage:
             try:
                 if isinstance(self.storage_conditions, str):
                     print(self.storage_plugins, 'storage conditions in simulate storage')
-                    storage_class = self.storage_plugins['storage_' + self.storage_conditions.lower()]
+                    storage_class = self.storage_plugins[self.storage_conditions.lower()]
                     print(storage_class, 'storage class in simulate storage')
                     plugin = storage_class(self)  # Instantiate the plugin class
                     data_sto, info = plugin.simulate(assembled_data.data)
@@ -54,7 +54,7 @@ class SimulateStorage:
                     tempconditions = self.years
                     for i, condition in enumerate(self.storage_conditions):
                         print(self.storage_plugins, 'storage conditions in simulate storage - list')
-                        storage_class = self.storage_plugins['storage_' + condition.lower()]
+                        storage_class = self.storage_plugins[condition.lower()]
                         print(storage_class, 'storage class in simulate storage - list')
                         self.years = tempconditions[i]
                         print(self.years, 'self storage conditions in simulate storage - list')
