@@ -12,15 +12,19 @@ class SimulateStorage:
     """
     
     def __init__(self, params, logger=None):
+        self.logger = logger
+        self.storage_plugins = params.storage_plugins
         
         if not hasattr(params, 'storage_conditions') or params.storage_conditions is None:
             self.storage_conditions = None
         else:
-            self.years = params.years
             self.storage_conditions = params.storage_conditions
-            self.storage_plugins = params.storage_plugins
-            self.logger = logger
-
+            if hasattr(params, 'storage_params'):
+                self.storage_params = params.storage_params
+            elif hasattr(params, 'storage_params_list'):
+                self.storage_params_list = params.storage_params_list
+            else:
+                raise ValueError("Params object must have storage_conditions for storage plugin.")
     def simulate(self, data):
         """
         Simulate storage of DNA sequences in a storage medium.
@@ -37,18 +41,22 @@ class SimulateStorage:
                     info = {"degradation_info": {}, "number_of_strand_breaks": 0}
                     return stored_data, info
                 elif isinstance(self.storage_conditions, str):
+                    data_to_store = data.data
                     storage_class = self.storage_plugins[self.storage_conditions.lower()]
+                    for key, value in self.storage_params.items():
+                        setattr(self, key, value)
                     plugin = storage_class(self)  # Instantiate the plugin class
-                    data_sto, info = plugin.simulate(data)
+                    data_sto, info = plugin.simulate(data_to_store)
                     return InSilicoDNA(data_sto), info
                 
                 elif isinstance(self.storage_conditions, list):
                     combined_data = data.data
-                    combined_info = {}
-                    tempconditions = self.years
                     for i, condition in enumerate(self.storage_conditions):
                         storage_class = self.storage_plugins[condition.lower()]
-                        self.years = tempconditions[i]
+                        for key, value in self.storage_params_list[i].items():
+                            print(key, value)
+                            setattr(self, key, value)
+                        print(self)
                         plugin = storage_class(self)  # Instantiate the plugin class
                         combined_data, info = plugin.simulate(combined_data)
                     return InSilicoDNA(combined_data), info

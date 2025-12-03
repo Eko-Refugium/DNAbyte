@@ -4,6 +4,10 @@ from dnabyte.store import SimulateStorage
 class Roomtemperature(SimulateStorage):
     # Reference::
     # half-life of DNA: 521 years => lambda = 0.00133
+    
+    def __init__(self, params, logger=None):
+        self.years = params.years
+
     def simulate(self, data):
         """
         Simulate storage of DNA sequences at room temperature.
@@ -13,7 +17,7 @@ class Roomtemperature(SimulateStorage):
         remaining_oligos = []
         strand_breaks = 0
 
-        for oligo in data.data:
+        for oligo in data:
             # half-life of DNA: 521 years => lambda = ln(2)/521 ≈ 0.00133 per year
             # decay rate per nucleotide per year
             lambda_decay = 0.00133

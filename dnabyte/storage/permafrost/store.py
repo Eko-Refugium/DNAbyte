@@ -6,6 +6,10 @@ class Permafrost(SimulateStorage):
     # Reference:
     # Allentoft, M. E. et al. The half-life of DNA in bone: measuring decay kinetics in 158 dated fossils. 
     # Proc. R. Soc. B Biol. Sci. 279, 4724–4733 (2012).
+
+    def __init__(self, params, logger=None):
+        self.years = params.years
+
     def simulate(self, assembled_data):
         """
         Simulate storage of DNA sequences in a permafrost medium.

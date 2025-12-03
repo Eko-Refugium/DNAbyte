@@ -6,12 +6,16 @@ from dnabyte.store import SimulateStorage
 class Random(SimulateStorage):
     # Random: 1 cut/century/100 000 nucleotides
     # This class is for testing purposes mainly.
+
+    def __init__(self, params, logger=None):
+        self.years = params.years
+
     def simulate(self, data):
 
         remaining_oligos = []
         total_strand_breaks = 0
         
-        for oligo in data.data:
+        for oligo in data:
             for i in range(0, math.ceil(len(oligo[0])/460)):
                 bases = ['A', 'T', 'C', 'G']
                 randomposition = random.randint(0, len(oligo[0])-1)

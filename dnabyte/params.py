@@ -20,6 +20,8 @@ class Params:
         # Load plugins
         self.binarization_plugins, self.encoding_plugins, self.synthesis_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.synthesis_method, self.storage_conditions, self.sequencing_method)
 
+        print(self.storage_plugins)
+
         # Check binarization parameters
         if self.binarization_method is None:
             pass
@@ -56,11 +58,30 @@ class Params:
         # Check storage parameters
         if self.storage_conditions is None:
             pass
-        elif self.storage_conditions in self.storage_plugins:
+        elif isinstance(self.storage_conditions, list):
+            storage_params_list = []
+            self.years_list = self.years
+            for i, condition in enumerate(self.storage_conditions):
+                dict_of_attributes = {}
+                if condition in self.storage_plugins:
+                    storage = importlib.import_module(f"dnabyte.storage.{condition}.store")
+                    setattr(self, 'years', self.years_list[i])
+                    attributes_store = storage.attributes(self)
+                    delattr(self, 'years')
+                    for keys, value in attributes_store.items():
+                        dict_of_attributes[keys] = value
+                    storage_params_list.append(dict_of_attributes)
+                else:
+                    raise ValueError(f"Invalid storage condition: {condition}")
+            self.storage_params_list = storage_params_list
+        elif isinstance(self.storage_conditions, str) and self.storage_conditions in self.storage_plugins:
+            
+            dict_of_attributes = {}
             storage = importlib.import_module(f"dnabyte.storage.{self.storage_conditions}.store")
             attributes_store = storage.attributes(self)
             for keys, value in attributes_store.items():
-                setattr(self, keys, value)
+                dict_of_attributes[keys] = value
+            self.storage_params = dict_of_attributes
         else:
             raise ValueError(f"Invalid storage conditions: {self.storage_conditions}")
         

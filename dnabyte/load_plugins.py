@@ -115,7 +115,7 @@ def load_plugins(binarization_method, encoding_method, synthesis_method, storage
                                 break
                 elif isinstance(storage_conditions, list):
                     for condition in storage_conditions:
-                        if 'storage_' + condition.lower() == filename.lower():
+                        if condition.lower() == filename.lower():
                             # Load the encode module
                             storage_module = importlib.import_module(f'dnabyte.storage.{filename}.store')
                             # Find the class definition in the module
