@@ -23,21 +23,41 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
         sequencing_plugins = {}  # Define the plugins dictionary
         binarization_plugins = {}  # Define the plugins dictionary
 
+        # Normalize method names to lowercase
+        binarization_method = binarization_method.lower() if binarization_method != None else None
         encoding_method = encoding_method.lower() if encoding_method != None else None
         if isinstance(synthesis_method, str):
             synthesis_method = synthesis_method.lower() if synthesis_method != None else None
-
         if isinstance(storage_conditions, str):
             storage_conditions = storage_conditions.lower() if storage_conditions != None else None
         elif isinstance(storage_conditions, list):
             storage_conditions = [condition.lower() for condition in storage_conditions]
         sequencing_method = sequencing_method.lower() if sequencing_method != None else None
-        binarization_method = binarization_method.lower() if binarization_method != None else None
+        
+        # Load encoding plugin folder names
         path_encode = plugin_folder + '/encoding'
 
         folders_encode = [name for name in os.listdir(path_encode) 
             if os.path.isdir(os.path.join(path_encode, name))]
         
+        # Load binarization plugins
+        if binarization_method != None:
+            try:
+                for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/binarization') if f.endswith('.py')]:
+                    #print(filename)
+                    module_name = filename[:-3] 
+                    if binarization_method.lower() == module_name.lower():
+                        
+                        # Load the encode module
+                        binarization_module = importlib.import_module('dnabyte.binarization.' + f'{module_name}')
+                        # Find the class definition in the module
+                        for name, obj in inspect.getmembers(binarization_module, inspect.isclass):
+                            if issubclass(obj, Binarize) and obj is not Binarize:
+                            # Add the class to the plugins dictionary
+                                binarization_plugins[module_name] = obj
+                                break
+            except Exception as e:
+                print(f"Error loading binarization plugin '{module_name}': {e}")
 
         # Load encoding plugins
         if encoding_method != None:
@@ -60,29 +80,8 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                                 break
             except Exception as e:
                 print(f"Error loading encoding plugin '{filename}': {e}")
-        # else:
-        #     raise ValueError("No encoding method specified.")
 
-        if sequencing_method != None:
-            try:
-                for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/sequencing') if f.endswith('.py')]:
-                    # if filename.startswith('encode_') and filename.endswith('.py'):
-                    module_name = filename[:-3] 
-                    if 'sequencing_' + sequencing_method.lower() == module_name.lower():
-                        # Load the encode module
-                        sequencing_module = importlib.import_module('dnabyte.sequencing.sequencing_' + f'{module_name}')
-
-                        # Find the class definition in the module
-                        for name, obj in inspect.getmembers(sequencing_module, inspect.isclass):
-                            if issubclass(obj, SimulateSequencing) and obj is not SimulateSequencing:
-                                # Add the class to the plugins dictionary
-                                sequencing_plugins[module_name] = obj
-                                break
-            except Exception as e:
-                print(f"Error loading sequencing plugin '{module_name}': {e}")
-        else:
-            print("No sequencing method specified, skipping sequencing plugin loading.")
-
+        # Load synthesis plugins
         if synthesis_method != None:
             try:
                 for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/synthesis') if f.endswith('.py')]:
@@ -99,11 +98,8 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                                 break
             except Exception as e:
                 print(f"Error loading synthesis plugin '{module_name}': {e}")
-        else:
-            print("No synthesis method specified, skipping synthesis plugin loading.")
 
-        print('STORAGE CONDITIONS:', storage_conditions)
-
+        # Load storage plugins
         if storage_conditions != None:
             try:   
                 for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/storage') if f.endswith('.py')]:
@@ -137,31 +133,24 @@ def load_plugins(encoding_method, synthesis_method, storage_conditions, sequenci
                                         break
             except Exception as e:
                 print(f"Error loading storage plugin '{module_name}': {e}")
-        else:
-            print("No storage conditions specified, skipping storage plugin loading.")
 
-        print('BINARIZATION METHOD:', binarization_method)
-
-        if binarization_method != None:
+        # Load sequencing plugins
+        if sequencing_method != None:
             try:
-                for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/binarization') if f.endswith('.py')]:
-                    #print(filename)
+                for filename in [f for f in os.listdir(os.path.dirname(__file__) + '/sequencing') if f.endswith('.py')]:
+                    # if filename.startswith('encode_') and filename.endswith('.py'):
                     module_name = filename[:-3] 
-                    if binarization_method.lower() == module_name.lower():
-                        
+                    if 'sequencing_' + sequencing_method.lower() == module_name.lower():
                         # Load the encode module
-                        binarization_module = importlib.import_module('dnabyte.binarization.' + f'{module_name}')
+                        sequencing_module = importlib.import_module('dnabyte.sequencing.sequencing_' + f'{module_name}')
+
                         # Find the class definition in the module
-                        for name, obj in inspect.getmembers(binarization_module, inspect.isclass):
-                            if issubclass(obj, Binarize) and obj is not Binarize:
-                            # Add the class to the plugins dictionary
-                                binarization_plugins[module_name] = obj
+                        for name, obj in inspect.getmembers(sequencing_module, inspect.isclass):
+                            if issubclass(obj, SimulateSequencing) and obj is not SimulateSequencing:
+                                # Add the class to the plugins dictionary
+                                sequencing_plugins[module_name] = obj
                                 break
             except Exception as e:
-                print(f"Error loading binarization plugin '{module_name}': {e}")
-        # else:
-        #     raise ValueError("No binarization method specified.")
+                print(f"Error loading sequencing plugin '{module_name}': {e}")
 
-
-        return encoding_plugins, synthesis_plugins, storage_plugins, sequencing_plugins, binarization_plugins
-
+        return binarization_plugins, encoding_plugins, synthesis_plugins, storage_plugins, sequencing_plugins
