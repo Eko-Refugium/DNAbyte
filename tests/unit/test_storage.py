@@ -4,8 +4,8 @@ from dnabyte.store import SimulateStorage
 from dnabyte.params import Params
 from dnabyte import InSilicoDNA
 
-class TestBiogene(unittest.TestCase):
-    """ Test cases for the Biogene storage simulation. """
+class TestStorage(unittest.TestCase):
+    """ Test cases for the storage simulation methods. """
 
     def setUp(self):
         self.data = InSilicoDNA.generate_random_sequences(m=100, n=10000)

@@ -32,12 +32,8 @@ class MESA(SimulateSynthesis):
         with open(file_path, 'r') as f:
             synth_dict = json.load(f)
 
-
         # Subset the dictionary
         method_dict = {item['id']: item for item in synth_dict if item.get('id') == method_id}       
-
-        # print("Method dict:")
-        # print(method_dict)
 
         # get the error parameters for the designated method
         err_rate_syn = method_dict[method_id]['err_data']
@@ -95,4 +91,6 @@ def attributes(params):
         else:
             mesa_synthesis_id = params.mesa_synthesis_id
 
-    return {"mean": mean, "std_dev": std_dev, "mesa_synthesis_id": mesa_synthesis_id}
+    return {"mean": mean, 
+            "std_dev": std_dev, 
+            "mesa_synthesis_id": mesa_synthesis_id}
