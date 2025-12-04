@@ -150,7 +150,7 @@ def generate_positional_library(lengthmessage, amountofmessages, lengthgeneric, 
         else:
             positionset.append(Complimentmap(newposition))
 
-    file=open(f'./app/static/libraries/lib_positional_{lengthmessage}({amountofmessages})m_{lengthgeneric}({amoauntofgeneric})g_{lengthposition}({amountofposition})p.csv', 'w')
+    file=open(f'./tests/testlibraries/lib_positional_{lengthmessage}({amountofmessages})m_{lengthgeneric}({amoauntofgeneric})g_{lengthposition}({amountofposition})p.csv', 'w')
     file.write('Messages\n')
     for i in range(len(messageset)):
         file.write(messageset[i]+'\n')

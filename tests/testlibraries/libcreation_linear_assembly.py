@@ -111,7 +111,7 @@ def simplecration(oligosize,motiveamounts):
 
         finalset= [''.join(p) for p in itertools.product(leftlist, rightlist)]
 
-        with open(f'./app/static/libraries/lib_simple_{oligosize}bp_{amountofoligos}.csv', 'w') as file:
+        with open(f'./tests/testlibraries/lib_simple_{oligosize}bp_{amountofoligos}.csv', 'w') as file:
             for i in range(len(finalset)):
                 file.write(f"{finalset[i]}\n")
 

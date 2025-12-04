@@ -101,7 +101,7 @@ class Simulation():
                     start_time = time.time()
 
                     try:
-                        #lib = Library(structure=params.assembly_structure, filename='./app/static/libraries/' + params.library_name)
+                        #lib = Library(structure=params.assembly_structure, filename='./tests/testlibraries/' + params.library_name)
                         enc = Encode(params, logger=self.simlogger)
                         data_enc, info = enc.encode(data_raw)
 
