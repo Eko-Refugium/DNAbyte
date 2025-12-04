@@ -19,16 +19,15 @@ class MESA(SimulateSequencing):
         :param data: A list of DNA sequences.
         :return: A list of sequenced DNA sequences.
         """
+        # TODO: the sequencing simulator should not be doing coverage simulation
         # Create copies of sequences based on normal distribution (coverage)
-        sequences_multiples = [seq for seq in data.data for _ in range(max(1, int(np.random.normal(self.params.mean, self.params.std_dev))))]
+        #sequences_multiples = [seq for seq in data for _ in range(max(1, int(np.random.normal(self.params.mean, self.params.std_dev))))]
         
         # Call the sequencing simulation function
-        modified_sequences, error_dicts = self.sequencing_simulation(sequences_multiples, method_id=self.params.mesa_sequencing_id)
-        
-        average_copy_number = len(modified_sequences) / len(data.data)
-        
+        modified_sequences, error_dicts = self.sequencing_simulation(data, method_id=self.params.mesa_sequencing_id)
+                
         info = {
-            "average_copy_number": average_copy_number,
+            "average_copy_number": 1.0,  # No coverage simulation in sequencing
             "number_of_sequencing_errors": sum([len(d) for d in error_dicts]),
             "error_dict": error_dicts
         }
@@ -104,12 +103,14 @@ class MESA(SimulateSequencing):
         return sequences_modified, error_dict
 
 def attributes(params):
-    if 'sequencing_method' not in params.__dict__ or params.sequencing_method is None:
-        sequencing_method = 38
+    # required
+    if 'mesa_sequencing_id' not in params.__dict__ or params.mesa_sequencing_id is None:
+        # set default sequencing method id
+        mesa_sequencing_id = 38
     else:
-        if params.sequencing_method not in [41, 40, 37, 36, 39, 38, 35,'iid', None]:
-            raise ValueError("Invalid sequencing method")
+        if params.mesa_sequencing_id not in [41, 40, 37, 36, 39, 38, 35]:
+            raise ValueError("Invalid sequencing method id")
         else:
-            sequencing_method = params.sequencing_method
+            mesa_sequencing_id = params.mesa_sequencing_id
         
-    return {"sequencing_method": sequencing_method}
+    return {"mesa_sequencing_id": mesa_sequencing_id}

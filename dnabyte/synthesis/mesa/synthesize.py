@@ -74,23 +74,29 @@ class MESA(SimulateSynthesis):
 def attributes(params):
 
     if 'mean' not in params.__dict__ or params.mean is None:
+        # set default mean
         mean = 10
     else:
         mean = params.mean
 
     if 'std_dev' not in params.__dict__ or params.std_dev is None:
-        std_dev = 0
+        # set default std_dev
+        std_dev = 2
     else:
         std_dev = params.std_dev
 
+    
     if 'mesa_synthesis_id' not in params.__dict__ or params.mesa_synthesis_id is None:
+        # set default synthesis method id
         mesa_synthesis_id = 68
     else:
-        if params.mesa_synthesis_id not in [3, 4, 5, 6, 7, 68, 69, 70, 71, None]:
+        if params.mesa_synthesis_id not in [3, 4, 5, 6, 7, 68, 69, 70, 71]:
             raise ValueError("Invalid Synthesis ID Error")
         else:
             mesa_synthesis_id = params.mesa_synthesis_id
 
-    return {"mean": mean, 
-            "std_dev": std_dev, 
-            "mesa_synthesis_id": mesa_synthesis_id}
+    return {
+        "mean": mean, 
+        "std_dev": std_dev, 
+        "mesa_synthesis_id": mesa_synthesis_id
+    }
