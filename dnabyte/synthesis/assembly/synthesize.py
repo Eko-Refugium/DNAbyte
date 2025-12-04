@@ -28,7 +28,7 @@ class Assembly(SimulateSynthesis):
             synthezised, info = synthesis_module.assembly(data, self.params)
 
         except KeyError:
-            raise ValueError(f"Synthesis method '{self.synthesis_method}' not recognized.")
+            raise ValueError(f"Synthesis method '{self.params.encoding_method}' not recognized.")
         
         return synthezised, info
 
