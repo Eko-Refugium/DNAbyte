@@ -12,13 +12,13 @@ from dnabyte.sequence import SimulateSequencing
 from dnabyte.synthesize import SimulateSynthesis
 
 
-def load_plugins(binarization_method, encoding_method, synthesis_method, storage_conditions, sequencing_method):
+def load_plugins(binarization_method, encoding_method, storage_conditions, sequencing_method):
     """
     Load plugins from the specified folder and return a dictionary of plugin classes.
     """
     plugin_folder = os.path.dirname(__file__)
     encoding_plugins = {}  # Define the plugins dictionary
-    synthesis_plugins = {}  # Define the plugins dictionary
+    # synthesis_plugins = {}  # Define the plugins dictionary
     storage_plugins = {}  # Define the plugins dictionary
     sequencing_plugins = {}  # Define the plugins dictionary
     binarization_plugins = {}  # Define the plugins dictionary
@@ -26,8 +26,8 @@ def load_plugins(binarization_method, encoding_method, synthesis_method, storage
     # Normalize method names to lowercase
     binarization_method = binarization_method.lower() if binarization_method != None else None
     encoding_method = encoding_method.lower() if encoding_method != None else None
-    if isinstance(synthesis_method, str):
-        synthesis_method = synthesis_method.lower() if synthesis_method != None else None
+    # if isinstance(synthesis_method, str):
+    #     synthesis_method = synthesis_method.lower() if synthesis_method != None else None
     if isinstance(storage_conditions, str):
         storage_conditions = storage_conditions.lower() if storage_conditions != None else None
     elif isinstance(storage_conditions, list):
@@ -76,24 +76,24 @@ def load_plugins(binarization_method, encoding_method, synthesis_method, storage
 
 
 
-    # Load synthesis plugins
-    if synthesis_method != None:
-        try:
-            folders_synthesize = [name for name in os.listdir(plugin_folder + '/synthesis') 
-                if os.path.isdir(os.path.join(plugin_folder + '/synthesis', name))]
+    # # Load synthesis plugins
+    # if synthesis_method != None:
+    #     try:
+    #         folders_synthesize = [name for name in os.listdir(plugin_folder + '/synthesis') 
+    #             if os.path.isdir(os.path.join(plugin_folder + '/synthesis', name))]
             
-            for filename in folders_synthesize:
-                if synthesis_method.lower() == filename.lower():
-                    # Load the encode module
-                    synthesis_module = importlib.import_module(f'dnabyte.synthesis.{filename}.synthesize')
-                    # Find the class definition in the module
-                    for name, obj in inspect.getmembers(synthesis_module, inspect.isclass):
-                        if issubclass(obj, SimulateSynthesis) and obj is not SimulateSynthesis:
-                            # Add the class to the plugins dictionary
-                            synthesis_plugins[filename] = obj
-                            break
-        except Exception as e:
-            print(f"Error loading synthesis plugin '{filename}': {e}")
+    #         for filename in folders_synthesize:
+    #             if synthesis_method.lower() == filename.lower():
+    #                 # Load the encode module
+    #                 synthesis_module = importlib.import_module(f'dnabyte.synthesis.{filename}.synthesize')
+    #                 # Find the class definition in the module
+    #                 for name, obj in inspect.getmembers(synthesis_module, inspect.isclass):
+    #                     if issubclass(obj, SimulateSynthesis) and obj is not SimulateSynthesis:
+    #                         # Add the class to the plugins dictionary
+    #                         synthesis_plugins[filename] = obj
+    #                         break
+    #     except Exception as e:
+    #         print(f"Error loading synthesis plugin '{filename}': {e}")
 
     # Load storage plugins
     if storage_conditions != None:
@@ -147,4 +147,38 @@ def load_plugins(binarization_method, encoding_method, synthesis_method, storage
         except Exception as e:
             print(f"Error loading sequencing plugin '{filename}': {e}")
 
-    return binarization_plugins, encoding_plugins, synthesis_plugins, storage_plugins, sequencing_plugins
+    return binarization_plugins, encoding_plugins, storage_plugins, sequencing_plugins
+
+def load_synthesis_plugins(synthesis_method):
+    """
+    Load synthesis plugins from the specified folder and return a dictionary of plugin classes.
+    """
+    plugin_folder = os.path.dirname(__file__)
+    synthesis_plugins = {}  # Define the plugins dictionary
+    print(synthesis_method)
+    if isinstance(synthesis_method, str):
+        synthesis_method = synthesis_method.lower() if synthesis_method != None else None
+    # Normalize method names to lowercase
+    if isinstance(synthesis_method, str):
+        synthesis_method = synthesis_method.lower() if synthesis_method != None else None
+
+    # Load synthesis plugins
+    if synthesis_method != None:
+        try:
+            folders_synthesize = [name for name in os.listdir(plugin_folder + '/synthesis') 
+                if os.path.isdir(os.path.join(plugin_folder + '/synthesis', name))]
+            
+            for filename in folders_synthesize:
+                if synthesis_method.lower() == filename.lower():
+                    # Load the encode module
+                    synthesis_module = importlib.import_module(f'dnabyte.synthesis.{filename}.synthesize')
+                    # Find the class definition in the module
+                    for name, obj in inspect.getmembers(synthesis_module, inspect.isclass):
+                        if issubclass(obj, SimulateSynthesis) and obj is not SimulateSynthesis:
+                            # Add the class to the plugins dictionary
+                            synthesis_plugins[filename] = obj
+                            break
+        except Exception as e:
+            print(f"Error loading synthesis plugin '{filename}': {e}")
+
+    return synthesis_plugins

@@ -1,5 +1,5 @@
 import importlib
-from dnabyte.load_plugins import load_plugins
+from dnabyte.load_plugins import load_plugins, load_synthesis_plugins
 
 class Params:
 
@@ -18,9 +18,14 @@ class Params:
         self.debug = debug
 
         # Load plugins
-        self.binarization_plugins, self.encoding_plugins, self.synthesis_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.synthesis_method, self.storage_conditions, self.sequencing_method)
-
+        self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method)
+        
+        print(self.encoding_plugins)
         print(self.storage_plugins)
+        print(self.sequencing_plugins)
+        print(self.binarization_plugins)
+
+        print(self)
 
         # Check binarization parameters
         if self.binarization_method is None:
@@ -32,7 +37,7 @@ class Params:
                 setattr(self, keys, value)
         else:
             raise ValueError(f"Invalid binarization method: {self.binarization_method}")
-        
+        print(self)
         # Check encoding parameters
         if self.encoding_method is None:
             pass
@@ -43,7 +48,9 @@ class Params:
                 setattr(self, keys, value)
         else:
             raise ValueError(f"Invalid encoding method: {self.encoding_method}")
-        
+
+        self.synthesis_plugins = load_synthesis_plugins(self.synthesis_method)
+
         # Check synthesis parameters
         if self.synthesis_method is None:
             pass
@@ -65,7 +72,10 @@ class Params:
                 dict_of_attributes = {}
                 if condition in self.storage_plugins:
                     storage = importlib.import_module(f"dnabyte.storage.{condition}.store")
-                    setattr(self, 'years', self.years_list[i])
+                    if i < len(self.years_list):
+                        setattr(self, 'years', self.years_list[i])
+                    else:
+                        setattr(self, 'years', None)
                     attributes_store = storage.attributes(self)
                     delattr(self, 'years')
                     for keys, value in attributes_store.items():
