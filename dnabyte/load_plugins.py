@@ -10,17 +10,18 @@ from dnabyte.encode import Encode
 from dnabyte.store import SimulateStorage
 from dnabyte.sequence import SimulateSequencing
 from dnabyte.synthesize import SimulateSynthesis
+from dnabyte.misc_err import SimulateMiscErrors
 
 
-def load_plugins(binarization_method, encoding_method, storage_conditions, sequencing_method):
+def load_plugins(binarization_method, encoding_method, storage_conditions, sequencing_method, error_methods):
     """
     Load plugins from the specified folder and return a dictionary of plugin classes.
     """
     plugin_folder = os.path.dirname(__file__)
     encoding_plugins = {}  # Define the plugins dictionary
-    # synthesis_plugins = {}  # Define the plugins dictionary
     storage_plugins = {}  # Define the plugins dictionary
     sequencing_plugins = {}  # Define the plugins dictionary
+    error_plugins = {}  # Define the plugins dictionary
     binarization_plugins = {}  # Define the plugins dictionary
 
     # Normalize method names to lowercase
@@ -74,27 +75,6 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         except Exception as e:
             print(f"Error loading encoding plugin '{filename}': {e}")
 
-
-
-    # # Load synthesis plugins
-    # if synthesis_method != None:
-    #     try:
-    #         folders_synthesize = [name for name in os.listdir(plugin_folder + '/synthesis') 
-    #             if os.path.isdir(os.path.join(plugin_folder + '/synthesis', name))]
-            
-    #         for filename in folders_synthesize:
-    #             if synthesis_method.lower() == filename.lower():
-    #                 # Load the encode module
-    #                 synthesis_module = importlib.import_module(f'dnabyte.synthesis.{filename}.synthesize')
-    #                 # Find the class definition in the module
-    #                 for name, obj in inspect.getmembers(synthesis_module, inspect.isclass):
-    #                     if issubclass(obj, SimulateSynthesis) and obj is not SimulateSynthesis:
-    #                         # Add the class to the plugins dictionary
-    #                         synthesis_plugins[filename] = obj
-    #                         break
-    #     except Exception as e:
-    #         print(f"Error loading synthesis plugin '{filename}': {e}")
-
     # Load storage plugins
     if storage_conditions != None:
         try:   
@@ -127,6 +107,42 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         except Exception as e:
             print(f"Error loading storage plugin '{filename}': {e}")
 
+    # Load error plugins
+    print(error_methods, type(error_methods), 'error methods in load plugins')
+    if error_methods != None:
+        try:   
+            folders_error = [name for name in os.listdir(plugin_folder + '/misc_errors') 
+                if os.path.isdir(os.path.join(plugin_folder + '/misc_errors', name))]
+            print(folders_error, 'folders error in load plugins')
+            for filename in folders_error:
+
+                if isinstance(error_methods, str):
+                    print(error_methods.lower(), filename.lower(), 'comparing error methods and filename')
+                    if error_methods.lower() == filename.lower():
+                        # Load the encode module
+                        error_module = importlib.import_module(f'dnabyte.misc_errors.{filename}.err')
+                        # Find the class definition in the module
+                        for name, obj in inspect.getmembers(error_module, inspect.isclass):
+                            if issubclass(obj, SimulateMiscErrors) and obj is not SimulateMiscErrors:
+                                # Add the class to the plugins dictionary
+                                error_plugins[filename] = obj
+                                break
+                elif isinstance(error_methods, list):
+                    for condition in error_methods:
+                        if condition.lower() == filename.lower():
+                            # Load the encode module
+                            error_module = importlib.import_module(f'dnabyte.misc_errors.{filename}.err')
+                            # Find the class definition in the module
+                            for name, obj in inspect.getmembers(error_module, inspect.isclass):
+                                if issubclass(obj, SimulateMiscErrors) and obj is not SimulateMiscErrors:
+                                    # Add the class to the plugins dictionary
+                                    error_plugins[filename] = obj
+                                    break
+        except Exception as e:
+            print(f"Error loading storage plugin '{filename}': {e}")
+
+    print(error_plugins, 'error plugins in load plugins')
+
     # Load sequencing plugins
     if sequencing_method != None:
         try:
@@ -147,7 +163,7 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         except Exception as e:
             print(f"Error loading sequencing plugin '{filename}': {e}")
 
-    return binarization_plugins, encoding_plugins, storage_plugins, sequencing_plugins
+    return binarization_plugins, encoding_plugins, storage_plugins, sequencing_plugins, error_plugins
 
 def load_synthesis_plugins(synthesis_method):
     """

@@ -28,13 +28,20 @@ class SimulateSequencing:
         if isinstance(data, InSilicoDNA):
         # Dynamically find the appropriate class based on sequencing_method
             try:
-                sequencing_class = self.sequencing_plugins[self.sequencing_method]
-                plugin = sequencing_class(self.params, logger=self.logger)
-                data, info = plugin.simulate(data.data)
-                obj = InSilicoDNA(data=data)
-                if hasattr(data, 'file_paths'):
-                    obj.file_paths = data.file_paths
-                return obj, info                
+                if self.sequencing_method == None:
+                    obj = InSilicoDNA(data=data.data)
+                    if hasattr(data, 'file_paths'):
+                        obj.file_paths = data.file_paths
+                    return obj, {}
+                else:
+                    sequencing_class = self.sequencing_plugins[self.sequencing_method]
+                    plugin = sequencing_class(self.params, logger=self.logger)
+                    data, info = plugin.simulate(data.data)
+                    print(data)
+                    obj = InSilicoDNA(data=data)
+                    if hasattr(data, 'file_paths'):
+                        obj.file_paths = data.file_paths
+                    return obj, info                
             except KeyError:
                 raise ValueError(f"Sequencing method '{self.sequencing_method}' not recognized.")
         else:

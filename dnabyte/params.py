@@ -11,6 +11,7 @@ class Params:
         self.storage_conditions = None
         self.sequencing_method = None
         self.binarization_method = None
+        self.error_methods = None
         
         # Set parameters from kwargs
         for key, value in kwargs.items():
@@ -18,7 +19,7 @@ class Params:
         self.debug = debug
 
         # Load plugins
-        self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method)
+        self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins, self.error_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method, self.error_methods)
 
         # Check binarization parameters
         if self.binarization_method is None:
@@ -61,6 +62,8 @@ class Params:
         elif isinstance(self.storage_conditions, list):
             storage_params_list = []
             self.years_list = self.years
+            if isinstance(self.years, int):
+                self.years_list = [self.years] * len(self.storage_conditions)
             for i, condition in enumerate(self.storage_conditions):
                 dict_of_attributes = {}
                 if condition in self.storage_plugins:
@@ -88,6 +91,43 @@ class Params:
         else:
             raise ValueError(f"Invalid storage conditions: {self.storage_conditions}")
         
+        print(self.error_plugins, 'error plugins in params')
+        
+        # Check error parameters
+        if self.error_methods is None:
+            pass
+        elif isinstance(self.error_methods, list):
+            error_params_list = {}
+            for i, condition in enumerate(self.error_methods):
+                dict_of_attributes = {}
+                if condition in self.error_plugins:
+                    errs = importlib.import_module(f"dnabyte.misc_errors.{condition}.err")
+                    if not hasattr(self, 'error_params_temp'):
+                        pass
+                    elif isinstance(self.error_params_temp, dict):
+                        if condition in self.error_params_temp:
+                            for key, value in self.error_params_temp[condition].items():
+                                setattr(self, key, value)
+                        delattr(self, 'error_params_temp')
+                    attributes_store = errs.attributes(self)
+                    for keys, value in attributes_store.items():
+                        dict_of_attributes[keys] = value
+                    error_params_list.update({condition: dict_of_attributes})
+                else:
+                    raise ValueError(f"Invalid storage condition: {condition}")
+            setattr(self, 'error_params_list', error_params_list)
+            delattr(self, 'error_params')
+            print(self.error_params_list, 'error params list in params')
+        elif isinstance(self.error_methods, str) and self.error_methods in self.error_plugins:
+            
+            dict_of_attributes = {}
+            errs = importlib.import_module(f"dnabyte.misc_errors.{self.error_methods}.err")
+            attributes_err = errs.attributes(self)
+            for keys, value in attributes_err.items():
+                dict_of_attributes[keys] = value
+            setattr(self, 'error_params', dict_of_attributes)
+        else:
+            raise ValueError(f"Invalid error methods: {self.error_methods}")
         # Check sequencing parameters
         if self.sequencing_method is None:
             pass

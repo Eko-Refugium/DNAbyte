@@ -12,6 +12,7 @@ from dnabyte.synthesize import SimulateSynthesis
 from dnabyte.store import SimulateStorage
 from dnabyte.sequence import SimulateSequencing
 from dnabyte.binarize import Binarize
+from dnabyte.misc_err import SimulateMiscErrors
 from dnabyte.params import Params
 
 class TestBase(unittest.TestCase):
@@ -127,16 +128,36 @@ class TestBase(unittest.TestCase):
                 self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
                 self.testlogger.info(data_sto.__str__())
             except Exception as e:
-                self.testlogger.info('STATUS: SUCCESS')
+                self.testlogger.info('STATUS: ERROR')
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error(traceback.format_exc())
                 self.fail(f"Storage simulation failed: %str(e)")
 
 #######################################################################################################################
-##### STEP 5: SIMULATE SEQUENCING #####################################################################################
+##### STEP 5: SIMULATE STORAGE ########################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP05: SIMULATE SEQUENCING')
+            self.testlogger.info('STEP05: SIMULATE MISC ERRORS')
+            start_time = time.time()
+            try:
+                sto = SimulateMiscErrors(self.params, logger=self.testlogger)
+                data_sto, info = sto.simulate(data_syn)
+                self.testlogger.info('STATUS: SUCCESS')
+                self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
+                self.testlogger.info(info)
+                self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
+                self.testlogger.info(data_sto.__str__())
+            except Exception as e:
+                self.testlogger.info('STATUS: ERROR')
+                self.testlogger.error('TYPE: %s', str(e))
+                self.testlogger.error(traceback.format_exc())
+                self.fail(f"Error simulation failed: %str(e)")
+
+#######################################################################################################################
+##### STEP 6: SIMULATE SEQUENCING #####################################################################################
+#######################################################################################################################
+
+            self.testlogger.info('STEP06: SIMULATE SEQUENCING')
             start_time = time.time()
             try:
                 seq = SimulateSequencing(self.params, logger=self.testlogger)
@@ -155,10 +176,10 @@ class TestBase(unittest.TestCase):
                 self.fail(f"Sequencing simulation failed: %s")
 
 #######################################################################################################################
-##### STEP 6: PROCESSING ##############################################################################################
+##### STEP 7: PROCESSING ##############################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP06: PROCESS DATA')
+            self.testlogger.info('STEP07: PROCESS DATA')
             start_time = time.time()
             try:
                 data_cor, info = enc.process(data_seq)
@@ -176,10 +197,10 @@ class TestBase(unittest.TestCase):
                 self.fail(f"Data processing failed: %s")
 
 #######################################################################################################################
-##### STEP 7: DECODING THE DATA #######################################################################################
+##### STEP 8: DECODING THE DATA #######################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP07: DECODE DATA')
+            self.testlogger.info('STEP08: DECODE DATA')
             start_time = time.time()
 
             try:
@@ -205,10 +226,10 @@ class TestBase(unittest.TestCase):
                 self.fail(f"Decoding failed: %s")
 
 #######################################################################################################################
-##### STEP 8: COMPARE DATA ############################################################################################
+##### STEP 9: COMPARE DATA ############################################################################################
 #######################################################################################################################
      
-            self.testlogger.info('STEP08: COMPARE DATA')
+            self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
 
             try:
@@ -233,10 +254,10 @@ class TestBase(unittest.TestCase):
 
 
 #######################################################################################################################
-##### STEP 9: RECREATE ORIGINAL DATA ##################################################################################
+##### STEP 10: RECREATE ORIGINAL DATA ##################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP09: RESTORE DATA')
+            self.testlogger.info('STEP10: RESTORE DATA')
             start_time = time.time()
 
             try:
