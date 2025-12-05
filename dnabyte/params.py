@@ -19,13 +19,6 @@ class Params:
 
         # Load plugins
         self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method)
-        
-        print(self.encoding_plugins)
-        print(self.storage_plugins)
-        print(self.sequencing_plugins)
-        print(self.binarization_plugins)
-
-        print(self)
 
         # Check binarization parameters
         if self.binarization_method is None:

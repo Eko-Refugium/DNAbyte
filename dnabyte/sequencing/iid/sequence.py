@@ -15,8 +15,7 @@ class IID(SimulateSequencing):
         :param data: A list of DNA sequences.
         :return: A list of sequenced DNA sequences.
         """
-
-        sequenceserror = data.data
+        sequenceserror = list(data)  # Create a copy of the data
         error_counter = 0
         for i in range(len(sequenceserror)):
             for j in range(len(sequenceserror[i])):
@@ -29,7 +28,7 @@ class IID(SimulateSequencing):
                         sequenceserror[i][j] = (data.data[i][j][:k] + new_base + data.data[i][j][k + 1:])      
                
         info = {}
-        info['eror_counter'] = error_counter
+        info['error_counter'] = error_counter
 
         return sequenceserror, info
     

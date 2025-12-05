@@ -1,5 +1,5 @@
 import random
-from dnabyte.oligo import Oligo, complement
+from .oligo import Oligo, complement
 import numpy as np
 
 class OligoPool:

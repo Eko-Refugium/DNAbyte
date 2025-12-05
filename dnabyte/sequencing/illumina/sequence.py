@@ -28,7 +28,7 @@ class Illumina(SimulateSequencing):
         sequenced_data = []
         error_counter = 0
 
-        for sequence in data.data:
+        for sequence in data:
             # Simulate substitutions
             modified_sequence, counter = self.simulate_substitutions(sequence, substitution_matrix_illumina, k=0.01)
             error_counter += counter
@@ -43,7 +43,13 @@ class Illumina(SimulateSequencing):
 
             sequenced_data.append(modified_sequence)
 
-        return sequenced_data, error_counter
+        info = {
+            "average_copy_number": 1.0,
+            "number_of_sequencing_errors": error_counter,
+            "error_dict": {}
+        }
+
+        return sequenced_data, info
 
     def simulate_substitutions(self, sequence, substitution_matrix_illumina, k=0.01):
         new_sequence = list(sequence)
@@ -82,7 +88,7 @@ class Illumina(SimulateSequencing):
         return ''.join(new_sequence), counter
     
     # Positional error rate function
-    def positional_error_rate(p, L, k=0.01):
+    def positional_error_rate(self, p, L, k=0.01):
         """
         This function enables to model the error rate as a function of the position in the read.
         """    

@@ -1,5 +1,6 @@
 
 import importlib
+
 from dnabyte.synthesize import SimulateSynthesis
 from .oligo import Oligo, complement, translate_nested_list, translate_nested_list_poly,back_translate_nested_list_poly_binom_real, back_translate_nested_list_chain, back_translate_nested_list_poly, back_translate_nested_list, back_translate_nested_list_poly_binom,back_translate_nested_list_real,back_translate_nested_list_chain_real
 from .oligopool import OligoPool
@@ -27,7 +28,7 @@ class Assembly(SimulateSynthesis):
             synthezised, info = synthesis_module.assembly(data, self.params)
 
         except KeyError:
-            raise ValueError(f"Synthesis method '{self.synthesis_method}' not recognized.")
+            raise ValueError(f"Synthesis method '{self.params.encoding_method}' not recognized.")
         
         return synthezised, info
 

@@ -13,8 +13,12 @@ class TestMESA(unittest.TestCase):
         for mesa_id in test_ids:
             with self.subTest(mesa_synthesis_id=mesa_id):
                 # Initialize MESA synthesis simulator with current ID
-                params = Params(assembly_structure='synthesis', synthesis_method='mesa', 
-                              mesa_synthesis_id=mesa_id, mean=100, std_dev=5)
+                params = Params(
+                    assembly_structure='synthesis', 
+                    synthesis_method='mesa', 
+                    mesa_synthesis_id=mesa_id, 
+                    mean=100, 
+                    std_dev=5)
                 simulator = SimulateSynthesis(params=params)
                 
                 data = NucleobaseCode(test_sequences)
