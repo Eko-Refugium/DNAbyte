@@ -2,7 +2,7 @@ import unittest
 import random
 import logging
 
-from dnabyte import BinaryCode, NucleobaseCode
+from dnabyte import BinaryCode, NucleobaseCode, InSilicoDNA
 from dnabyte.encoding.max_density.encode import MaxDensity
 from dnabyte.params import Params
 
@@ -34,7 +34,7 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
 
     def test_encode_decode_maxdensity(self):
         # Generate a random bitstream
-        original_data = self.generate_random_bitstream(1000)
+        original_data = self.generate_random_bitstream(500)
         
         binary_code = BinaryCode(original_data)
 
@@ -45,9 +45,13 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
         # Ensure encoding was successful
         self.assertIsNotNone(encoded_data, "Encoding failed")
         self.assertIsNotNone(encode_info, "Encoding failed")
+        
+        encoded_data = InSilicoDNA(encoded_data) 
+
+        procesed_data, info = coder.process(encoded_data)
 
         # Prepare corrected data for decoding
-        nucleobase_code = NucleobaseCode(encoded_data)
+        nucleobase_code = NucleobaseCode(procesed_data)
 
         # Decode the data
         decoded_data, checkervalid, decode_info = coder.decode(nucleobase_code)
