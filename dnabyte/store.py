@@ -54,9 +54,9 @@ class SimulateStorage:
                     for i, condition in enumerate(self.storage_conditions):
                         storage_class = self.storage_plugins[condition.lower()]
                         for key, value in self.storage_params_list[i].items():
-                            print(key, value)
+                            # print(key, value)
                             setattr(self, key, value)
-                        print(self)
+                        # print(self)
                         plugin = storage_class(self)  # Instantiate the plugin class
                         combined_data, info = plugin.simulate(combined_data)
                     return InSilicoDNA(combined_data), info

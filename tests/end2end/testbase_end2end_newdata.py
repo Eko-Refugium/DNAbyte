@@ -212,8 +212,8 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
-                print(data_dec.data, 'decoded data')
-                print(binary_code.data, 'raw data')
+                # print(data_dec.data, 'decoded data')
+                # print(binary_code.data, 'raw data')
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 
                 if comparison == 'SUCCESS':

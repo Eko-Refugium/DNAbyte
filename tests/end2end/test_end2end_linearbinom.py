@@ -8,17 +8,15 @@ from tests.testbase_end2end_newdata import TestBase
 params_list = [
     Params(
         name='end2end_linearbinom_noEC_noErrors',
-        filename='Bohemian_Rhapsody_Lyrics.txt',
+        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
 
         # binarization method
-        binarization_method='binarize_compressed',
+        binarization_method='compressed',
 
         # encoding parameters
         encoding_method = 'linear_binom',
         library_name='20bp_Lib.csv',
-        codeword_length=100,
-        dna_barcode_length=1,  
-        codeword_maxlength_positions=1,
+        sigma_amount=3,
 
         # error correction
         inner_error_correction=None,
@@ -26,7 +24,7 @@ params_list = [
 
         # error channels 
         storage_conditions=None,
-        synthesis_method=None,
+        synthesis_method='assembly', 
         sequencing_method=None,
 
         theory='yes'

@@ -130,13 +130,13 @@ class ArchiveBinarize(Binarize):
                     if member.isfile():
                         # Extract only the filename (without path) and place it directly in job_folder
                         member.name = os.path.basename(member.name)
-                        archive.extract(member, path=job_folder)
+                        archive.extract(member, path=job_folder, filter='data')
 
-            print(f"Files successfully restored to: {job_folder}")
+            # print(f"Files successfully restored to: {job_folder}")
             return True
             
         except Exception as e:
-            print(f"Restoration failed: {e}")
+            # print(f"Restoration failed: {e}")
             return False
         finally:
             # Clean up temporary archive
@@ -160,6 +160,7 @@ def attributes(params):
     else:
         compression_level = params.compression_level
 
+    # file_paths is optional during params initialization, can be set later
     if 'file_paths' not in params.__dict__ or params.file_paths is None:
         raise ValueError("file_paths parameter must be specified")
     else:
