@@ -6,6 +6,8 @@ from dnabyte.error_correction.auxiliary import MakeReedSolomonCodeSynthesis, mak
 from dnabyte.encoding.auxiliary import create_counter_list
 from dnabyte.encoding.max_density.decode import decode
 from dnabyte.encoding.max_density.process import process
+from dnabyte.encoding.max_density.decode import decode as decode_function
+from dnabyte.encoding.max_density.process import process as process_function
 
 class MaxDensity(Encode):
     """
@@ -18,8 +20,8 @@ class MaxDensity(Encode):
         self.params = params
         self.logger = logger
 
-        self.decode = decode
-        self.process = process
+        self._decode_function = decode_function
+        self._process_function = process_function
 
     def calculate_codeword_parameters(self, params):
         # Step 1: calculate the number of bits required to store the number of added zeros at the end of the last codeword
@@ -197,75 +199,132 @@ class MaxDensity(Encode):
 
         return dna_codewords, info
 
-MaxDensity.process = process
-MaxDensity.decode = decode
+    def decode(self, data):
+        """
+        Decodes the provided data using maxdensity decoding.
+        Wraps the standalone decode function to use self.params.
+        """
+        return self._decode_function(data, self.params, self.logger)
+
+    def process(self, data):
+        """
+        Processes the provided data using maxdensity processing.
+        Wraps the standalone process function to use self.params.
+        """
+        return self._process_function(data, self.params, self.logger)
+
+#MaxDensity.process = process
+#MaxDensity.decode = decode
+
 
 def attributes(inputparams):
-    library = None
-    library_name = None
-    encoding_scheme = 'max_density_encoding'
+
+    encoding_method = 'max_density_encoding'
     assembly_structure = 'synthesis'
+
+    # parameter: codeword_length
     if not hasattr(inputparams, 'codeword_length') or inputparams.codeword_length is None:
-        codeword_length = 500
+        codeword_length = 500 # default
+    elif not (20 < inputparams.codeword_length < 10000):
+        raise ValueError(f"codeword_length must be greater than 20 and less than 10000, got {inputparams.codeword_length}")
     else:
         codeword_length = inputparams.codeword_length
+    
+    # parameter: dna_barcode_length
     if not hasattr(inputparams, 'dna_barcode_length') or inputparams.dna_barcode_length is None:
-        dna_barcode_length = m.ceil(codeword_length * 0.15)
+        dna_barcode_length = m.ceil(codeword_length * 0.15) # default
+    elif not (5 < inputparams.dna_barcode_length < 1000):
+        raise ValueError(f"dna_barcode_length must be greater than 5 and less than 100, got {inputparams.dna_barcode_length}")
     else:
         dna_barcode_length = inputparams.dna_barcode_length
+
+    # parameter: codeword_maxlength_positions
     if not hasattr(inputparams, 'codeword_maxlength_positions') or inputparams.codeword_maxlength_positions is None:
         codeword_maxlength_positions = m.ceil(codeword_length * 0.15)
+    # TODO: set range for codeword_maxlength_positions using an elif statement
     else:
         codeword_maxlength_positions = inputparams.codeword_maxlength_positions
-    if not hasattr(inputparams, 'inner_error_correction'):
-        index_carry_length = None
-        ltcode_header = None
-        percent_of_symbols = None        
-        checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
-    elif inputparams.inner_error_correction == 'ltcode':
+
+    checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
+
+    # parameter group: inner_error_correction
+    if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
         if not hasattr(inputparams, 'index_carry_length') or inputparams.index_carry_length is None:
-            index_carry_length = m.ceil(codeword_length * 0.15)
+            index_carry_length = m.ceil(codeword_length * 0.15) # default
+        #TODO: set proper range for index_carry_length
+        elif not (0.5 * codeword_length < inputparams.index_carry_length < 0.9 * codeword_length):
+            raise ValueError(f"index_carry_length must be greater than 0.5 * codeword_length and less than 0.9 * codeword_length, got {inputparams.index_carry_length}")
         else:
             index_carry_length = inputparams.index_carry_length
+
         if not hasattr(inputparams, 'ltcode_header') or inputparams.ltcode_header is None:
-            ltcode_header = m.ceil(codeword_length * 0.15)
+            ltcode_header = m.ceil(codeword_length * 0.15) # default
+        # TODO: set proper range for ltcode_header
+        elif not (0.05 * codeword_length < inputparams.ltcode_header < 0.3 * codeword_length):
+            raise ValueError(f"ltcode_header must be greater than 0.05 * codeword_length and less than 0.2 * codeword_length, got {inputparams.ltcode_header}")
         else:
             ltcode_header = inputparams.ltcode_header
+
         if not hasattr(inputparams, 'percent_of_symbols') or inputparams.percent_of_symbols is None:
-            percent_of_symbols = 2
+            percent_of_symbols = 2 # default
+        # TODO: set proper range for percent_of_symbols
+        elif not (1 < inputparams.percent_of_symbols < 5):
+            raise ValueError(f"percent_of_symbols must be greater than 1 and less than 5, got {inputparams.percent_of_symbols}")
         else:
             percent_of_symbols = inputparams.percent_of_symbols
+
         checker = codeword_length - codeword_maxlength_positions - dna_barcode_length - index_carry_length - ltcode_header
-    else:
-        index_carry_length = None
-        ltcode_header = None
-        percent_of_symbols = None
-        checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
-    
-    if not hasattr(inputparams, 'outer_error_correction'):
-        reed_solo_percentage = None
-    elif inputparams.outer_error_correction == 'reedsolomon':
+
+    elif inputparams.inner_error_correction is None or not hasattr(inputparams, 'inner_error_correction'):
+        pass
+    else: 
+        raise ValueError("Invalid inner_error_correction method")
+
+
+    # parameter group: outer_error_correction
+    if hasattr(inputparams, 'outer_error_correction') and inputparams.outer_error_correction == 'reedsolomon':
         if not hasattr(inputparams, 'reed_solo_percentage') or inputparams.reed_solo_percentage is None:
-            reed_solo_percentage = 0.8
+            reed_solo_percentage = 0.8 # default
+        # TODO: set proper range for reed_solo_percentage
+        elif not (0.5 < inputparams.reed_solo_percentage < 0.95):
+            raise ValueError(f"reed_solo_percentage must be greater than 0.5 and less than 0.95, got {inputparams.reed_solo_percentage}")
         else:
             reed_solo_percentage = inputparams.reed_solo_percentage
+    elif inputparams.outer_error_correction is None:
+        pass
     else:
-        reed_solo_percentage = None
-    
-    sigmaamount = None
-    
+        raise ValueError("Invalid outer_error_correction method")
+
+    # TODO: does the outer_error_correction affect the checker calculation?
+
+
+    # Check correct combination of codeword parameters
     if checker < 0:
         raise ValueError("The codeword length is too small for the given parameters.")
 
-    return {"encoding_scheme": encoding_scheme, 
-            "assembly_structure": assembly_structure,
-            "library": library, 
-            "library_name": library_name, 
-            "codeword_length": codeword_length, 
-            "dna_barcode_length": dna_barcode_length, 
-            "codeword_maxlength_positions": codeword_maxlength_positions, 
-            "percent_of_symbols": percent_of_symbols, 
-            "index_carry_length": index_carry_length, 
-            "sigma_amount": sigmaamount, 
-            "ltcode_header": ltcode_header, 
-            "reed_solo_percentage": reed_solo_percentage}
+    # Build return dictionary with only relevant parameters
+    result = {
+        "encoding_method": encoding_method, 
+        "assembly_structure": assembly_structure,
+        "codeword_length": codeword_length, 
+        "dna_barcode_length": dna_barcode_length, 
+        "codeword_maxlength_positions": codeword_maxlength_positions,
+    }
+    
+    # Add inner error correction parameters only if ltcode is used
+    if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
+        result.update({
+            "inner_error_correction": 'ltcode',
+            "percent_of_symbols": percent_of_symbols,
+            "index_carry_length": index_carry_length,
+            "ltcode_header": ltcode_header,
+        })
+    
+    # Add outer error correction parameters only if reedsolomon is used
+    if hasattr(inputparams, 'outer_error_correction') and inputparams.outer_error_correction == 'reedsolomon':
+        result.update({
+            "outer_error_correction": 'reedsolomon',
+            "reed_solo_percentage": reed_solo_percentage,
+        })
+    
+    return result

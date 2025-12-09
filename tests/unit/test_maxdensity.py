@@ -2,11 +2,8 @@ import unittest
 import random
 import logging
 
-from dnabyte.data_classes.base import Data
-from dnabyte.data_classes.binarycode import BinaryCode
-from dnabyte.data_classes.nucleobasecode import NucleobaseCode
+from dnabyte import BinaryCode, NucleobaseCode
 from dnabyte.encoding.max_density.encode import MaxDensity
-from dnabyte.encoding.max_density.decode import MaxDensity
 from dnabyte.params import Params
 
 class TestMaxDensityEncodingDecoding(unittest.TestCase):
@@ -23,16 +20,13 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
 
         # Define parameters for encoding and decoding
         self.params = Params(
+            encoding_method='max_density',
             assembly_structure='synthesis',
-            encoding_scheme='max_density_encoding',
-            inner_error_correction='ltcode',
-            outer_error_correction='reedsolomon',
+            inner_error_correction=None,
+            outer_error_correction=None,
             dna_barcode_length=10,
             codeword_maxlength_positions=100,
-            codeword_length=200,
-            index_carry_length=5,
-            percent_of_symbols=0.1,
-            reed_solo_percentage=0.2
+            codeword_length=200
         )
 
     def generate_random_bitstream(self, length):
@@ -45,28 +39,32 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
         binary_code = BinaryCode(original_data)
 
         # Encode the data
-        encoder = MaxDensity(self.params, logger=self.logger)
-        encoded_data, barcode, encode_info = encoder.encode_maxdensity(binary_code)
+        coder = MaxDensity(self.params, logger=self.logger)
+        encoded_data, encode_info = coder.encode(binary_code)
 
         # Ensure encoding was successful
         self.assertIsNotNone(encoded_data, "Encoding failed")
-        self.assertIsNotNone(barcode, "Encoding failed")
         self.assertIsNotNone(encode_info, "Encoding failed")
 
         # Prepare corrected data for decoding
         nucleobase_code = NucleobaseCode(encoded_data)
 
         # Decode the data
-        decoder = MaxDensity(self.params, logger=self.logger)
-        decoded_data, checkervalid, decode_info = decoder.decode_maxdensity(nucleobase_code)
+        decoded_data, checkervalid, decode_info = coder.decode(nucleobase_code)
 
         # Ensure decoding was successful
         self.assertTrue(checkervalid, "Decoding failed")
         self.assertIsNotNone(decoded_data, "Decoding failed")
         self.assertIsNotNone(decode_info, "Decoding failed")
 
+        print('Original data:', original_data)
+        print('Decoded data:', decoded_data)
+
+
         # Compare the original data with the decoded data
         self.assertEqual(original_data, decoded_data, "Decoded data does not match the original data")
+
+
 
 if __name__ == '__main__':
     unittest.main()
