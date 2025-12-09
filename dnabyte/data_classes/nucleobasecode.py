@@ -126,29 +126,43 @@ class NucleobaseCode(Data):
                 codeword = ''.join(random.choice(['A', 'T', 'C', 'G']) for _ in range(m))
                 data.append(codeword)
 
-        elif type == 'assembly':
+        elif type == 'nested_assembly':
             if library is None:
                 raise ValueError("Library must be provided for assembly type")
             
             else:
                 library = Library(structure='linear_assembly', filename='./tests/testlibraries/20bp_Lib.csv')
             
-            # Helper function to create nested list of random depth
-            def create_nested_structure(current_depth, max_depth):
-                """Recursively create nested list structure with random depth."""
-                # If we've reached max depth or randomly decide to stop, return a leaf element
-                if current_depth >= max_depth or (current_depth > 0 and random.random() < 0.3):
-                    return random.choice(library.library)
+                # Helper function to create nested list of random depth
+                def create_nested_structure(current_depth, max_depth):
+                    """Recursively create nested list structure with random depth."""
+                    # If we've reached max depth or randomly decide to stop, return a leaf element
+                    if current_depth >= max_depth or (current_depth > 0 and random.random() < 0.3):
+                        return random.choice(library.library)
+                    
+                    # Create a list with 1-3 children
+                    num_children = random.randint(1, 3)
+                    return [create_nested_structure(current_depth + 1, max_depth) for _ in range(num_children)]
                 
-                # Create a list with 1-3 children
-                num_children = random.randint(1, 3)
-                return [create_nested_structure(current_depth + 1, max_depth) for _ in range(num_children)]
+                # Generate n codewords, each with random nested structure (depth 1-5)
+                for _ in range(n):
+                    max_depth = random.randint(1, 5)
+                    codeword = create_nested_structure(0, max_depth)
+                    data.append(codeword)
+
+
+        elif type == 'linear_assembly':
+            if library is None:
+                raise ValueError("Library must be provided for assembly type")
             
-            # Generate n codewords, each with random nested structure (depth 1-5)
-            for _ in range(n):
-                max_depth = random.randint(1, 5)
-                codeword = create_nested_structure(0, max_depth)
-                data.append(codeword)
+            else:
+                library = Library(structure='linear_assembly', filename='./tests/testlibraries/20bp_Lib.csv')
+            
+                # Generate n codewords, each with m library elements
+                for _ in range(n):
+                    codeword = random.choices(library.library, k=m)
+                    data.append(codeword)
+
         else:
             raise ValueError(f"Invalid synthesis type: {type}")
         
