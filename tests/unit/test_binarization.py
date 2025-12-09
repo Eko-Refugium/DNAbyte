@@ -10,9 +10,9 @@ from dnabyte.data_classes.base import Data
 from dnabyte.params import Params
 from dnabyte.binarize import Binarize
 from dnabyte.data_classes.binarycode import BinaryCode
-from dnabyte.binarization.text.binarize_text import TextBinarize
-from dnabyte.binarization.compressed.binarize_compressed import ArchiveBinarize
-from dnabyte.binarization.default.binarize_default import DefaultBinarize
+from dnabyte.binarization.text.binarize import TextBinarize
+from dnabyte.binarization.compressed.binarize import ArchiveBinarize
+from dnabyte.binarization.default.binarize import DefaultBinarize
 
 
 class TestTextBinarize(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestTextBinarize(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
-        self.binarizer = Binarize(Params(binarization_method='binarize_text'))
+        self.binarizer = Binarize(Params(binarization_method='text'))
         self.test_dir = tempfile.mkdtemp()
         
         # Create test text file
@@ -35,12 +35,12 @@ class TestTextBinarize(unittest.TestCase):
     
     def test_init_default_encoding(self):
         """Test initialization with default encoding."""
-        binarizer = Binarize(Params(binarization_method='binarize_text'))
+        binarizer = Binarize(Params(binarization_method='text'))
         self.assertEqual(binarizer.text_encoding, 'utf-8')
     
     def test_init_custom_encoding(self):
         """Test initialization with custom encoding."""
-        binarizer = Binarize(Params(binarization_method='binarize_text', text_encoding='ascii'))
+        binarizer = Binarize(Params(binarization_method='text', text_encoding='ascii'))
         self.assertEqual(binarizer.text_encoding, 'ascii')
     
     def test_binarize_single_file_success(self):
@@ -143,7 +143,7 @@ class TestArchiveBinarize(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
-        self.binarizer = Binarize(Params(binarization_method='binarize_compressed'))
+        self.binarizer = Binarize(Params(binarization_method='compressed'))
         self.test_dir = tempfile.mkdtemp()
         
         # Create multiple test files
@@ -439,12 +439,12 @@ class TestBinarizationIntegration(unittest.TestCase):
         data = Data([self.text_file])
         
         # Test TextBinarize
-        text_binarizer = Binarize(Params(binarization_method='binarize_text'))
+        text_binarizer = Binarize(Params(binarization_method='text'))
         text_result = text_binarizer.binarize(data)
         self.assertIsInstance(text_result, BinaryCode)
         
         # Test ArchiveBinarize  
-        archive_binarizer = Binarize(Params(binarization_method='binarize_compressed'))
+        archive_binarizer = Binarize(Params(binarization_method='compressed'))
         archive_result = archive_binarizer.binarize(data)
         self.assertIsInstance(archive_result, BinaryCode)
         
@@ -463,8 +463,8 @@ class TestBinarizationIntegration(unittest.TestCase):
     #     """Compare binary lengths produced by different methods."""
     #     data = Data([self.text_file])
         
-    #     text_binarizer = Binarize(Params(binarization_method='binarize_text'))
-    #     archive_binarizer = Binarize(Params(binarization_method='binarize_compressed'))
+    #     text_binarizer = Binarize(Params(binarization_method='text'))
+    #     archive_binarizer = Binarize(Params(binarization_method='compressed'))
     #     default_binarizer = Binarize(Params(binarization_method='binarize_default'))
         
     #     text_result = text_binarizer.binarize(data)

@@ -8,7 +8,8 @@ class TestMESA(unittest.TestCase):
     def test_simulate_synthesis_all_ids(self):
         """Test all valid mesa_synthesis_id values"""
         test_ids = [3, 4, 5, 6, 7, 68, 69, 70, 71]
-        test_sequences = ['ACACTGATACAACTTTAGTTGTTTACACTGAGATCACTTTATATAGG', 'ACGGGGACATGTGTTAATATATACACACCATACAGCTCAATCATCTAGCATTCTCAGCA']
+
+        data = NucleobaseCode.random(m=100, n=50)
         
         for mesa_id in test_ids:
             with self.subTest(mesa_synthesis_id=mesa_id):
@@ -20,9 +21,7 @@ class TestMESA(unittest.TestCase):
                     mean=100, 
                     std_dev=5)
                 simulator = SimulateSynthesis(params=params)
-                
-                data = NucleobaseCode(test_sequences)
-                
+                                
                 # Simulate synthesis
                 synthesized_sequences, info = simulator.simulate(data)
                 

@@ -41,7 +41,7 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
                     assembly_structure='synthesis',
                     inner_error_correction='ltcode',
                     outer_error_correction=None,
-                    percent_of_symbols=2,
+                    percent_of_symbols=3,
                     dna_barcode_length=10,
                     codeword_maxlength_positions=50,
                     codeword_length=200
@@ -112,6 +112,7 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
 
                 # Validate decoding based on expectations
                 if config['expect_perfect_decode']:
+
                     # Expect perfect decoding
                     self.assertTrue(checkervalid, 
                         f"Decoding failed for {config['name']} - checker not valid")
