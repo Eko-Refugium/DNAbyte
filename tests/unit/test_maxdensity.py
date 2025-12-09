@@ -29,14 +29,10 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
             codeword_length=200
         )
 
-    def generate_random_bitstream(self, length):
-        return ''.join(random.choice('01') for _ in range(length))
-
     def test_encode_decode_maxdensity(self):
-        # Generate a random bitstream
-        original_data = self.generate_random_bitstream(500)
-        
-        binary_code = BinaryCode(original_data)
+
+        # Generate a random bitstream        
+        binary_code = BinaryCode.random(500)
 
         # Encode the data
         coder = MaxDensity(self.params, logger=self.logger)
@@ -46,8 +42,10 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
         self.assertIsNotNone(encoded_data, "Encoding failed")
         self.assertIsNotNone(encode_info, "Encoding failed")
         
+        # TODO: this test should run without applying the processing step
+        # we, thus, need to move some steps of the processing into the encoding step
+        # in particular the step that removes the barcode and index from the sequences
         encoded_data = InSilicoDNA(encoded_data) 
-
         procesed_data, info = coder.process(encoded_data)
 
         # Prepare corrected data for decoding
@@ -61,12 +59,8 @@ class TestMaxDensityEncodingDecoding(unittest.TestCase):
         self.assertIsNotNone(decoded_data, "Decoding failed")
         self.assertIsNotNone(decode_info, "Decoding failed")
 
-        print('Original data:', original_data)
-        print('Decoded data:', decoded_data)
-
-
         # Compare the original data with the decoded data
-        self.assertEqual(original_data, decoded_data, "Decoded data does not match the original data")
+        self.assertEqual(binary_code.data, decoded_data, "Decoded data does not match the original data")
 
 
 

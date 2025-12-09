@@ -8,7 +8,7 @@ class TestStorage(unittest.TestCase):
     """ Test cases for the storage simulation methods. """
 
     def setUp(self):
-        self.data = InSilicoDNA.generate_random_sequences(m=100, n=10000)
+        self.data = InSilicoDNA.random(m=100, n=10000)
 
     def test_simulate_storage_biogene(self):
         """Test biogene storage simulation"""

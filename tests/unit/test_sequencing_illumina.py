@@ -10,7 +10,7 @@ class TestIlluminaSequencing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Generate test sequences once for all tests"""
-        cls.test_sequences = InSilicoDNA.generate_random_sequences(m=500, n=200)
+        cls.test_sequences = InSilicoDNA.random(m=500, n=200)
     
     def test_simulate_sequencing(self):
         """Test Illumina sequencing simulation"""

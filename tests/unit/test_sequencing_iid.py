@@ -10,7 +10,7 @@ class TestIIDSequencing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Generate test sequences once for all tests"""
-        cls.test_sequences = InSilicoDNA.generate_random_sequences(m=1000, n=200)
+        cls.test_sequences = InSilicoDNA.random(m=1000, n=200)
     
     def test_simulate_sequencing_default_error_rate(self):
         """Test IID sequencing with default error rate (0.01)"""

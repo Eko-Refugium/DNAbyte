@@ -10,7 +10,7 @@ class TestNanoporeSequencing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Generate test sequences once for all tests"""
-        cls.test_sequences = InSilicoDNA.generate_random_sequences(m=500, n=200)
+        cls.test_sequences = InSilicoDNA.random(m=500, n=200)
     
     def test_simulate_sequencing(self):
         """Test Nanopore sequencing simulation"""
@@ -74,7 +74,7 @@ class TestNanoporeSequencing(unittest.TestCase):
         
         for length in test_lengths:
             with self.subTest(sequence_length=length):
-                test_seqs = InSilicoDNA.generate_random_sequences(m=100, n=length)
+                test_seqs = InSilicoDNA.random(m=100, n=length)
                 params = Params(sequencing_method='nanopore')
                 simulator = SimulateSequencing(params=params)
                 
