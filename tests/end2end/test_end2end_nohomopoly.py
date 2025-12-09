@@ -27,25 +27,27 @@ params_list = [
     ),
     Params(
         name='end2end_nohomopoly_allEC_noErrors',
-        filename='Bohemian_Rhapsody_Lyrics.txt',
+        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
+
+        # binarization method
+        binarization_method='compressed',
 
         # encoding parameters
-        encoding_method='nohomopoly',
+        encoding_method='no_homopolymer',
         codeword_length=501,
         dna_barcode_length=34,
 
         # error correction
         inner_error_correction='ltcode',
         ltcode_header=34,
-        percent_of_symbols=2,
+        percent_of_symbols=4,
         outer_error_correction='reedsolomon',
-        reed_solo_percentage=0.8,
+        reed_solo_percentage=0.9,
 
         # error channels
         storage_conditions=None,
         synthesis_method=None,
-        sequencing_method=None,
-
+        sequencing_method=None
     )]#,
     # Params(
     #     name='end2end_synthesis_nohomopoly_allErrors',
@@ -106,7 +108,7 @@ params_list = [
     #     sigma_amount=None,
     #     theory='no'
     # )
-]
+
 
 # Create a parameterized test case
 def parameterized_test_generator(params):
