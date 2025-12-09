@@ -1,3 +1,4 @@
+import random
 from .base import Data
 
 class BinaryCode(Data):
@@ -105,6 +106,16 @@ class BinaryCode(Data):
             return 'SUCCESS', res
         else:
             return 'ERROR', res
+
+    def random(n):
+        """
+        Generates a random BinaryCode object with a specified length.
+
+        :param n: Length of the binary string to generate.
+        :return: BinaryCode object with random binary data.
+        """
+        bitstream = ''.join(random.choice('01') for _ in range(n))
+        return BinaryCode(bitstream)
 
     def __str__(self):
         output = f"Type: {type(self).__name__}\n"

@@ -193,7 +193,7 @@ class InSilicoDNA(Data):
         return True
 
 
-    def generate_random_sequences(m, n):
+    def random(m, n):
         """
         Generate m random nucleotide sequences of length n.
 
