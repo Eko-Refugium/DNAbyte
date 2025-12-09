@@ -23,123 +23,6 @@ class MaxDensity(Encode):
         self._decode_function = decode_function
         self._process_function = process_function
 
-    def calculate_codeword_parameters(self, params):
-        # Step 1: calculate the number of bits required to store the number of added zeros at the end of the last codeword
-        # number of bits reserved to save the number of added zeros at the end of the last (and any) codeword. At the beginning of
-        # each codeword, the number of zeros is stored in zfill_bits bits. This is necessary to remove the padding zeros at the end 
-        # of the last codeword during decoding.
-
-        zfill_bits = m.ceil(m.log2(params.codeword_length))
-
-        if params.outer_error_correction == 'reedsolomon':
-            # to apply the reed-solomon error correction efficiently, the dna barcode must have a multiple of 8 bits
-            adjustment = (4 - zfill_bits % 4) % 4
-            params.dna_barcode_length -= adjustment
-            zfill_bits += adjustment
-
-        params.zfill_bits = zfill_bits
-
-      # Step 2: Calculate the message length
-
-        if params.inner_error_correction == 'ltcode':
-            message_length = params.codeword_length - params.dna_barcode_length - zfill_bits - params.index_carry_length - params.ltcode_header
-        else:
-            message_length = params.codeword_length - params.dna_barcode_length - zfill_bits
-
-        # adjust the bits per codeword such that it is a multiple of 4
-        if params.outer_error_correction == 'reedsolomon':
-            while message_length % 4 != 0:
-                message_length -= 1
-                params.dna_barcode_length += 1
-        
-        params.message_length = message_length
-
-        # Step 3: calculate bits per codeword
-        bits_per_codeword = message_length * 2
-
-        if params.outer_error_correction == 'reedsolomon':
-            bits_per_codeword = m.floor(bits_per_codeword * params.reed_solo_percentage)
-            bits_per_ec = (message_length * 2 - bits_per_codeword)
-
-            # Adjust bits_per_codeword to be a multiple of 8
-            adjustment = (8 - bits_per_codeword % 8) % 8
-            bits_per_codeword += adjustment
-            bits_per_ec -= adjustment
-            params.bits_per_ec = bits_per_ec
-
-        params.bits_per_codeword = bits_per_codeword
-
-        # Step 4: Determine the length of the DNA barcode
-        # if self.params.outer_error_correction == 'reedsolomon':
-        #     # TODO: check if this is correct
-        #     #dna_barcode_length = self.params.codeword_length - len(binary_codewords[0]) // 2
-        #     dna_barcode_length = params.codeword_length - params.message_length // 2
-
-        #     params.dna_barcode_length = dna_barcode_length
-
-        return params
-
-    def create_binary_codewords(self, data, params):
-        """
-        Generates binary codewords from the provided data. It supports both Reed-Solomon and LT code error correction schemes.
-        """
-        # Step 1: cut the binary string to substrings of length bits_per_codeword 
-        binary_blocks = []
-        for i in range(0, len(data.data), params.bits_per_codeword):
-            binary_blocks.append(data.data[i:i + params.bits_per_codeword])
-
-        number_of_zero_padding = len(binary_blocks[-1])
-
-        binary_blocks[-1] = binary_blocks[-1].zfill(params.bits_per_codeword)
-        
-        # Step 2: create the binary codewords
-        binary_codewords = []
-        
-        print('AAAAAAAAAAAAAAAAAAAAAA')
-        for block in binary_blocks:
-            codeword = str(self.decimal_to_binary(0)).zfill(params.zfill_bits * 2) + block
-            binary_codewords.append(codeword)
-
-        # fill the last binary codeword with zeros
-
-        if number_of_zero_padding == params.bits_per_codeword:
-            number_of_zero_padding = 0
-
-        binary_codewords[-1] = str(self.decimal_to_binary(number_of_zero_padding)).zfill(params.zfill_bits * 2) + binary_codewords[-1][params.zfill_bits * 2:]
-        
-        # Step 3: apply outer error correction
-        if params.outer_error_correction == 'reedsolomon':
-            binary_codewords = MakeReedSolomonCodeSynthesis(binary_codewords, params.bits_per_ec)
-
-        # Step 4: apply inner error correction
-        if params.inner_error_correction == 'ltcode':
-            binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.ltcode_header, 2)
-        
-        return binary_codewords
-        
-    def base4_list_to_bitstring(self, base4_list):
-        """
-        Converts a list of base-4 numbers to a bitstring.
-        """
-        bit_string = ''.join(format(x, '02b') for x in base4_list)
-        return bit_string
-    
-    def decimal_to_binary(self, n): 
-        return bin(n).replace("0b", "") 
-
-    def binary_to_dna(self, binary_sequence):
-        """
-        Converts a binary string to a DNA string.
-        """
-        dna_mapping = {
-            '00': 'A',
-            '01': 'G',
-            '10': 'C',
-            '11': 'T'
-        }
-        dna_sequence = ''.join(dna_mapping[binary_sequence[i:i+2]] for i in range(0, len(binary_sequence), 2))
-        return dna_sequence
-    
     def encode(self, data):
         """
         This method encodes the provided data into DNA sequences using the specified parameters.
@@ -213,9 +96,122 @@ class MaxDensity(Encode):
         """
         return self._process_function(data, self.params, self.logger)
 
-#MaxDensity.process = process
-#MaxDensity.decode = decode
+    def calculate_codeword_parameters(self, params):
+        # Step 1: calculate the number of bits required to store the number of added zeros at the end of the last codeword
+        # number of bits reserved to save the number of added zeros at the end of the last (and any) codeword. At the beginning of
+        # each codeword, the number of zeros is stored in zfill_bits bits. This is necessary to remove the padding zeros at the end 
+        # of the last codeword during decoding.
 
+        zfill_bits = m.ceil(m.log2(params.codeword_length))
+
+        if params.outer_error_correction == 'reedsolomon':
+            # to apply the reed-solomon error correction efficiently, the dna barcode must have a multiple of 8 bits
+            adjustment = (4 - zfill_bits % 4) % 4
+            params.dna_barcode_length -= adjustment
+            zfill_bits += adjustment
+
+        params.zfill_bits = zfill_bits
+
+      # Step 2: Calculate the message length
+
+        if params.inner_error_correction == 'ltcode':
+            message_length = params.codeword_length - params.dna_barcode_length - zfill_bits - params.index_carry_length - params.ltcode_header
+        else:
+            message_length = params.codeword_length - params.dna_barcode_length - zfill_bits
+
+        # adjust the bits per codeword such that it is a multiple of 4
+        if params.outer_error_correction == 'reedsolomon':
+            while message_length % 4 != 0:
+                message_length -= 1
+                params.dna_barcode_length += 1
+        
+        params.message_length = message_length
+
+        # Step 3: calculate bits per codeword
+        bits_per_codeword = message_length * 2
+
+        if params.outer_error_correction == 'reedsolomon':
+            bits_per_codeword = m.floor(bits_per_codeword * params.reed_solo_percentage)
+            bits_per_ec = (message_length * 2 - bits_per_codeword)
+
+            # Adjust bits_per_codeword to be a multiple of 8
+            adjustment = (8 - bits_per_codeword % 8) % 8
+            bits_per_codeword += adjustment
+            bits_per_ec -= adjustment
+            params.bits_per_ec = bits_per_ec
+
+        params.bits_per_codeword = bits_per_codeword
+
+        # Step 4: Determine the length of the DNA barcode
+        # if self.params.outer_error_correction == 'reedsolomon':
+        #     # TODO: check if this is correct
+        #     #dna_barcode_length = self.params.codeword_length - len(binary_codewords[0]) // 2
+        #     dna_barcode_length = params.codeword_length - params.message_length // 2
+
+        #     params.dna_barcode_length = dna_barcode_length
+
+        return params
+
+    def create_binary_codewords(self, data, params):
+        """
+        Generates binary codewords from the provided data. It supports both Reed-Solomon and LT code error correction schemes.
+        """
+        # Step 1: cut the binary string to substrings of length bits_per_codeword 
+        binary_blocks = []
+        for i in range(0, len(data.data), params.bits_per_codeword):
+            binary_blocks.append(data.data[i:i + params.bits_per_codeword])
+
+        number_of_zero_padding = len(binary_blocks[-1])
+
+        binary_blocks[-1] = binary_blocks[-1].zfill(params.bits_per_codeword)
+        
+        # Step 2: create the binary codewords
+        binary_codewords = []
+        
+        for block in binary_blocks:
+            codeword = str(self.decimal_to_binary(0)).zfill(params.zfill_bits * 2) + block
+            binary_codewords.append(codeword)
+
+        # fill the last binary codeword with zeros
+
+        if number_of_zero_padding == params.bits_per_codeword:
+            number_of_zero_padding = 0
+
+        binary_codewords[-1] = str(self.decimal_to_binary(number_of_zero_padding)).zfill(params.zfill_bits * 2) + binary_codewords[-1][params.zfill_bits * 2:]
+        
+        # Step 3: apply outer error correction
+        if params.outer_error_correction == 'reedsolomon':
+            binary_codewords = MakeReedSolomonCodeSynthesis(binary_codewords, params.bits_per_ec)
+
+        # Step 4: apply inner error correction
+        if params.inner_error_correction == 'ltcode':
+            binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.ltcode_header, 2)
+        
+        return binary_codewords
+        
+    def base4_list_to_bitstring(self, base4_list):
+        """
+        Converts a list of base-4 numbers to a bitstring.
+        """
+        bit_string = ''.join(format(x, '02b') for x in base4_list)
+        return bit_string
+    
+    def decimal_to_binary(self, n): 
+        return bin(n).replace("0b", "") 
+
+    def binary_to_dna(self, binary_sequence):
+        """
+        Converts a binary string to a DNA string.
+        """
+        dna_mapping = {
+            '00': 'A',
+            '01': 'G',
+            '10': 'C',
+            '11': 'T'
+        }
+        dna_sequence = ''.join(dna_mapping[binary_sequence[i:i+2]] for i in range(0, len(binary_sequence), 2))
+        return dna_sequence
+    
 
 def attributes(inputparams):
 
@@ -249,6 +245,8 @@ def attributes(inputparams):
 
     # parameter group: inner_error_correction
     if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
+
+        # parameter: index_carry_length
         if not hasattr(inputparams, 'index_carry_length') or inputparams.index_carry_length is None:
             index_carry_length = m.ceil(codeword_length * 0.15) # default
         #TODO: set proper range for index_carry_length
@@ -257,6 +255,7 @@ def attributes(inputparams):
         else:
             index_carry_length = inputparams.index_carry_length
 
+        # parameter: ltcode_header
         if not hasattr(inputparams, 'ltcode_header') or inputparams.ltcode_header is None:
             ltcode_header = m.ceil(codeword_length * 0.15) # default
         # TODO: set proper range for ltcode_header
@@ -265,6 +264,7 @@ def attributes(inputparams):
         else:
             ltcode_header = inputparams.ltcode_header
 
+        # parameter: percent_of_symbols
         if not hasattr(inputparams, 'percent_of_symbols') or inputparams.percent_of_symbols is None:
             percent_of_symbols = 2 # default
         # TODO: set proper range for percent_of_symbols
@@ -283,6 +283,8 @@ def attributes(inputparams):
 
     # parameter group: outer_error_correction
     if hasattr(inputparams, 'outer_error_correction') and inputparams.outer_error_correction == 'reedsolomon':
+
+        # parameter: reed_solo_percentage
         if not hasattr(inputparams, 'reed_solo_percentage') or inputparams.reed_solo_percentage is None:
             reed_solo_percentage = 0.8 # default
         # TODO: set proper range for reed_solo_percentage

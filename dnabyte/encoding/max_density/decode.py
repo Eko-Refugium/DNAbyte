@@ -5,6 +5,34 @@ from dnabyte.encode import Encode
 from dnabyte.error_correction.auxiliary import undoreedsolomonsynthesis, undoltcodesynth
 from dnabyte.encoding.auxiliary import split_string
 
+def decode(data, params, logger=None):
+    """
+    Decodes the provided corrected data using maxdensity decoding.
+    """
+    try:
+
+        # Convert DNA sequences to binary strings
+        binary_strings = []
+        for i in range(len(data.data)):
+            binary_strings.append(dna_to_binary(data.data[i]))
+        decoded_binary, valid = recreate_binary_codewords(binary_strings, params)
+
+        info = {
+            "number_of_codewords": len(binary_strings),
+            "data_length": len(data.data)
+        }
+
+    except Exception as e:
+        if logger:
+            logger.error(f"Error during decoding: {e}")
+            logger.error(traceback.format_exc())
+
+        decoded_binary = None
+        valid = False
+        info = {}
+
+    return decoded_binary, valid, info
+
 def dna_to_binary(dna_string):
     """
     Converts a DNA string to a binary string.
@@ -44,33 +72,7 @@ def recreate_binary_codewords(data, params):
 
     return concatenated_string, check
 
-def decode(data, params, logger=None):
-    """
-    Decodes the provided corrected data using maxdensity decoding.
-    """
-    try:
 
-        # Convert DNA sequences to binary strings
-        binary_strings = []
-        for i in range(len(data.data)):
-            binary_strings.append(dna_to_binary(data.data[i]))
-        decoded_binary, valid = recreate_binary_codewords(binary_strings, params)
-
-        info = {
-            "number_of_codewords": len(binary_strings),
-            "data_length": len(data.data)
-        }
-
-    except Exception as e:
-        if logger:
-            logger.error(f"Error during decoding: {e}")
-            logger.error(traceback.format_exc())
-
-        decoded_binary = None
-        valid = False
-        info = {}
-
-    return decoded_binary, valid, info
 
         
     

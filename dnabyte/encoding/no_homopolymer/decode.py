@@ -4,6 +4,41 @@ import traceback
 from dnabyte.error_correction.auxiliary import undoreedsolomonsynthesis, undoltcodesynth
 from dnabyte.encoding.auxiliary import split_string
 
+def decode(data, params, logger=None):
+    """
+    Decodes the provided data using the no-homopolymer odd-even decoding scheme.
+
+    This method decodes the provided DNA sequences into binary data using the specified parameters.
+
+    Parameters:
+    data (SequencedData): The sequenced data to be decoded.
+
+    Returns:
+    tuple: A tuple containing the decoded binary data, a validity checker, and additional info.
+    """
+    try:
+        binary_codewords = []
+        
+        for i in range(len(data.data)):
+            binary_codewords.append(dna_to_binary_custom(data.data[i]))
+        
+        decoded_binary, valid = decode_binary_codewords(binary_codewords, params)
+
+        # Additional info
+        info = {
+            "Length of decoded data": len(decoded_binary),
+        }
+
+    except Exception as e:
+        logger.error(f"Error during decoding: {str(e)}")
+        logger.error(traceback.format_exc())
+        
+        decoded_binary = None
+        valid = False
+        info = None
+
+    return decoded_binary, valid, info
+
 def dna_to_binary_custom(dna_string):
     """
     Converts a DNA string to a binary string using a custom mapping to avoid homopolymers.
@@ -44,28 +79,6 @@ def dna_to_binary_custom(dna_string):
 
 def decode_binary_codewords(data, params):
 
-    # params.zfill_bits = m.ceil(m.log2(params.codeword_length))
-    
-    # if params.outer_error_correction == 'reedsolomon':
-        
-    #     while params.zfill_bits % 8 != 0:
-    #         params.dna_barcode_length -= 1
-    #         params.zfill_bits += 1
-        
-    # if params.inner_error_correction == 'ltcode':        
-    #     message_length = params.codeword_length - 2 * params.dna_barcode_length - params.zfill_bits - params.index_carry_length
-        
-    # else:
-        
-    #     message_length = params.codeword_length - params.dna_barcode_length-params.zfill_bits
-
-    # if params.outer_error_correction == 'reedsolomon':
-    #     while message_length % 8 != 0:
-    #         message_length -= 1
-    #         params.dna_barcode_length += 1
-    
-    # bits_per_codeword = message_length * 1
-
     check_ltcode, check_reedsolomon = True, True
 
     if params.inner_error_correction == 'ltcode':
@@ -88,38 +101,5 @@ def decode_binary_codewords(data, params):
     check = check_ltcode & check_reedsolomon
     return combined_string, check
 
-def decode(data, params, logger=None):
-    """
-    Decodes the provided data using the no-homopolymer odd-even decoding scheme.
 
-    This method decodes the provided DNA sequences into binary data using the specified parameters.
-
-    Parameters:
-    data (SequencedData): The sequenced data to be decoded.
-
-    Returns:
-    tuple: A tuple containing the decoded binary data, a validity checker, and additional info.
-    """
-    try:
-        binary_codewords = []
-        
-        for i in range(len(data.data)):
-            binary_codewords.append(dna_to_binary_custom(data.data[i]))
-        
-        decoded_binary, valid = decode_binary_codewords(binary_codewords, params)
-
-        # Additional info
-        info = {
-            "Length of decoded data": len(decoded_binary),
-        }
-
-    except Exception as e:
-        logger.error(f"Error during decoding: {str(e)}")
-        logger.error(traceback.format_exc())
-        
-        decoded_binary = None
-        valid = False
-        info = None
-
-    return decoded_binary, valid, info
     
