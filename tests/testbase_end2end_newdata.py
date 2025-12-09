@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 
 from dnabyte.data_classes.base import Data
+from dnabyte.data_classes.insilicodna import InSilicoDNA
 from dnabyte.encode import Encode
 from dnabyte.library import Library
 from dnabyte.synthesize import SimulateSynthesis
@@ -21,6 +22,7 @@ class TestBase(unittest.TestCase):
         super().__init__(methodName)
         self.params = params
         self.testlogger = None
+        self.name = params.name if params is not None else None
 
     def setUp(self):
         # Set up logging configuration
@@ -33,6 +35,9 @@ class TestBase(unittest.TestCase):
             self.testlogger.removeHandler(self.handler)
 
     def test_logic(self):
+        # Skip test if no params provided (happens during test discovery)
+        if self.params is None:
+            self.skipTest("No params provided - test should be run via load_tests()")
 
         job_identifier = datetime.now().strftime('%Y%m%d_%H%M%S')
         log_filename = os.path.join('tests', 'testlogs', f'job_{job_identifier}.log')
@@ -53,7 +58,15 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
-                data_obj = Data(file_paths=['./tests/testfiles/' + self.params.filename])
+                # Handle both file_paths (list) and filename (single string) parameters
+                if hasattr(self.params, 'file_paths') and self.params.file_paths:
+                    file_paths = ['./tests/testfiles/' + fp for fp in self.params.file_paths]
+                elif hasattr(self.params, 'filename'):
+                    file_paths = ['./tests/testfiles/' + self.params.filename]
+                else:
+                    raise ValueError("No file_paths or filename provided in params")
+                
+                data_obj = Data(file_paths=file_paths)
                 bin_obj = Binarize(self.params)
                 binary_code = bin_obj.binarize(data_obj)
                 self.testlogger.info('STATUS: SUCCESS')
@@ -93,87 +106,106 @@ class TestBase(unittest.TestCase):
 ##### STEP 3: SIMULATE SYNTHESIS ######################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP03: SIMULATE SYNTHESIS')
-            start_time = time.time()
+            if self.params.synthesis_method is not None:
+                self.testlogger.info('STEP03: SIMULATE SYNTHESIS')
+                start_time = time.time()
 
-            try:
-                syn = SimulateSynthesis(self.params, logger=self.testlogger)
-                data_syn, info = syn.simulate(data_enc)
-                self.testlogger.info('STATUS: SUCCESS')
-                self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
-                self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_syn.data))
-                self.testlogger.info(data_syn.__str__())
+                try:
+                    syn = SimulateSynthesis(self.params, logger=self.testlogger)
+                    data_syn, info = syn.simulate(data_enc)
+                    self.testlogger.info('STATUS: SUCCESS')
+                    self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
+                    self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_syn.data))
+                    self.testlogger.info(data_syn.__str__())
 
-                # TODO: Add the info to the log
-                #self.testlogger.info(info)
+                    # TODO: Add the info to the log
+                    #self.testlogger.info(info)
 
-            except Exception as e:
-                self.testlogger.info('STATUS: ERROR')
-                self.testlogger.error('TYPE: %s', str(e))
-                self.testlogger.error(traceback.format_exc())
-                self.fail(f"Synthesis simulation failed: {str(e)}")
+                except Exception as e:
+                    self.testlogger.info('STATUS: ERROR')
+                    self.testlogger.error('TYPE: %s', str(e))
+                    self.testlogger.error(traceback.format_exc())
+                    self.fail(f"Synthesis simulation failed: {str(e)}")
+            else:
+                self.testlogger.info('STEP03: SIMULATE SYNTHESIS - SKIPPED (synthesis_method is None)')
+                data_syn = data_enc
 
 #######################################################################################################################
 ##### STEP 4: SIMULATE STORAGE ########################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP04: SIMULATE STORAGE')
-            start_time = time.time()
-            try:
-                sto = SimulateStorage(self.params, logger=self.testlogger)
-                data_sto, info = sto.simulate(data_syn)
-                self.testlogger.info('STATUS: SUCCESS')
-                self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
-                self.testlogger.info('NUMBER OF STRAND BREAKS: %d', info['number_of_strand_breaks'])
-                self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
-                self.testlogger.info(data_sto.__str__())
-            except Exception as e:
-                self.testlogger.info('STATUS: ERROR')
-                self.testlogger.error('TYPE: %s', str(e))
-                self.testlogger.error(traceback.format_exc())
-                self.fail(f"Storage simulation failed: %str(e)")
+            if self.params.storage_conditions is not None:
+                self.testlogger.info('STEP04: SIMULATE STORAGE')
+                start_time = time.time()
+                try:
+                    sto = SimulateStorage(self.params, logger=self.testlogger)
+                    data_sto, info = sto.simulate(data_syn)
+                    self.testlogger.info('STATUS: SUCCESS')
+                    self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
+                    self.testlogger.info('NUMBER OF STRAND BREAKS: %d', info['number_of_strand_breaks'])
+                    self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
+                    self.testlogger.info(data_sto.__str__())
+                except Exception as e:
+                    self.testlogger.info('STATUS: ERROR')
+                    self.testlogger.error('TYPE: %s', str(e))
+                    self.testlogger.error(traceback.format_exc())
+                    self.fail(f"Storage simulation failed: %str(e)")
+            else:
+                self.testlogger.info('STEP04: SIMULATE STORAGE - SKIPPED (storage_conditions is None)')
+                data_sto = data_syn
 
 #######################################################################################################################
-##### STEP 5: SIMULATE STORAGE ########################################################################################
+##### STEP 5: SIMULATE MISC ERRORS ####################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP05: SIMULATE MISC ERRORS')
-            start_time = time.time()
-            try:
-                sto = SimulateMiscErrors(self.params, logger=self.testlogger)
-                data_sto, info = sto.simulate(data_syn)
-                self.testlogger.info('STATUS: SUCCESS')
-                self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
-                self.testlogger.info(info)
-                self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
-                self.testlogger.info(data_sto.__str__())
-            except Exception as e:
-                self.testlogger.info('STATUS: ERROR')
-                self.testlogger.error('TYPE: %s', str(e))
-                self.testlogger.error(traceback.format_exc())
-                self.fail(f"Error simulation failed: %str(e)")
+            if self.params.error_methods is not None:
+                self.testlogger.info('STEP05: SIMULATE MISC ERRORS')
+                start_time = time.time()
+                try:
+                    sto = SimulateMiscErrors(self.params, logger=self.testlogger)
+                    data_err, info = sto.simulate(data_sto)
+                    self.testlogger.info('STATUS: SUCCESS')
+                    self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
+                    self.testlogger.info(info)
+                    self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_err.data))
+                    self.testlogger.info(data_err.__str__())
+                except Exception as e:
+                    self.testlogger.info('STATUS: ERROR')
+                    self.testlogger.error('TYPE: %s', str(e))
+                    self.testlogger.error(traceback.format_exc())
+                    self.fail(f"Error simulation failed: %str(e)")
+            else:
+                self.testlogger.info('STEP05: SIMULATE MISC ERRORS - SKIPPED (error_methods is None)')
+                data_err = data_sto
 
 #######################################################################################################################
 ##### STEP 6: SIMULATE SEQUENCING #####################################################################################
 #######################################################################################################################
 
-            self.testlogger.info('STEP06: SIMULATE SEQUENCING')
-            start_time = time.time()
-            try:
-                seq = SimulateSequencing(self.params, logger=self.testlogger)
-                data_seq, info = seq.simulate(data_sto)
-                # data_seq = SequencedData(data_seq.data) 
-                self.testlogger.info('STATUS: SUCCESS')
-                self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
-                self.testlogger.info('NUMBER OF INTRODUCED ERRORS: %d', len(info))
-                self.testlogger.info(data_seq.__str__())
+            if self.params.sequencing_method is not None:
+                self.testlogger.info('STEP06: SIMULATE SEQUENCING')
+                start_time = time.time()
+                try:
+                    seq = SimulateSequencing(self.params, logger=self.testlogger)
+                    data_seq, info = seq.simulate(data_err)
+                    # data_seq = SequencedData(data_seq.data) 
+                    self.testlogger.info('STATUS: SUCCESS')
+                    self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
+                    self.testlogger.info('NUMBER OF INTRODUCED ERRORS: %d', len(info))
+                    self.testlogger.info(data_seq.__str__())
 
-            except Exception as e:
-                self.testlogger.info('STATUS: ERROR')
-                self.testlogger.error('TYPE: %s', str(e))
-                self.testlogger.error('Error during sequencing simulation: %s', str(e))
-                self.testlogger.error(traceback.format_exc())
-                self.fail(f"Sequencing simulation failed: %s")
+                except Exception as e:
+                    self.testlogger.info('STATUS: ERROR')
+                    self.testlogger.error('TYPE: %s', str(e))
+                    self.testlogger.error('Error during sequencing simulation: %s', str(e))
+                    self.testlogger.error(traceback.format_exc())
+                    self.fail(f"Sequencing simulation failed: {str(e)}")
+            else:
+                self.testlogger.info('STEP06: SIMULATE SEQUENCING - SKIPPED (sequencing_method is None)')
+                data_seq = data_err
+                # Convert NucleobaseCode to InSilicoDNA when no sequencing is done
+                if not isinstance(data_seq, InSilicoDNA):
+                    data_seq = InSilicoDNA(data_seq.data)
 
 #######################################################################################################################
 ##### STEP 7: PROCESSING ##############################################################################################
@@ -223,7 +255,7 @@ class TestBase(unittest.TestCase):
                 self.testlogger.info('STATUS: ERROR')
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error(traceback.format_exc())
-                self.fail(f"Decoding failed: %s")
+                self.fail(f"Decoding failed: {str(e)}")
 
 #######################################################################################################################
 ##### STEP 9: COMPARE DATA ############################################################################################
@@ -233,8 +265,6 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
-                print(data_dec.data, 'decoded data')
-                print(binary_code.data, 'raw data')
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 
                 if comparison == 'SUCCESS':
@@ -261,7 +291,7 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
-                success = bin_obj.debinarize(data_obj)
+                success = bin_obj.debinarize(data=data_dec, output_directory='./tests/testfiles/testdecode/')
                 self.testlogger.info('STATUS: SUCCESS')
                 self.testlogger.info('DURATION: %.2f seconds' + "\n", time.time() - start_time)
 

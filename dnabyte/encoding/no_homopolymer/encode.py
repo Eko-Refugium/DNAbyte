@@ -203,7 +203,7 @@ class NoHomoPoly(Encode):
 
 def attributes(inputparams):
 
-    encoding_method = 'no_homopolymeroddeven_encoding'
+    encoding_method = 'no_homopolymer'
     assembly_structure = 'synthesis'
     
     # parameter: codeword_length
@@ -284,7 +284,7 @@ def attributes(inputparams):
             raise ValueError(f"reed_solo_percentage must be greater than 0.5 and less than 0.95, got {inputparams.reed_solo_percentage}")
         else:
             reed_solo_percentage = inputparams.reed_solo_percentage
-    elif inputparams.outer_error_correction is None:
+    elif inputparams.outer_error_correction is None or not hasattr(inputparams, 'outer_error_correction'):
         pass
     else:
         raise ValueError("Invalid outer_error_correction method")

@@ -27,14 +27,11 @@ class Binarize:
             raise TypeError(f"Expected Data object, got {type(data).__name__}")
         else:
             try:
-                print(self.binarize_plugins, 'binarize plugins in binarization method')
                 binarization_class = self.binarize_plugins[self.name]
                 plugin = binarization_class(self.params)  # Instantiate the plugin class
 
                 # Call the binarize method of the plugin class
-                print('binarize method called in binarization class')
                 successfull, size = plugin.binarize(data)
-                print(successfull,data.file_paths, size, 'data in binarization method')
                 binary_data = BinaryCode(data=successfull, 
                                      file_paths=data.file_paths,size=size)
                 return binary_data
@@ -43,7 +40,7 @@ class Binarize:
             except KeyError:
                 raise ValueError(f"Binarization method '{self.name}' not recognized.")
             
-    def debinarize(self, data, output_file_path=None):
+    def debinarize(self, data, output_directory=None):
         if self.name == None:
             raise ValueError("No binarization method specified.")
         elif isinstance(data, BinaryCode) == False:
@@ -54,7 +51,7 @@ class Binarize:
                 plugin = binarization_class(self.params)  # Instantiate the plugin class
 
                 # Call the debinarize method of the plugin class
-                successful = plugin.debinarize(data, output_file_path)
+                successful = plugin.debinarize(data, output_directory)
                 return successful
 
             except KeyError:

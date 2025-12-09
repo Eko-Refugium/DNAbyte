@@ -108,16 +108,16 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
             print(f"Error loading storage plugin '{filename}': {e}")
 
     # Load error plugins
-    print(error_methods, type(error_methods), 'error methods in load plugins')
+    #print(error_methods, type(error_methods), 'error methods in load plugins')
     if error_methods != None:
         try:   
             folders_error = [name for name in os.listdir(plugin_folder + '/misc_errors') 
                 if os.path.isdir(os.path.join(plugin_folder + '/misc_errors', name))]
-            print(folders_error, 'folders error in load plugins')
+            #print(folders_error, 'folders error in load plugins')
             for filename in folders_error:
 
                 if isinstance(error_methods, str):
-                    print(error_methods.lower(), filename.lower(), 'comparing error methods and filename')
+                    #print(error_methods.lower(), filename.lower(), 'comparing error methods and filename')
                     if error_methods.lower() == filename.lower():
                         # Load the encode module
                         error_module = importlib.import_module(f'dnabyte.misc_errors.{filename}.err')
@@ -139,9 +139,10 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
                                     error_plugins[filename] = obj
                                     break
         except Exception as e:
+            
             print(f"Error loading storage plugin '{filename}': {e}")
 
-    print(error_plugins, 'error plugins in load plugins')
+    #print(error_plugins, 'error plugins in load plugins')
 
     # Load sequencing plugins
     if sequencing_method != None:
@@ -171,7 +172,7 @@ def load_synthesis_plugins(synthesis_method):
     """
     plugin_folder = os.path.dirname(__file__)
     synthesis_plugins = {}  # Define the plugins dictionary
-    print(synthesis_method)
+    #print(synthesis_method)
     if isinstance(synthesis_method, str):
         synthesis_method = synthesis_method.lower() if synthesis_method != None else None
     # Normalize method names to lowercase

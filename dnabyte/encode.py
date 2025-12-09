@@ -78,7 +78,8 @@ class Encode:
             try:
                 encode_class = self.encoding_plugins[self.encoding_method]
                 plugin = encode_class(self.params, logger=self.logger)
-                decoded_data, valid, info = plugin.decode(data=data, params=self.params, logger=self.logger)
+                #decoded_data, valid, info = plugin.decode(data=data, params=self.params, logger=self.logger)
+                decoded_data, valid, info = plugin.decode(data=data)
                 obj = BinaryCode(decoded_data)
                 obj.file_paths = data.file_paths
                 return obj, valid, info
@@ -110,11 +111,11 @@ class Encode:
             try:
                 encode_class = self.encoding_plugins[self.encoding_method]
                 plugin = encode_class(self.params, logger=self.logger)
-                processed, info = plugin.process(data=data, params=self.params, logger=self.logger)
+                processed, info = plugin.process(data)
                 obj = NucleobaseCode(processed)
                 obj.file_paths = data.file_paths
-                print(data.file_paths, 'data file paths in process method')
-                print(obj, 'processed obj in process method')
+                #print(data.file_paths, 'data file paths in process method')
+                #print(obj, 'processed obj in process method')
                 return obj, info
             except KeyError:
                 raise ValueError(f"Process Module for encoding method '{self.encoding_method}' not found in plugins.")

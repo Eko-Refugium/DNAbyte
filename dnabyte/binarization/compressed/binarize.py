@@ -7,19 +7,6 @@ from dnabyte.data_classes.base import Data
 from dnabyte.data_classes.binarycode import BinaryCode
 from dnabyte.binarize import Binarize
 
-def attributes(params):
-    if 'compression_level' not in params.__dict__ or params.compression_level is None:
-        compression_level = 9
-    else:
-        compression_level = params.compression_level
-
-    if 'file_paths' not in params.__dict__ or params.file_paths is None:
-        raise ValueError("file_paths parameter must be specified")
-    else:
-        file_paths = params.file_paths
-        
-    return {"compression_level": compression_level, "file_paths": file_paths}
-
 class ArchiveBinarize(Binarize):
     """
     ArchiveBinarize creates a compressed tar.gz archive from multiple files 
@@ -166,3 +153,16 @@ class ArchiveBinarize(Binarize):
     def __repr__(self):
         """Developer representation of CompressedBinarize."""
         return f"CompressedBinarize(compression_level={self.compression_level}, temp_dir={self.temp_dir!r})"
+    
+def attributes(params):
+    if 'compression_level' not in params.__dict__ or params.compression_level is None:
+        compression_level = 9
+    else:
+        compression_level = params.compression_level
+
+    if 'file_paths' not in params.__dict__ or params.file_paths is None:
+        raise ValueError("file_paths parameter must be specified")
+    else:
+        file_paths = params.file_paths
+        
+    return {"compression_level": compression_level, "file_paths": file_paths}

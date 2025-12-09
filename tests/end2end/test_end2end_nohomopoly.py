@@ -8,10 +8,10 @@ from tests.testbase_end2end_newdata import TestBase
 params_list = [
     Params(
         name='end2end_nohomopoly_noEC_noErrors',
-        filename='Bohemian_Rhapsody_Lyrics.txt',
+        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
 
         # binarization method
-        binarization_method='binarize_compressed',
+        binarization_method='compressed',
 
         # encoding parameters
         encoding_method='no_homopolymer',
@@ -24,29 +24,29 @@ params_list = [
         storage_conditions=None,
         synthesis_method=None,
         sequencing_method=None,
-    )#,
-    # Params(
-    #     name='end2end_nohomopoly_allEC_noErrors',
-    #     filename='Bohemian_Rhapsody_Lyrics.txt',
+    ),
+    Params(
+        name='end2end_nohomopoly_allEC_noErrors',
+        filename='Bohemian_Rhapsody_Lyrics.txt',
 
-    #     # encoding parameters
-    #     encoding_method='nohomopoly',
-    #     codeword_length=501,
-    #     dna_barcode_length=34,
+        # encoding parameters
+        encoding_method='nohomopoly',
+        codeword_length=501,
+        dna_barcode_length=34,
 
-    #     # error correction
-    #     inner_error_correction='ltcode',
-    #     ltcode_header=34,
-    #     percent_of_symbols=2,
-    #     outer_error_correction='reedsolomon',
-    #     reed_solo_percentage=0.8,
+        # error correction
+        inner_error_correction='ltcode',
+        ltcode_header=34,
+        percent_of_symbols=2,
+        outer_error_correction='reedsolomon',
+        reed_solo_percentage=0.8,
 
-    #     # error channels
-    #     storage_conditions=None,
-    #     synthesis_method=None,
-    #     sequencing_method=None,
+        # error channels
+        storage_conditions=None,
+        synthesis_method=None,
+        sequencing_method=None,
 
-    # ),
+    )]#,
     # Params(
     #     name='end2end_synthesis_nohomopoly_allErrors',
     #     filename='Bohemian_Rhapsody_Lyrics.txt',

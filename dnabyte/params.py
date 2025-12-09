@@ -31,7 +31,7 @@ class Params:
                 setattr(self, keys, value)
         else:
             raise ValueError(f"Invalid binarization method: {self.binarization_method}")
-        print(self)
+        #print(self)
         # Check encoding parameters
         if self.encoding_method is None:
             pass
@@ -91,7 +91,7 @@ class Params:
         else:
             raise ValueError(f"Invalid storage conditions: {self.storage_conditions}")
         
-        print(self.error_plugins, 'error plugins in params')
+        #print(self.error_plugins, 'error plugins in params')
         
         # Check error parameters
         if self.error_methods is None:
@@ -117,7 +117,7 @@ class Params:
                     raise ValueError(f"Invalid storage condition: {condition}")
             setattr(self, 'error_params_list', error_params_list)
             delattr(self, 'error_params')
-            print(self.error_params_list, 'error params list in params')
+            #print(self.error_params_list, 'error params list in params')
         elif isinstance(self.error_methods, str) and self.error_methods in self.error_plugins:
             
             dict_of_attributes = {}

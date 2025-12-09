@@ -56,7 +56,7 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
-                print('before data obj creation')
+                #print('before data obj creation')
                 data_obj = Data(['./tests/testfiles/' + self.params.filename])
 
                 bin = Binarize(self.params)

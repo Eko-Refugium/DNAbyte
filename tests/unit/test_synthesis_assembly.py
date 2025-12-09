@@ -16,7 +16,6 @@ import math
 class TestAssembly(unittest.TestCase):
 
     def setUp(self):
-
         self.nucleobase_code = NucleobaseCode.random(type='linear_assembly', library='20bp_Lib.csv', m=10, n=5)
 
     def test_assembly(self):
@@ -34,16 +33,22 @@ class TestAssembly(unittest.TestCase):
         self.assertIsInstance(assembled_data, InSilicoDNA)
 
     def test_assembly_linear_binom(self):
+
+        nucleobase_code = NucleobaseCode.random(type='linear_binom', library='20bp_Lib.csv', m=15, n=5)
+
         params = Params(encoding_method='linear_binom', 
                         sigma=5,
                         assembly_structure='assembly', 
                         synthesis_method='assembly', 
+                        percent_of_symbols=5,
                         mean=100, 
                         std_dev=2, 
                         hybridisation_steps=10000, 
                         library_name='20bp_Lib.csv')
         assembly = SimulateSynthesis(params=params)
         assembled_data, info = assembly.simulate(self.nucleobase_code)
+        print(assembled_data.data)
+
         self.assertIsInstance(assembled_data, InSilicoDNA)
 
 
