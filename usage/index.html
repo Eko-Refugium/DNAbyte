@@ -1,0 +1,2034 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://eko-refugium.github.io/DNAbyte/usage/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../simulation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Usage - DNAbyte Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pipeline-steps" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="DNAbyte Documentation" class="md-header__button md-logo" aria-label="DNAbyte Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DNAbyte Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Usage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Eko-Refugium/DNAbyte" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Eko-Refugium/DNAbyte
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DNAbyte Documentation" class="md-nav__button md-logo" aria-label="DNAbyte Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DNAbyte Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Eko-Refugium/DNAbyte" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Eko-Refugium/DNAbyte
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-parameter-configuration-params-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Parameter Configuration (Params class)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0: Parameter Configuration (Params class)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameter-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-parameter-ranges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Parameter Ranges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-binarize-and-compress-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Binarize and Compress Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Binarize and Compress Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#binarization-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binarization Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binarycode-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BinaryCode Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-encode-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Encode Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Encode Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-correction-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Correction Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nucleobasecode-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NucleobaseCode Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-simulate-synthesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Simulate Synthesis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Simulate Synthesis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mesa-synthesis-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MESA Synthesis Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assembly-synthesis-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assembly Synthesis Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insilicodna-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InSilicoDNA Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-simulate-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Simulate Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Simulate Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-simulate-sequencing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Simulate Sequencing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Simulate Sequencing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequencing-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequencing Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-process-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Process Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6: Process Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-decode-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Decode Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Decode Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-restore-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Restore Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Restore Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimal-example-no-error-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal Example (No Error Channels)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-0-parameter-configuration-params-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Parameter Configuration (Params class)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0: Parameter Configuration (Params class)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameter-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameter Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-parameter-ranges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Parameter Ranges
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-binarize-and-compress-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Binarize and Compress Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Binarize and Compress Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#binarization-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binarization Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binarycode-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BinaryCode Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-encode-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Encode Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Encode Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-correction-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Correction Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nucleobasecode-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NucleobaseCode Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-simulate-synthesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Simulate Synthesis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Simulate Synthesis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mesa-synthesis-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MESA Synthesis Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assembly-synthesis-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Assembly Synthesis Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insilicodna-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InSilicoDNA Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-simulate-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Simulate Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Simulate Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-simulate-sequencing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Simulate Sequencing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Simulate Sequencing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sequencing-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequencing Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-process-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Process Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 6: Process Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-decode-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Decode Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 7: Decode Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-restore-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Restore Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 8: Restore Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-values_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimal-example-no-error-channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal Example (No Error Channels)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="pipeline-steps">Pipeline Steps<a class="headerlink" href="#pipeline-steps" title="Permanent link">&para;</a></h1>
+<h2 id="step-0-parameter-configuration-params-class">Step 0: Parameter Configuration (<code>Params</code> class)<a class="headerlink" href="#step-0-parameter-configuration-params-class" title="Permanent link">&para;</a></h2>
+<p>The <code>Params</code> class encapsulates all configuration parameters required to simulate a full DNA data storage workflow. The parameters can be grouped into the steps of the pipeline they concern:</p>
+<h3 id="parameter-groups">Parameter Groups<a class="headerlink" href="#parameter-groups" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>File &amp; Identification</strong>: <code>name</code>, <code>file_paths</code>, <code>seed</code>, <code>debug</code></li>
+<li><strong>Binarization</strong>: <code>binarization_method</code>, <code>compression_level</code></li>
+<li><strong>Encoding</strong>: <code>encoding_method</code>, <code>assembly_structure</code>, <code>library_name</code>, <code>codeword_length</code>, <code>dna_barcode_length</code>, <code>codeword_maxlength_positions</code>, <code>percent_of_symbols</code>, <code>sigma_amount</code></li>
+<li><strong>Error Correction</strong>: <code>inner_error_correction</code>, <code>outer_error_correction</code>, <code>reed_solo_percentage</code>, <code>ltcode_header</code>, <code>index_carry_length</code></li>
+<li><strong>Synthesis</strong>: <code>synthesis_method</code>, <code>mesa_synthesis_id</code>, <code>mean</code>, <code>vol</code>, <code>std_dev</code>, <code>hybridisation_steps</code></li>
+<li><strong>Storage</strong>: <code>years</code>, <code>storage_conditions</code></li>
+<li><strong>Sequencing</strong>: <code>sequencing_method</code>, <code>sequencing_mesa_id</code>, <code>iid_error_rate</code></li>
+</ul>
+<p>More details about the parameters will be provided in the respective sections. </p>
+<h3 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">Params</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span>
+    <span class="n">file_paths</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;my_file.txt&#39;</span><span class="p">],</span>
+    <span class="n">binarization_method</span><span class="o">=</span><span class="s1">&#39;compressed&#39;</span><span class="p">,</span>
+    <span class="n">encoding_method</span><span class="o">=</span><span class="s1">&#39;max_density&#39;</span><span class="p">,</span>
+    <span class="n">outer_error_correction</span><span class="o">=</span><span class="s1">&#39;reedsolomon&#39;</span><span class="p">,</span>
+    <span class="n">reed_solo_percentage</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">dna_barcode_length</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span>
+    <span class="n">codeword_length</span><span class="o">=</span><span class="mi">501</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<h3 id="creating-parameter-ranges">Creating Parameter Ranges<a class="headerlink" href="#creating-parameter-ranges" title="Permanent link">&para;</a></h3>
+<p>Create multiple parameter sets by varying one parameter:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">params_list</span> <span class="o">=</span> <span class="n">Params</span><span class="o">.</span><span class="n">params_range</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;storage_duration_test&#39;</span><span class="p">,</span>
+    <span class="n">file_paths</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;test.txt&#39;</span><span class="p">],</span>
+    <span class="n">encoding_method</span><span class="o">=</span><span class="s1">&#39;max_density&#39;</span><span class="p">,</span>
+    <span class="n">binarization_method</span><span class="o">=</span><span class="s1">&#39;compressed&#39;</span><span class="p">,</span>
+    <span class="n">storage_conditions</span><span class="o">=</span><span class="s1">&#39;biogene&#39;</span><span class="p">,</span>
+    <span class="n">years</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>  <span class="c1"># Creates 4 Params objects</span>
+<span class="p">)</span>
+<span class="c1"># Returns a list of 4 Params objects, one for each year value</span>
+</code></pre></div>
+
+<hr />
+<h2 id="step-1-binarize-and-compress-data">Step 1: Binarize and Compress Data<a class="headerlink" href="#step-1-binarize-and-compress-data" title="Permanent link">&para;</a></h2>
+<p>To initiate the binarization process, create a <code>Data</code> object with a list of file paths, then use <code>Binarize</code> to convert it to binary.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.data_classes.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.binarize</span><span class="w"> </span><span class="kn">import</span> <span class="n">Binarize</span>
+
+<span class="c1"># Create data object</span>
+<span class="n">data_obj</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">file_paths</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mi_dna_disc_logo.png&quot;</span><span class="p">])</span>
+
+<span class="c1"># Configure and run binarization</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span><span class="n">binarization_method</span><span class="o">=</span><span class="s1">&#39;compressed&#39;</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">binarizer</span> <span class="o">=</span> <span class="n">Binarize</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">binary_code</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">binarize</span><span class="p">(</span><span class="n">data_obj</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binary length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">binary_code</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> bits&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Binary data: </span><span class="si">{</span><span class="n">binary_code</span><span class="o">.</span><span class="n">data</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The <code>Binarize</code> class compresses all input files into a temporary <code>.tar.gz</code> archive (when using <code>compressed</code> method), reads it as a binary stream, and converts it into a bitstring. This binary string is stored in <code>binary_code.data</code>. The temporary archive is deleted after use.</p>
+<h3 id="binarization-methods">Binarization Methods<a class="headerlink" href="#binarization-methods" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>'compressed'</code></strong>: Tar+gzip compression (recommended, requires <code>compression_level</code> parameter)</li>
+<li><strong><code>'text'</code></strong>: Plain text encoding</li>
+<li><strong><code>'default'</code></strong>: No compression</li>
+</ul>
+<h3 id="binarycode-class">BinaryCode Class<a class="headerlink" href="#binarycode-class" title="Permanent link">&para;</a></h3>
+<p>The result is a <code>BinaryCode</code> object containing:
+- <code>data</code> (str): Binary string (e.g., "10010101...")
+- <code>file_paths</code> (list): Original file paths</p>
+<hr />
+<h2 id="step-2-encode-data">Step 2: Encode Data<a class="headerlink" href="#step-2-encode-data" title="Permanent link">&para;</a></h2>
+<p>The encoding process transforms binary data into DNA sequences with optional error correction.</p>
+<h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.encode</span><span class="w"> </span><span class="kn">import</span> <span class="n">Encode</span>
+
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">Encode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">nucleobase_code</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">binary_code</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of codewords: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">nucleobase_code</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Barcode length: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;barcode_length&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="encoding-methods">Encoding Methods<a class="headerlink" href="#encoding-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Encoding Method</th>
+<th>Assembly Structure</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>max_density</code></td>
+<td><code>synthesis</code></td>
+<td>Maximum information density encoding</td>
+</tr>
+<tr>
+<td><code>no_homopolymer</code></td>
+<td><code>synthesis</code></td>
+<td>Homopolymer-free encoding</td>
+</tr>
+<tr>
+<td><code>linear_chain</code></td>
+<td><code>linear_assembly</code></td>
+<td>Linear chain assembly</td>
+</tr>
+<tr>
+<td><code>linear_binom</code></td>
+<td><code>linear_assembly</code></td>
+<td>Binomial linear assembly</td>
+</tr>
+<tr>
+<td><code>poly_chain</code></td>
+<td><code>polymerase_assembly</code></td>
+<td>Polymerase chain assembly</td>
+</tr>
+<tr>
+<td><code>poly_binom</code></td>
+<td><code>polymerase_assembly</code></td>
+<td>Binomial polymerase assembly</td>
+</tr>
+</tbody>
+</table>
+<h3 id="error-correction-parameters">Error Correction Parameters<a class="headerlink" href="#error-correction-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inner_error_correction</code></td>
+<td>Selects inner-layer error correction: <code>'ltcode'</code> or <code>None</code></td>
+</tr>
+<tr>
+<td><code>ltcode_header</code></td>
+<td>Number of bits used for Luby Transform code headers</td>
+</tr>
+<tr>
+<td><code>percent_of_symbols</code></td>
+<td>Percentage of symbols included in each encoded LT packet</td>
+</tr>
+<tr>
+<td><code>index_carry_length</code></td>
+<td>Number of bits used to carry the LT-code packet index</td>
+</tr>
+<tr>
+<td><code>outer_error_correction</code></td>
+<td>Selects outer-layer error correction: <code>'reedsolomon'</code> or <code>None</code></td>
+</tr>
+<tr>
+<td><code>reed_solo_percentage</code></td>
+<td>Redundancy percentage for Reed-Solomon coding (0.0-1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Example with error correction:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span>
+    <span class="n">file_paths</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;data.txt&#39;</span><span class="p">],</span>
+    <span class="n">encoding_method</span><span class="o">=</span><span class="s1">&#39;max_density&#39;</span><span class="p">,</span>
+    <span class="n">binarization_method</span><span class="o">=</span><span class="s1">&#39;compressed&#39;</span><span class="p">,</span>
+    <span class="n">codeword_length</span><span class="o">=</span><span class="mi">501</span><span class="p">,</span>
+    <span class="n">dna_barcode_length</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span>
+    <span class="n">inner_error_correction</span><span class="o">=</span><span class="s1">&#39;ltcode&#39;</span><span class="p">,</span>
+    <span class="n">ltcode_header</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span>
+    <span class="n">percent_of_symbols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">index_carry_length</span><span class="o">=</span><span class="mi">34</span><span class="p">,</span>
+    <span class="n">outer_error_correction</span><span class="o">=</span><span class="s1">&#39;reedsolomon&#39;</span><span class="p">,</span>
+    <span class="n">reed_solo_percentage</span><span class="o">=</span><span class="mf">0.8</span>  <span class="c1"># 80% redundancy</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<p>These error correction methods are commonly used for synthesis-based methods, where the information lies in the sequence of nucleotides. They can also be used for assembly-based methods, where the information lies in the sequence of motifs (short nucleotide sequences). Note that assembly-based methods exhibit implicit error correction from their restricted sequence space.</p>
+<h3 id="nucleobasecode-class">NucleobaseCode Class<a class="headerlink" href="#nucleobasecode-class" title="Permanent link">&para;</a></h3>
+<p>The result is a <code>NucleobaseCode</code> object. The structure of <code>data</code> depends on the encoding method:</p>
+<ul>
+<li><strong>Synthesis methods</strong> (<code>max_density</code>, <code>no_homopolymer</code>): <code>data</code> is a list of DNA strings</li>
+<li><strong>Assembly methods</strong> (<code>linear_chain</code>, <code>poly_chain</code>, etc.): <code>data</code> is nested lists of library elements</li>
+</ul>
+<hr />
+<h2 id="step-3-simulate-synthesis">Step 3: Simulate Synthesis<a class="headerlink" href="#step-3-simulate-synthesis" title="Permanent link">&para;</a></h2>
+<p>Simulates the synthesis process of converting digital data into DNA oligonucleotides. There are two different synthesis strategies determined by the <code>synthesis_method</code> parameter:</p>
+<ul>
+<li><strong><code>'mesa'</code></strong>: Nucleotide-wise chemical synthesis based on the MESA model</li>
+<li><strong><code>'assembly'</code></strong>: Synthesis by ligating short oligos from a library (hybridization simulation) </li>
+</ul>
+<h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.synthesize</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulateSynthesis</span>
+
+<span class="n">synthesizer</span> <span class="o">=</span> <span class="n">SimulateSynthesis</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">synthesized_dna</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">nucleobase_code</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of sequences: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">synthesized_dna</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="mesa-synthesis-parameters">MESA Synthesis Parameters<a class="headerlink" href="#mesa-synthesis-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Synthesis Approach</th>
+<th>Method</th>
+<th>Method ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Column synthesized oligos</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>MutS</td>
+<td><code>68</code></td>
+</tr>
+<tr>
+<td></td>
+<td>Consensus shuffle</td>
+<td><code>69</code></td>
+</tr>
+<tr>
+<td></td>
+<td>ErrASE</td>
+<td><code>6</code></td>
+</tr>
+<tr>
+<td></td>
+<td>No error correction</td>
+<td><code>71</code></td>
+</tr>
+<tr>
+<td><strong>Microarray based oligo pools</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Oligo hybridization based error correction</td>
+<td><code>4</code></td>
+</tr>
+<tr>
+<td></td>
+<td>High-temperature ligation/hybridization based</td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td></td>
+<td>ErrASE</td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td></td>
+<td>Nuclease-based</td>
+<td><code>7</code></td>
+</tr>
+<tr>
+<td></td>
+<td>NGS-based</td>
+<td><code>70</code></td>
+</tr>
+<tr>
+<td></td>
+<td>No error correction</td>
+<td><code>71</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="assembly-synthesis-parameters">Assembly Synthesis Parameters<a class="headerlink" href="#assembly-synthesis-parameters" title="Permanent link">&para;</a></h3>
+<p>For assembly-based approaches (<code>synthesis_method='assembly'</code>), the following parameters must be provided:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mean</code></td>
+<td>Mean number of copies of an oligonucleotide</td>
+</tr>
+<tr>
+<td><code>std_dev</code></td>
+<td>Standard deviation of copy numbers</td>
+</tr>
+<tr>
+<td><code>vol</code></td>
+<td>Volume of the solution (in liters)</td>
+</tr>
+<tr>
+<td><code>hybridisation_steps</code></td>
+<td>Number of random hybridization steps (proxy for reaction time)</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">Avogadro</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span>
+    <span class="n">synthesis_method</span><span class="o">=</span><span class="s1">&#39;mesa&#39;</span><span class="p">,</span>
+    <span class="n">mesa_synthesis_id</span><span class="o">=</span><span class="mi">68</span><span class="p">,</span>
+    <span class="n">mean</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">vol</span><span class="o">=</span><span class="mi">1000000</span> <span class="o">/</span> <span class="n">Avogadro</span><span class="p">,</span>
+    <span class="n">std_dev</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">hybridisation_steps</span><span class="o">=</span><span class="mi">10000</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<h3 id="insilicodna-class">InSilicoDNA Class<a class="headerlink" href="#insilicodna-class" title="Permanent link">&para;</a></h3>
+<p>The result is an <code>InSilicoDNA</code> object containing:
+- <code>data</code> (list): List of DNA sequence strings
+- Methods for statistics and string representation</p>
+<h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
+<p>[1] Schwarz, Michael, et al. "MESA: automated assessment of synthetic DNA fragments and simulation of DNA synthesis, storage, sequencing and PCR errors." <em>Bioinformatics</em> 36.11 (2020): 3322-3326.</p>
+<hr />
+<h2 id="step-4-simulate-storage">Step 4: Simulate Storage<a class="headerlink" href="#step-4-simulate-storage" title="Permanent link">&para;</a></h2>
+<p>The <code>SimulateStorage</code> class models the long-term degradation of DNA sequences stored under various environmental conditions. DNA degradation is modeled probabilistically based on empirical decay rates under three conditions:</p>
+<ul>
+<li><strong><code>'biogene'</code></strong>: 1×10⁻⁷ per nucleotide per year (Biogene capsule storage)</li>
+<li><strong><code>'permafrost'</code></strong>: 5.5×10⁻⁶ per nucleotide per year  </li>
+<li><strong><code>'roomtemperature'</code></strong>: approximated half-life of 521 years (decay rate ≈ 0.00133)</li>
+<li><strong><code>'random'</code></strong>: Custom decay for testing</li>
+</ul>
+<h3 id="usage_2">Usage<a class="headerlink" href="#usage_2" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.store</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulateStorage</span>
+
+<span class="n">storage</span> <span class="o">=</span> <span class="n">SimulateStorage</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">stored_dna</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">synthesized_dna</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Strand breaks: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;number_of_strand_breaks&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="storage-parameters">Storage Parameters<a class="headerlink" href="#storage-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>years</code></td>
+<td><code>int</code></td>
+<td>Number of years to simulate storage. Use <code>0</code> to disable simulation.</td>
+</tr>
+<tr>
+<td><code>storage_conditions</code></td>
+<td><code>str</code></td>
+<td>One of <code>'permafrost'</code>, <code>'roomtemperature'</code>, <code>'biogene'</code>, or <code>'random'</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>'random'</code> mode allows base substitutions to simulate artificial mutation rates.</p>
+<h3 id="return-values">Return Values<a class="headerlink" href="#return-values" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>InSilicoDNA</code> object (filtered or mutated sequences)</li>
+<li><code>info</code> dictionary containing:</li>
+<li><code>number_of_strand_breaks</code>: Number of sequences degraded</li>
+</ul>
+<h3 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h3>
+<p>[1] Allentoft, M. E. et al. <em>The half-life of DNA in bone: measuring decay kinetics in 158 dated fossils.</em> Proc. R. Soc. B 279, 4724–4733 (2012).<br />
+[2] Coudy, D. et al. <em>Long term conservation of DNA at ambient temperature: Implications for DNA data storage.</em> PLoS One 16.11 (2021): e0259868.</p>
+<hr />
+<h2 id="step-5-simulate-sequencing">Step 5: Simulate Sequencing<a class="headerlink" href="#step-5-simulate-sequencing" title="Permanent link">&para;</a></h2>
+<p>The <code>SimulateSequencing</code> class models the sequencing process by applying sequencing-specific error profiles to stored DNA oligonucleotides.</p>
+<h3 id="usage_3">Usage<a class="headerlink" href="#usage_3" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.sequence</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulateSequencing</span>
+
+<span class="n">sequencer</span> <span class="o">=</span> <span class="n">SimulateSequencing</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">sequenced_dna</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">sequencer</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">stored_dna</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Errors introduced: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">info</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="sequencing-methods">Sequencing Methods<a class="headerlink" href="#sequencing-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Sequencing Method</th>
+<th>ID/Parameter</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>None</code></td>
+<td>-</td>
+<td>No sequencing simulation is performed.</td>
+</tr>
+<tr>
+<td><code>'iid'</code></td>
+<td><code>iid_error_rate</code></td>
+<td>Independent and identically distributed error model (specify custom rate).</td>
+</tr>
+<tr>
+<td><code>'mesa'</code></td>
+<td><code>35</code></td>
+<td>Illumina: Single End</td>
+</tr>
+<tr>
+<td><code>'mesa'</code></td>
+<td><code>36</code></td>
+<td>Illumina: Paired End</td>
+</tr>
+<tr>
+<td><code>'mesa'</code></td>
+<td><code>39</code></td>
+<td>Nanopore: 1D</td>
+</tr>
+<tr>
+<td><code>'mesa'</code></td>
+<td><code>40</code></td>
+<td>Nanopore: 2D</td>
+</tr>
+<tr>
+<td><code>'mesa'</code></td>
+<td><code>37</code></td>
+<td>PacBio: Subread</td>
+</tr>
+<tr>
+<td><code>'mesa'</code></td>
+<td><code>38</code></td>
+<td>PacBio: CCS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># MESA sequencing with Illumina</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span>
+    <span class="n">sequencing_method</span><span class="o">=</span><span class="s1">&#39;mesa&#39;</span><span class="p">,</span>
+    <span class="n">sequencing_mesa_id</span><span class="o">=</span><span class="mi">35</span>  <span class="c1"># Illumina Single End</span>
+<span class="p">)</span>
+
+<span class="c1"># IID sequencing with custom error rate</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span>
+    <span class="n">sequencing_method</span><span class="o">=</span><span class="s1">&#39;iid&#39;</span><span class="p">,</span>
+    <span class="n">iid_error_rate</span><span class="o">=</span><span class="mf">0.01</span>  <span class="c1"># 1% error rate</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<h3 id="return-values_1">Return Values<a class="headerlink" href="#return-values_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>InSilicoDNA</code> object with sequencing errors</li>
+<li><code>info</code> list containing error information</li>
+</ul>
+<hr />
+<h2 id="step-6-process-data">Step 6: Process Data<a class="headerlink" href="#step-6-process-data" title="Permanent link">&para;</a></h2>
+<p>Align and prepare sequences for decoding. This step processes sequenced reads to prepare them for error correction and decoding.</p>
+<h3 id="usage_4">Usage<a class="headerlink" href="#usage_4" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Process sequenced data</span>
+<span class="n">processed_code</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">sequenced_dna</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">processed_code</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> codewords&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Note:</strong> For assembly methods requiring sequence alignment (<code>linear_binom</code>, <code>poly_binom</code>), this step requires <strong>MMseqs2</strong> to be installed on your system.</p>
+<h3 id="return-values_2">Return Values<a class="headerlink" href="#return-values_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>NucleobaseCode</code> object ready for decoding</li>
+<li><code>info</code> dictionary with processing metrics</li>
+</ul>
+<hr />
+<h2 id="step-7-decode-data">Step 7: Decode Data<a class="headerlink" href="#step-7-decode-data" title="Permanent link">&para;</a></h2>
+<p>Decode DNA sequences back to binary with error correction.</p>
+<h3 id="usage_5">Usage<a class="headerlink" href="#usage_5" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="n">decoded_binary</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">coder</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">processed_code</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Decoding successful!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovered </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">decoded_binary</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> bits&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Decoding failed - error correction could not recover data&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="return-values_3">Return Values<a class="headerlink" href="#return-values_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>BinaryCode</code> object with recovered binary data</li>
+<li><code>valid</code> (bool): <code>True</code> if error correction successfully recovered original data</li>
+<li><code>info</code> dictionary with decoding metrics</li>
+</ul>
+<p>The <code>valid</code> flag indicates whether the decoded data matches the original after error correction. If too many errors were introduced during synthesis/storage/sequencing, <code>valid</code> will be <code>False</code>.</p>
+<hr />
+<h2 id="step-8-restore-files">Step 8: Restore Files<a class="headerlink" href="#step-8-restore-files" title="Permanent link">&para;</a></h2>
+<p>Convert binary back to original files.</p>
+<h3 id="usage_6">Usage<a class="headerlink" href="#usage_6" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+    <span class="n">restored_data</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">debinarize</span><span class="p">(</span><span class="n">decoded_binary</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Files restored: </span><span class="si">{</span><span class="n">restored_data</span><span class="o">.</span><span class="n">file_paths</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="return-values_4">Return Values<a class="headerlink" href="#return-values_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>Data</code> object with restored files</li>
+<li><code>info</code> dictionary with restoration metrics</li>
+</ul>
+<p>The files are restored to their original format and can be accessed from the file system.</p>
+<hr />
+<h2 id="minimal-example-no-error-channels">Minimal Example (No Error Channels)<a class="headerlink" href="#minimal-example-no-error-channels" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">Params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.data_classes.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.binarize</span><span class="w"> </span><span class="kn">import</span> <span class="n">Binarize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dnabyte.encode</span><span class="w"> </span><span class="kn">import</span> <span class="n">Encode</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">Params</span><span class="p">(</span>
+    <span class="n">file_paths</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;test.txt&#39;</span><span class="p">],</span>
+    <span class="n">encoding_method</span><span class="o">=</span><span class="s1">&#39;max_density&#39;</span><span class="p">,</span>
+    <span class="n">binarization_method</span><span class="o">=</span><span class="s1">&#39;compressed&#39;</span><span class="p">,</span>
+    <span class="n">synthesis_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">storage_conditions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">sequencing_method</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">file_paths</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;test.txt&#39;</span><span class="p">])</span>
+<span class="n">binarizer</span> <span class="o">=</span> <span class="n">Binarize</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">Encode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+<span class="n">binary</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">binarize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">encoded</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">binary</span><span class="p">)</span>
+<span class="n">decoded</span><span class="p">,</span> <span class="n">valid</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
+    <span class="n">restored</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">debinarize</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Success!&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<hr />
+<h2 id="additional-references">Additional References<a class="headerlink" href="#additional-references" title="Permanent link">&para;</a></h2>
+<p>[1] Schwarz, M., et al. "MESA: automated assessment of synthetic DNA fragments and simulation of DNA synthesis, storage, sequencing and PCR errors." <em>Bioinformatics</em> 36.11 (2020): 3322-3326.</p>
+<p>[2] Allentoft, M.E., et al. "The half-life of DNA in bone: measuring decay kinetics in 158 dated fossils." <em>Proc. R. Soc. B</em> 279 (2012): 4724–4733.</p>
+<p>[3] Coudy, D., et al. "Long term conservation of DNA at ambient temperature: Implications for DNA data storage." <em>PLoS One</em> 16.11 (2021): e0259868.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Eko-Refugium" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M202.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M496 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/company/96306392/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["icons"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
