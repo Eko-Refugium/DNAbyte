@@ -1,95 +1,63 @@
-# Reference
+# API Reference
 
-## Data structures
+## Data Classes
 
-### DNADS
+DNAbyte uses different data structures to represent information at various stages of the DNA storage pipeline.
 
-::: dnabyte.data.DNADS
+### Data (Base Class)
+
+::: dnabyte.data_classes.base.Data
     handler: python
     options:
       show_source: true
 
-### RawData
+### BinaryCode
 
-::: dnabyte.data.RawData
+::: dnabyte.data_classes.binarycode.BinaryCode
     handler: python
     options:
       show_source: true
 
-### EncodedData
+### NucleobaseCode
 
-::: dnabyte.data.EncodedData
+::: dnabyte.data_classes.nucleobasecode.NucleobaseCode
     handler: python
     options:
       show_source: true
 
-### AssembledData
+### InSilicoDNA
 
-::: dnabyte.data.AssembledData
+::: dnabyte.data_classes.insilicodna.InSilicoDNA
     handler: python
     options:
       show_source: true
 
-### StoreddData
-
-::: dnabyte.data.StoredData
-    handler: python
-    options:
-      show_source: true
-
-### SequencedData
-
-::: dnabyte.data.SequencedData
-    handler: python
-    options:
-      show_source: true
-
-### CorrectedData
-
-::: dnabyte.data.CorrectedData
-    handler: python
-    options:
-      show_source: true
-
-### DecodedData
-
-::: dnabyte.data.DecodedData
-    handler: python
-    options:
-      show_source: true
-
-### RestoredData
-
-::: dnabyte.data.RestoredData
-    handler: python
-    options:
-      show_source: true
+## Core Modules
 
 ### Params
 
-::: dnabyte.params
+::: dnabyte.params.Params
     handler: python
     options:
       show_source: true
 
-## Encode
+### Library
 
-::: dnabyte.encode
+::: dnabyte.library.Library
     handler: python
     options:
       show_source: true
 
-::: dnabyte.assembly
+### Oligo
+
+::: dnabyte.oligo.Oligo
     handler: python
     options:
       show_source: true
 
-::: dnabyte.storage
-    handler: python
-    options:
-      show_source: true
+### OligoPool
 
-::: dnabyte.sequencing
+::: dnabyte.oligopool.OligoPool
     handler: python
     options:
       show_source: true
