@@ -611,8 +611,31 @@ def split_string_into_chunks_poly_chain(string, ngeneric, npossition, nmessage):
     return result
 
 
+def check_library(inputparams, default, assembly_structure):
+    if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
+        # set default library
+        library_name = default
+        library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + default)
+    else:
+        library_name = inputparams.library_name
+        with open('./tests/testlibraries/' + inputparams.library_name, 'r') as f:
+            first_line = f.readline().strip() 
+            if first_line == 'Messages':
+                raise ValueError("Library not compatible with linear assembly")
+            else:
+                library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + inputparams.library_name)
 
+    return library_name, library
 
+def check_parameter(parameter, default, min, max, inputparams):
+    if not hasattr(inputparams, parameter) or inputparams.__dict__[parameter] is None:
+        parameter_value = default
+    elif not (min < inputparams.__dict__[parameter] < max):
+        raise ValueError(f"{parameter} must be greater than {min} and less than {max}, got {inputparams.__dict__[parameter]}")
+    else:
+        parameter_value = inputparams.__dict__[parameter]
+    
+    return parameter_value
 
 
 
