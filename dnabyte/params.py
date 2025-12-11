@@ -160,9 +160,12 @@ class Params:
         """
         params_list = []
         
-        # Find the first attribute that is a non-empty list
+        # Attributes that should not be treated as range parameters (must remain as lists)
+        excluded_attrs = {'file_paths'}
+        
+        # Find the first attribute that is a non-empty list (excluding special attributes)
         for attr_name, attr_value in kwargs.items():
-            if isinstance(attr_value, list) and attr_value:
+            if attr_name not in excluded_attrs and isinstance(attr_value, list) and attr_value:
                 for item in attr_value:
                     new_kwargs = {**kwargs, attr_name: item}
                     params_list.append(cls(**new_kwargs))

@@ -7,8 +7,8 @@ from scipy.constants import Avogadro
 import pickle
 
 from dnabyte.params import Params
-from simulations.simulation import Simulation
-from simulations.auxiliary import create_text_files
+from simulation import Simulation
+from auxiliary import create_text_files
 
 
 # define parameters of the simulation
@@ -19,16 +19,15 @@ years = [y for y in [10, 100, 1000, 10000, 20000, 40000, 60000, 80000, 90000, 10
 # set other parameters
 params = Params.params_range(
         name='synthesis_max_density',
-        filename='./simulations/simfiles/textfile_40b.txt',
+        file_paths=['./simulations/simfiles/textfile_40b.txt'],
         assembly_structure='synthesis',
-        encoding_scheme='max_density_encoding',
-        library_name='',
+        encoding_method='max_density',
         mean=200,
         vol=1000000 / Avogadro,
         std_dev=1,
         hybridisation_steps=10000,
         inner_error_correction='ltcode',
-        outer_error_correction='reed_solomon',
+        outer_error_correction='reedsolomon',
         dna_barcode_length=34,  
         codeword_maxlength_positions=18,
         years=years,
@@ -36,10 +35,11 @@ params = Params.params_range(
         codeword_length=501,
         percent_of_symbols=2,
         index_carry_length=34,
-        synthesis_method=68,
-        sequencing_method=None,
+        synthesis_method='mesa',
+        mesa_synthesis_id=68,
+        sequencing_method='mesa',
+        mesa_sequencing_id=38,
         reed_solo_percentage=0.9,
-        sigma_amount=None,
         seed=42,
         theory='no'
 )

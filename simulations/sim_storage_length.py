@@ -6,13 +6,12 @@ from datetime import datetime
 from scipy.constants import Avogadro
 
 from dnabyte.params import Params
-from simulations.simulation import Simulation
-from simulations.auxiliary import create_text_files
+from simulation import Simulation
+from auxiliary import create_text_files
 
 # define parameters of the simulation
-repeats = 1
-years = [y for y in [1] for _ in range(repeats)]
-
+repeats = 100
+years = [y for y in [1, 10, 100, 1000, 10000] for _ in range(repeats)]
 
 # create files
 directory = "./simulations/simfiles"
@@ -21,10 +20,10 @@ filenames = create_text_files(directory, [400])
 # set other parameters
 params = Params.params_range(
         name='synthesis_max_density',
-        filename='./simulations/simfiles/textfile_400b.txt',
+        file_paths=['./simulations/simfiles/textfile_400b.txt'],
         assembly_structure='synthesis',
-        encoding_scheme='max_density_encoding',
-        library_name='',
+        encoding_method='max_density',
+        binarization_method='compressed',
         mean=100,
         vol=1000000 / Avogadro,
         std_dev=0,
@@ -38,7 +37,8 @@ params = Params.params_range(
         codeword_length=501,
         percent_of_symbols=6,
         index_carry_length=34,
-        synthesis_method=68,
+        synthesis_method='mesa',
+        mesa_synthesis_id=68,
         sequencing_method=None,
         reed_solo_percentage=0.8,
         sigma_amount=None,

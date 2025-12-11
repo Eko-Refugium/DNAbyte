@@ -22,9 +22,10 @@ filenames = create_text_files(directory, [400])
 # set other parameters
 params = Params.params_range(
         name='synthesis_max_density',
-        filename='./simulations/simfiles/textfile_400b.txt',
+        file_paths=['./simulations/simfiles/textfile_400b.txt'],
         assembly_structure='linear_assembly',
-        encoding_scheme='linear_encoding',
+        encoding_method='linear_encoding',
+        binarization_method='compressed',
         library_name='20bp_Lib.csv',
         mean=200,
         vol=1000000 / Avogadro,

@@ -239,8 +239,10 @@ def attributes(inputparams):
 
         index_carry_length = check_parameter(parameter="index_carry_length",
                                             default=m.ceil(codeword_length * 0.15),
-                                            min=0.5 * codeword_length,
-                                            max=0.9 * codeword_length,
+                                            #min=0.5 * codeword_length,
+                                            min=1,
+                                            #max=0.9 * codeword_length,
+                                            max=1000,
                                             inputparams=inputparams)
         
         ltcode_header = check_parameter(parameter="ltcode_header",

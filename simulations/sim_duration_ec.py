@@ -19,28 +19,18 @@ filenames = create_text_files(directory, sizes)
 # set remaining parameters
 params = Params.params_range(
         name='Linear_chain',
-        filename=filenames,
+        file_paths=filenames,
         assembly_structure='linear_assembly',
-        encoding_scheme='linear_encoding',
+        encoding_method='linear_encoding',
+        binarization_method='compressed',
         library_name='20bp_Lib.csv',
-        mean=20,
-        vol=1000000 / Avogadro,
-        std_dev=1,
-        hybridisation_steps=10000,
         inner_error_correction=None,
         outer_error_correction='reedsolomon',
+        reed_solo_percentage=0.8,
         dna_barcode_length=34,  
         codeword_maxlength_positions=18,
-        years=0,
-        storage_conditions=None,
-        codeword_length=501,
-        percent_of_symbols=2,
-        index_carry_length=34,
-        synthesis_method=None,
-        sequencing_method=None,
-        reed_solo_percentage=0.8,
-        sigma_amount=None,
-        theory='no'
+        codeword_length=501
+
 )
 
 # run simulation

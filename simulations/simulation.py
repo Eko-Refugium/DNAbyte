@@ -20,7 +20,7 @@ from dnabyte.synthesize import SimulateSynthesis
 from dnabyte.store import SimulateStorage
 from dnabyte.sequence import SimulateSequencing
 from dnabyte.params import Params
-
+from dnabyte.binarize import Binarize
 
 class Simulation():
 
@@ -51,7 +51,7 @@ class Simulation():
                 counter += 1
                 results[name] = {}
 
-                if params.seed:
+                if hasattr(params, 'seed') and params.seed:
                     random.seed(params.seed + counter)
 
                 try:
@@ -67,8 +67,10 @@ class Simulation():
                     start_time = time.time()
 
                     try:
-                        data_obj = Data([params.filename])
-                        data_raw = data_obj.binarize()
+                        bin = Binarize(params)
+
+                        data_obj = Data(file_paths=params.file_paths)
+                        binary_code = bin.binarize(data_obj)
 
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')
@@ -81,14 +83,14 @@ class Simulation():
                     duration = time.time() - start_time
                     info = {
                         'duration': duration,
-                        'length_of_bitsream': len(data_raw.data)
+                        'length_of_bitsream': len(binary_code.data)
                     }
 
                     # logging
                     self.simlogger.info('STATUS: SUCCESS')
                     self.simlogger.info('DURATION: %.2f seconds', duration)
-                    self.simlogger.info('LENGTH OF DATA: %d', len(data_raw.data))
-                    self.simlogger.info(data_raw.__str__())
+                    self.simlogger.info('LENGTH OF DATA: %d', len(binary_code.data))
+                    self.simlogger.info(binary_code.__str__())
 
                     # save to results
                     results[name]['step1'] = info
@@ -101,9 +103,8 @@ class Simulation():
                     start_time = time.time()
 
                     try:
-                        #lib = Library(structure=params.assembly_structure, filename='./tests/testlibraries/' + params.library_name)
-                        enc = Encode(params, logger=self.simlogger)
-                        data_enc, info = enc.encode(data_raw)
+                        coder = Encode(params, logger=self.simlogger)
+                        data_enc, info = coder.encode(binary_code)
 
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')
@@ -111,9 +112,9 @@ class Simulation():
                         self.simlogger.error(traceback.format_exc())
                         results[name]['status'] = 'FAILURE'
                         continue
-                    # print('data_enc', data_enc.data)
+
                     # generate the info
-                    print('info', info)
+                    #print('info', info)
                     duration = time.time() - start_time
                     info['duration'] = duration
                     
@@ -229,7 +230,7 @@ class Simulation():
                     self.simlogger.info('STEP06: PROCESS DATA')
                     start_time = time.time()
                     try:
-                        data_cor, info = enc.process(data_seq)
+                        data_cor, info = coder.process(data_seq)
                     
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')
@@ -259,7 +260,7 @@ class Simulation():
                     start_time = time.time()
                     # print('data_cor', data_cor.data)
                     try:
-                        data_dec, valid, info = enc.decode(data_cor)
+                        data_dec, valid, info = coder.decode(data_cor)
 
                         if not valid:
                             self.simlogger.info('STATUS: ERROR')
@@ -292,13 +293,13 @@ class Simulation():
                     self.simlogger.info('STEP08: COMPARE DATA')
                     start_time = time.time()
 
-                    print('data_dec', data_dec.data)
-                    print('data_raw', data_raw.data)
-                    print('len data_dec', len(data_dec.data))
-                    print('len data_raw', len(data_raw.data))
+                    # print('data_dec', data_dec.data)
+                    # print('binary_code', binary_code.data)
+                    # print('len data_dec', len(data_dec.data))
+                    # print('len binary_code', len(binary_code.data))
 
                     try:
-                        comparison, res = data_dec.compare(data_dec, data_raw, logger=self.simlogger)
+                        comparison, res = data_dec.compare(data_dec, binary_code, logger=self.simlogger)
 
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')
@@ -332,7 +333,9 @@ class Simulation():
                     start_time = time.time()
 
                     try:
-                        RestoredData(data_dec, output_folder='./simulations/simfiles/', job_identifier=self.job_identifier)
+                        success = bin.debinarize(data=binary_code, output_directory='./simulations/simfiles/')
+
+                        #RestoredData(data_dec, output_folder='./simulations/simfiles/', job_identifier=self.job_identifier)
 
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')

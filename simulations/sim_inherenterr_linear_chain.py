@@ -7,46 +7,52 @@ from scipy.constants import Avogadro
 import pickle
 
 from dnabyte.params import Params
-from simulations.simulation import Simulation
-from simulations.auxiliary import create_text_files
+from simulation import Simulation
+from auxiliary import create_text_files
 
 
 # define parameters of the simulation
-repeats = 1
-iid_error_rate = [y for y in [0,0.1] for _ in range(repeats)]
+repeats = 10
+iid_error_rate = [y for y in [0] for _ in range(repeats)]
+
 
 # set other parameters
 params = Params.params_range(
-        name='sim_linear_binom_noEC',
-        filename='./simulations/simfiles/textfile_40b.txt',
+        name='sim_linear_chain_noEC',
+        file_paths=['./simulations/simfiles/textfile_40b_restored.txt'],
+        binarization_method='compressed',
         assembly_structure='linear_assembly',
-        encoding_scheme='binomial_encoding',
+        encoding_method='linear_chain',
         library_name='lib_simple_30_400.csv',
-        mean=1,
+        mean=10,
         vol=1000000 / Avogadro,
         std_dev=0,
         hybridisation_steps=10000,
         inner_error_correction=None,
         outer_error_correction='reedsolomon',
-        dna_barcode_length=3,  
-        codeword_maxlength_positions=2,
+        dna_barcode_length=5,  
+        codeword_maxlength_positions=5,
         years=0,
         storage_conditions='biogene',
         codeword_length=100,
         percent_of_symbols=2,
-        ltcode_header=2,
+        ltcode_header=4,
         index_carry_length=3,
         synthesis_method=None,
         sequencing_method='iid',
         iid_error_rate=iid_error_rate,
         reed_solo_percentage=0.9,
-        sigma_amount=3,
+        sigma_amount=None,
         seed=42,
         theory='no'
 )
+filename='./simulations/simfiles/Order_lib_simple_30_144_1.txt'
+encoding_scheme='linear_encoding'
+mean=5
 
 filename='./simulations/simfiles/textfile_40b.txt'
-encoding_scheme='binomial_encoding',
+encoding_scheme='linear_encoding'
+mean=5
 
 sim = Simulation(params)
 #res = sim.run(paralel=True, max_workers=8)
@@ -91,8 +97,7 @@ print(iid_error_rate)
 
 
 with open("dataofsims.txt", "a+") as file:
-    file.write("iid_error_rate: " + str(iid_error_rate) +", success_rate: " + str(success_rate) + ", success_failure_counts: " + str(success_failure_counts) + ", library" + str(filename) + ", encoding" + str(encoding_scheme) + "\n")
-
+    file.write("iid_error_rate: " + str(iid_error_rate) +", success_rate: " + str(success_rate) + ", success_failure_counts: " + str(success_failure_counts) + ", library" + str(filename) + ", encodingscheme" + str(encoding_scheme) + ", mean" + str(mean) + "\n")
 
 # Plot the results
 plt.figure(figsize=(10, 6))

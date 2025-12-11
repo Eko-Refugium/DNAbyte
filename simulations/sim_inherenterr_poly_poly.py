@@ -7,8 +7,8 @@ from scipy.constants import Avogadro
 import pickle
 
 from dnabyte.params import Params
-from simulations.simulation import Simulation
-from simulations.auxiliary import create_text_files
+from simulation import Simulation
+from auxiliary import create_text_files
 
 
 # define parameters of the simulation
@@ -19,9 +19,10 @@ iid_error_rate = [y for y in [0] for _ in range(repeats)]
 # set other parameters
 params = Params.params_range(
         name='sim_linear_chain_noEC',
-        filename='./simulations/simfiles/textfile_640b.txt',
+        file_paths=['./simulations/simfiles/textfile_640b.txt'],
+        binarization_method='compressed',
         assembly_structure='positional_assembly',
-        encoding_scheme='binomial_encoding',
+        encoding_method='poly_chain',
         library_name='polymeraselibinparts_500(40)_100(35)_70.csv',
         mean=1,
         vol=1000000 / Avogadro,
@@ -29,8 +30,8 @@ params = Params.params_range(
         hybridisation_steps=10000,
         inner_error_correction='ltcode',
         outer_error_correction='reedsolomon',
-        dna_barcode_length=3,  
-        codeword_maxlength_positions=2,
+        dna_barcode_length=5,  
+        codeword_maxlength_positions=6,
         years=0,
         storage_conditions='biogene',
         codeword_length=100,

@@ -630,8 +630,8 @@ def check_library(inputparams, default, assembly_structure):
 def check_parameter(parameter, default, min, max, inputparams):
     if not hasattr(inputparams, parameter) or inputparams.__dict__[parameter] is None:
         parameter_value = default
-    elif not (min < inputparams.__dict__[parameter] < max):
-        raise ValueError(f"{parameter} must be greater than {min} and less than {max}, got {inputparams.__dict__[parameter]}")
+    elif not (min <= inputparams.__dict__[parameter] <= max):
+        raise ValueError(f"{parameter} must be greater than or equal to {min} and less than or equal to {max}, got {inputparams.__dict__[parameter]}")
     else:
         parameter_value = inputparams.__dict__[parameter]
     

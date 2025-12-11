@@ -6,8 +6,8 @@ from datetime import datetime
 from scipy.constants import Avogadro
 
 from dnabyte.params import Params
-from simulations.simulation import Simulation
-from simulations.auxiliary import create_text_files
+from simulation import Simulation
+from auxiliary import create_text_files
 
 # define parameters of the simulation
 repeats = 10
@@ -21,30 +21,25 @@ filenames = create_text_files(directory, [400])
 # set other parameters
 params = Params.params_range(
         name='synthesis_max_density',
-        filename='./simulations/simfiles/textfile_400b.txt',
+        file_paths=['./simulations/simfiles/textfile_400b.txt'],
+        binarization_method='compressed',
         assembly_structure='synthesis',
-        encoding_scheme='max_density_encoding',
-        library_name='',
+        encoding_method='max_density',
         mean=100,
         vol=1000000 / Avogadro,
         std_dev=0,
         hybridisation_steps=10000,
-        inner_error_correction=None,
         outer_error_correction='reedsolomon',
         dna_barcode_length=34,  
         codeword_maxlength_positions=18,
-        years=0,
-        storage_conditions='biogene',
         codeword_length=501,
-        percent_of_symbols=6,
         index_carry_length=34,
         synthesis_method='nosynthpoly',
-        sequencing_method=38,
+        sequencing_method='mesa',
+        mesa_sequencing_id=68,
         reed_solo_percentage=reedsoloperc,
-        sigma_amount=None,
         seed=69,
         theory='no',
-        ltcode_header=34
 )
 
 

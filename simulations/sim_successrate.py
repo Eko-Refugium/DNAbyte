@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.constants import Avogadro
 
 from dnabyte.params import Params
-from simulations.simulation import Simulation
-from simulations.auxiliary import create_text_files
+from simulation import Simulation
+from auxiliary import create_text_files
 
 # define parameters of the simulation
 
@@ -18,10 +18,10 @@ filenames = create_text_files(directory, [40])
 # set remaining parameters
 params = Params.params_range(
         name='success_rate_of_synthesis_max_density',
-        filename='./simulations/simfiles/textfile_40b.txt',
+        file_paths=['./simulations/simfiles/textfile_40b.txt'],
         assembly_structure='synthesis',
-        encoding_scheme='max_density_encoding',
-        library_name='',
+        encoding_method='max_density',
+        binarization_method='compressed',
         mean=200,
         vol=1000000 / Avogadro,
         std_dev=1,
@@ -35,7 +35,8 @@ params = Params.params_range(
         codeword_length=501,
         percent_of_symbols=2,
         index_carry_length=34,
-        synthesis_method=68,
+        synthesis_method='mesa',
+        mesa_synthesis_id=68,
         ltcode_header=34,
         sequencing_method=None,
         reed_solo_percentage=0.8,
@@ -43,7 +44,7 @@ params = Params.params_range(
         theory='no'
 )
 
-print(params)
+#print(params)
 
 # run simulation
 sim = Simulation(params, debug=True)
@@ -61,7 +62,7 @@ for name, steps in res.items():
     total_duration = sum(step_info['duration'] for step_info in steps.values() if isinstance(step_info, dict) and 'duration' in step_info)
     success_rate.append(total_duration)
 
-print(res)
+#print(res)
 
 # # Create the plot
 # plt.figure(figsize=(10, 6))

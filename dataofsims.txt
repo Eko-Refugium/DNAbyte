@@ -1,0 +1,10 @@
+iid_error_rate: ['0', '0.1'], success_rate: [0.0, 0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 1}, '0.1': {'SUCCESS': 0, 'FAILURE': 1}}, library./simulations/simfiles/textfile_40b.txt, encoding('binomial_encoding',)
+iid_error_rate: ['0'], success_rate: [0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 10}}, library./simulations/simfiles/textfile_40b.txt, encodingschemelinear_encoding, mean5
+iid_error_rate: ['0'], success_rate: [0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 10}}, library./simulations/simfiles/textfile_40b.txt, encodingschemelinear_encoding, mean5
+iid_error_rate: ['0', '0.1'], success_rate: [0.0, 0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 1}, '0.1': {'SUCCESS': 0, 'FAILURE': 1}}, library./simulations/simfiles/textfile_40b.txt, encoding('binomial_encoding',)
+iid_error_rate: ['0', '0.1'], success_rate: [0.0, 0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 1}, '0.1': {'SUCCESS': 0, 'FAILURE': 1}}, library./simulations/simfiles/textfile_40b.txt, encoding('binomial_encoding',)
+iid_error_rate: ['0', '0.1'], success_rate: [0.0, 0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 1}, '0.1': {'SUCCESS': 0, 'FAILURE': 1}}, library./simulations/simfiles/textfile_40b.txt, encoding('binomial_encoding',)
+iid_error_rate: ['0'], success_rate: [0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 10}}, library./simulations/simfiles/textfile_640b.txt
+iid_error_rate: ['0'], success_rate: [0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 10}}, library./simulations/simfiles/textfile_640b.txt
+iid_error_rate: ['0'], success_rate: [0.0], success_failure_counts: {'0': {'SUCCESS': 0, 'FAILURE': 10}}, library./simulations/simfiles/textfile_640b.txt
+iid_error_rate: ['0'], success_rate: [0.3], success_failure_counts: {'0': {'SUCCESS': 3, 'FAILURE': 7}}, library./simulations/simfiles/textfile_640b.txt
