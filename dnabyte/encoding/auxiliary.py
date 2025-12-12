@@ -612,18 +612,19 @@ def split_string_into_chunks_poly_chain(string, ngeneric, npossition, nmessage):
 
 
 def check_library(inputparams, default, assembly_structure):
+    print('current dir:', os.getcwd())
     if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
         # set default library
         library_name = default
-        library = Library(structure=assembly_structure, filename='./test/testlibrary/' + default)
+        library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + default)
     else:
         library_name = inputparams.library_name
-        with open('./test/testlibrary/' + inputparams.library_name, 'r') as f:
+        with open('./tests/testlibraries/' + inputparams.library_name, 'r') as f:
             first_line = f.readline().strip() 
             if first_line == 'Messages':
                 raise ValueError("Library not compatible with linear assembly")
             else:
-                library = Library(structure=assembly_structure, filename='./test/testlibrary/' + inputparams.library_name)
+                library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + inputparams.library_name)
 
     return library_name, library
 

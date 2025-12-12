@@ -21,7 +21,8 @@ class TestDefaultBinarize(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         # Create mock params
-        self.binarizer = Binarize(Params(binarization_method='binarize_default'))
+        self.binarizer = Binarize(Params(binarization_method='default',
+        filename='textfile_40b.txt'))
         self.test_dir = tempfile.mkdtemp()
         
         # Create test files of different types
@@ -46,7 +47,7 @@ class TestDefaultBinarize(unittest.TestCase):
     
     def test_init_with_params(self):
         """Test initialization with params."""
-        self.assertEqual(self.binarizer.name, 'binarize_default')
+        self.assertEqual(self.binarizer.name, 'default')
     
     def test_binarize_text_file_success(self):
         """Test successful binarization of text file."""
