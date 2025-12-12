@@ -615,15 +615,15 @@ def check_library(inputparams, default, assembly_structure):
     if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
         # set default library
         library_name = default
-        library = Library(structure=assembly_structure, filename='./app/static/libraries/' + default)
+        library = Library(structure=assembly_structure, filename='./test/testlibrary/' + default)
     else:
         library_name = inputparams.library_name
-        with open('./app/static/libraries/' + inputparams.library_name, 'r') as f:
+        with open('./test/testlibrary/' + inputparams.library_name, 'r') as f:
             first_line = f.readline().strip() 
             if first_line == 'Messages':
                 raise ValueError("Library not compatible with linear assembly")
             else:
-                library = Library(structure=assembly_structure, filename='./app/static/libraries/' + inputparams.library_name)
+                library = Library(structure=assembly_structure, filename='./test/testlibrary/' + inputparams.library_name)
 
     return library_name, library
 
