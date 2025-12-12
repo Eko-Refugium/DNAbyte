@@ -22,7 +22,6 @@ class Assembly(SimulateSynthesis):
         :param data: A list of DNA sequences.
         :return: A list of sequenced DNA sequences.
         """
-        # print(self.params.encoding_method)
         try: 
             synthesis_module = importlib.import_module(f'dnabyte.encoding.{self.params.encoding_method}.assembly')
             synthezised, info = synthesis_module.assembly(data, self.params)

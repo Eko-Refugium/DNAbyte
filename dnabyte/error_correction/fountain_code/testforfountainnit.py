@@ -36,7 +36,6 @@ def generateBinaryString(N):
         # Append it to the string
         S += str(x)
      
-    # Print the resulting string
     return S
 
 def translate_dna(dna_string):

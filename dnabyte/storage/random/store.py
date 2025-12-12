@@ -27,10 +27,21 @@ class Random(SimulateStorage):
         info = {"number_of_strand_breaks": total_strand_breaks}
         return remaining_oligos, info
 
-def attributes(params):
-    if 'years' not in params.__dict__ or params.years is None:
-        years = 100
+def check_parameter(parameter, default, min, max, inputparams):
+    if not hasattr(inputparams, parameter) or inputparams.__dict__[parameter] is None:
+        parameter_value = default
+    elif not (min <= inputparams.__dict__[parameter] <= max):
+        raise ValueError(f"{parameter} must be greater than or equal to {min} and less than or equal to {max}, got {inputparams.__dict__[parameter]}")
     else:
-        years = params.years
-        
+        parameter_value = inputparams.__dict__[parameter]
+    
+    return parameter_value
+
+def attributes(params):
+    years = check_parameter(parameter="years",
+                                        default=100,
+                                        min=0,
+                                        max=1000000000000,
+                                        inputparams=params)
+
     return {"years": years}

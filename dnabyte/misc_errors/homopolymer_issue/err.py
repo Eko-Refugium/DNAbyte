@@ -25,7 +25,6 @@ class HomopolymerIssue(SimulateMiscErrors):
         sequenceserror = list(data)  # Create a copy of the data
         error_counter = 0
         ticker = 0
-        # print(sequenceserror, 'data in homopolymer issue')
         for i in range(len(sequenceserror)):
             for j in range(len(sequenceserror[i])):
                 sequence = list(sequenceserror[i][j])
@@ -43,7 +42,6 @@ class HomopolymerIssue(SimulateMiscErrors):
                     ticker += 1  
                 sequenceserror[i][j] = ''.join(sequence)
                 ticker = 0  # Reset ticker for the next sequence
-        # print(sequenceserror, 'sequences with homopolymer errors')
                
         info = {}
         info['error_counter'] = error_counter

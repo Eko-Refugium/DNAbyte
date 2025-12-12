@@ -37,7 +37,6 @@ class SimulateSequencing:
                     sequencing_class = self.sequencing_plugins[self.sequencing_method]
                     plugin = sequencing_class(self.params, logger=self.logger)
                     data, info = plugin.simulate(data.data)
-                    # print(data)
                     obj = InSilicoDNA(data=data)
                     if hasattr(data, 'file_paths'):
                         obj.file_paths = data.file_paths

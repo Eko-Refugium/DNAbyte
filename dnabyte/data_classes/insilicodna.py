@@ -58,7 +58,6 @@ class InSilicoDNA(Data):
         valid_nucleotides = {'A', 'C', 'G', 'T'}
         
         for i, sequence in enumerate(data):
-            #print((isinstance(sequence, list) and len(sequence) == 2), 'sequence in insilicodna validation')
             if not isinstance(sequence, str) and not (isinstance(sequence, list) and len(sequence) == 2):
                 raise ValueError(f"DNA sequence at index {i} must be a string, "
                                f"got {type(sequence).__name__}")

@@ -131,8 +131,6 @@ class ArchiveBinarize(Binarize):
                         # Extract only the filename (without path) and place it directly in job_folder
                         member.name = os.path.basename(member.name)
                         archive.extract(member, path=job_folder, filter='data')
-
-            # print(f"Files successfully restored to: {job_folder}")
             return True
             
         except Exception as e:
@@ -154,11 +152,22 @@ class ArchiveBinarize(Binarize):
         """Developer representation of CompressedBinarize."""
         return f"CompressedBinarize(compression_level={self.compression_level}, temp_dir={self.temp_dir!r})"
     
-def attributes(params):
-    if 'compression_level' not in params.__dict__ or params.compression_level is None:
-        compression_level = 9
+def check_parameter(parameter, default, min, max, inputparams):
+    if not hasattr(inputparams, parameter) or inputparams.__dict__[parameter] is None:
+        parameter_value = default
+    elif not (min <= inputparams.__dict__[parameter] <= max):
+        raise ValueError(f"{parameter} must be greater than or equal to {min} and less than or equal to {max}, got {inputparams.__dict__[parameter]}")
     else:
-        compression_level = params.compression_level
+        parameter_value = inputparams.__dict__[parameter]
+    
+    return parameter_value
+    
+def attributes(params):
+    compression_level = check_parameter(parameter="compression_level",
+                                                default=9,
+                                                min=1,
+                                                max=9,
+                                                inputparams=params)
 
     # file_paths is optional during params initialization, can be set later
     if 'file_paths' not in params.__dict__ or params.file_paths is None:

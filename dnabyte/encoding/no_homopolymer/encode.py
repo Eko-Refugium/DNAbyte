@@ -119,7 +119,7 @@ class NoHomoPoly(Encode):
         # Step 1: calculate the number of bits required to store the number of added zeros at the end of the last codeword
         zfill_bits = m.ceil(m.log2(params.codeword_length))
 
-        if params.outer_error_correction == 'reedsolomon':
+        if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             # Calculate the adjustment needed to make zfill_bits a multiple of 8
             adjustment = (8 - zfill_bits % 8) % 8
             params.dna_barcode_length -= adjustment
@@ -128,12 +128,12 @@ class NoHomoPoly(Encode):
         params.zfill_bits = zfill_bits
 
         # Step 2: Calculate the message length
-        if params.inner_error_correction == 'ltcode':
+        if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
             message_length = params.codeword_length - 2 * params.dna_barcode_length - zfill_bits - params.index_carry_length
         else:
             message_length = params.codeword_length - params.dna_barcode_length - zfill_bits
 
-        if params.outer_error_correction == 'reedsolomon':
+        if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             while message_length % 8 != 0:
                 message_length -= 1
                 params.dna_barcode_length += 1   
@@ -143,7 +143,7 @@ class NoHomoPoly(Encode):
         # Step 3: calculate the bits per codeword
         bits_per_codeword = message_length
         
-        if params.outer_error_correction == 'reedsolomon':
+        if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             
             bits_per_codeword = m.floor(bits_per_codeword * params.reed_solo_percentage)
             bits_per_ec = (message_length - bits_per_codeword)
@@ -160,7 +160,7 @@ class NoHomoPoly(Encode):
 
         # TODO: Check whether this is correct
         # Determine the length of the DNA barcode
-        if self.params.outer_error_correction == 'reedsolomon':
+        if hasattr(self.params, 'outer_error_correction') and self.params.outer_error_correction == 'reedsolomon':
             dna_barcode_length = params.codeword_length - params.message_length
             params.dna_barcode_length = dna_barcode_length
 
@@ -188,11 +188,11 @@ class NoHomoPoly(Encode):
 
         binary_codewords[-1] = str(decimal_to_binary(number_of_zero_padding)).zfill(params.zfill_bits * 1) + binary_codewords[-1][params.zfill_bits * 1:]
 
-        if params.outer_error_correction == 'reedsolomon':
+        if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             binary_codewords = MakeReedSolomonCodeSynthesis(binary_codewords, params.bits_per_ec)
  
          # Step 3: apply inner error correction
-        if params.inner_error_correction == 'ltcode':
+        if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
             binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.dna_barcode_length, 1)
 
         return binary_codewords
@@ -210,30 +210,30 @@ def attributes(inputparams):
 
     dna_barcode_length = check_parameter(parameter="dna_barcode_length",
                                          default=m.ceil(codeword_length * 0.15),
-                                         min=5,
-                                         max=codeword_length // 2,
+                                         min=2,
+                                         max=codeword_length - 2,
                                          inputparams=inputparams)
 
     codeword_maxlength_positions = check_parameter(parameter="codeword_maxlength_positions",
                                                    default=m.ceil(codeword_length * 0.15),
-                                                   min=10,
+                                                   min=2,
                                                    max=codeword_length - dna_barcode_length,
                                                    inputparams=inputparams)
 
     checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
 
     # parameter group: inner_error_correction
-    if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
+    if getattr(inputparams, 'inner_error_correction', None) == 'ltcode':
 
         index_carry_length = check_parameter(parameter="index_carry_length",
                                              default=m.ceil(codeword_length * 0.15),
-                                             min=0.5 * codeword_length,
+                                             min=1,
                                              max=0.9 * codeword_length,
                                              inputparams=inputparams)
 
         ltcode_header = check_parameter(parameter="ltcode_header",
                                         default=m.ceil(codeword_length * 0.15),
-                                        min=0.05 * codeword_length,
+                                        min=1,
                                         max=0.3 * codeword_length,
                                         inputparams=inputparams)
 
@@ -245,14 +245,14 @@ def attributes(inputparams):
 
         checker = codeword_length - codeword_maxlength_positions - dna_barcode_length - index_carry_length - ltcode_header
 
-    elif inputparams.inner_error_correction is None or not hasattr(inputparams, 'inner_error_correction'):
+    elif getattr(inputparams, 'inner_error_correction', None) is None:
         pass
     else: 
         raise ValueError("Invalid inner_error_correction method")
 
 
     # parameter group: outer_error_correction
-    if hasattr(inputparams, 'outer_error_correction') and inputparams.outer_error_correction == 'reedsolomon':
+    if getattr(inputparams, 'outer_error_correction', None) == 'reedsolomon':
 
         reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
                                               default=0.8,
@@ -260,7 +260,7 @@ def attributes(inputparams):
                                               max=0.95,
                                               inputparams=inputparams)
 
-    elif inputparams.outer_error_correction is None or not hasattr(inputparams, 'outer_error_correction'):
+    elif getattr(inputparams, 'outer_error_correction', None) is None:
         pass
     else:
         raise ValueError("Invalid outer_error_correction method")

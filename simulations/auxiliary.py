@@ -31,7 +31,6 @@ def create_text_files(directory, sizes):
         filenames.append(filename)
         with open(filename, 'w') as f:
             f.write(generate_random_ascii(size))
-        #print(f"Created {filename} with size {size} bytes")
 
     return filenames
 

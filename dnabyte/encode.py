@@ -114,8 +114,6 @@ class Encode:
                 processed, info = plugin.process(data)
                 obj = NucleobaseCode(processed)
                 obj.file_paths = data.file_paths
-                #print(data.file_paths, 'data file paths in process method')
-                #print(obj, 'processed obj in process method')
                 return obj, info
             except KeyError:
                 raise ValueError(f"Process Module for encoding method '{self.encoding_method}' not found in plugins.")

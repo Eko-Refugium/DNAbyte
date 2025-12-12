@@ -32,10 +32,21 @@ class IID(SimulateSequencing):
 
         return sequenceserror, info
     
-def attributes(params):
-    if 'iid_error_rate' not in params.__dict__ or params.iid_error_rate is None:
-        iid_error_rate = 0.01
+def check_parameter(parameter, default, min, max, inputparams):
+    if not hasattr(inputparams, parameter) or inputparams.__dict__[parameter] is None:
+        parameter_value = default
+    elif not (min <= inputparams.__dict__[parameter] <= max):
+        raise ValueError(f"{parameter} must be greater than or equal to {min} and less than or equal to {max}, got {inputparams.__dict__[parameter]}")
     else:
-        iid_error_rate = params.iid_error_rate
+        parameter_value = inputparams.__dict__[parameter]
+    
+    return parameter_value
+    
+def attributes(params):
+    iid_error_rate = check_parameter(parameter="iid_error_rate",
+                                        default=0.01,
+                                        min=0.0,
+                                        max=1.0,
+                                        inputparams=params)
         
     return {"iid_error_rate": iid_error_rate}

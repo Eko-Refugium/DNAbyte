@@ -37,7 +37,6 @@ class BinaryCode(Data):
         :param size: Optional original file size in bytes.
         """
         
-        #print(data, 'data in binarycode init')
         # Validate the bitstream before setting any attributes
         self._validate_bitstream(data)
 

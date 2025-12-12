@@ -31,9 +31,7 @@ class SimulateMiscErrors:
             # Dynamically find the appropriate class based on storage_conditions
             try:
                 if isinstance(self.error_methods, str):
-                    print(self.error_plugins, 'error conditions in simulate misc errors')
                     error_class = self.error_plugins[self.error_methods.lower()]
-                    print(error_class, 'error class in simulate misc errors')
                     plugin = error_class(self)  # Instantiate the plugin class
                     data_sto, info = plugin.simulate(to_error_data.data)
                     data_sto = InSilicoDNA(data_sto)
@@ -42,9 +40,7 @@ class SimulateMiscErrors:
                     combined_data = to_error_data.data
                     tempconditions = self.error_params_list
                     for i, condition in enumerate(self.error_methods):
-                        print(self.error_plugins, 'error conditions in simulate misc errors - list')
                         error_class = self.error_plugins[condition.lower()]
-                        print(error_class, 'error class in simulate misc errors - list')
                         self.error_params = tempconditions[condition]
                         for key, value in self.error_params.items():
                             setattr(self, key, value)

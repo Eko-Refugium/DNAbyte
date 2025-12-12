@@ -81,10 +81,10 @@ def decode_binary_codewords(data, params):
 
     check_ltcode, check_reedsolomon = True, True
 
-    if params.inner_error_correction == 'ltcode':
+    if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
         data, check_ltcode = undoltcodesynth(data, params.index_carry_length, params.dna_barcode_length, 1)
 
-    if params.outer_error_correction == 'reedsolomon':
+    if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
 
         data, check_reedsolomon = undoreedsolomonsynthesis(data, params.bits_per_ec)
 

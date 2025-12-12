@@ -56,7 +56,6 @@ class DefaultBinarize(Binarize):
         try:
             # Binarize the single file
             binary_sequence, size = self._binarize_single_file(file_path)
-            #print(binary_sequence[:64], 'binary sequence snippet in binarize_default') 
             
             # Create and return BinaryCode object
             return binary_sequence, size

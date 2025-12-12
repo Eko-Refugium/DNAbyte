@@ -20,7 +20,6 @@ class Err_IID(SimulateMiscErrors):
         :param data: A list of DNA sequences.
         :return: A list of sequenced DNA sequences.
         """
-        print('self if err:', self)
         sequenceserror = list(data)  # Create a copy of the data
         error_counter = 0
         for i in range(len(sequenceserror)):

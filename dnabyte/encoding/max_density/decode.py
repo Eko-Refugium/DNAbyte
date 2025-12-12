@@ -51,10 +51,10 @@ def recreate_binary_codewords(data, params):
     check_ltcode, check_reedsolomon = True, True
 
     # Step 1: undo inner error correction
-    if params.inner_error_correction == 'ltcode':
+    if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
         data, check_ltcode = undoltcodesynth(data, params.index_carry_length, params.ltcode_header, 2)
     # Step 2: undo couter error correction
-    if params.outer_error_correction == 'reedsolomon':
+    if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
         data, check_reedsolomon = undoreedsolomonsynthesis(data, params.bits_per_ec)
 
     # Step 3: remove the zfill bits
