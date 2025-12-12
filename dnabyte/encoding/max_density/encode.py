@@ -235,7 +235,7 @@ def attributes(inputparams):
     checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
 
     # parameter group: inner_error_correction
-    if getattr(inputparams, 'inner_error_correction', None) is None:
+    if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
 
         index_carry_length = check_parameter(parameter="index_carry_length",
                                             default=m.ceil(codeword_length * 0.15),
