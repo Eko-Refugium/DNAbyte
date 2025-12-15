@@ -20,13 +20,15 @@ class TestTextBinarize(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
-        self.binarizer = Binarize(Params(binarization_method='text'))
+        self.binarizer = Binarize(Params(binarization_method='text',
+        file_paths='textfile_40b.txt'))
         self.test_dir = tempfile.mkdtemp()
         
         # Create test text file
         self.text_content = "Hello, DNAbyte!\nThis is a test file with UTF-8 content: áéíóú"
         self.text_file = os.path.join(self.test_dir, 'test.txt')
-        with open(self.text_file, 'w', encoding='utf-8') as f:
+        # Use newline='' to prevent platform-specific line ending conversion
+        with open(self.text_file, 'w', encoding='utf-8', newline='') as f:
             f.write(self.text_content)
     
     def tearDown(self):
@@ -35,12 +37,14 @@ class TestTextBinarize(unittest.TestCase):
     
     def test_init_default_encoding(self):
         """Test initialization with default encoding."""
-        binarizer = Binarize(Params(binarization_method='text'))
+        binarizer = Binarize(Params(binarization_method='text',
+        file_paths='textfile_40b.txt'))
         self.assertEqual(binarizer.text_encoding, 'utf-8')
     
     def test_init_custom_encoding(self):
         """Test initialization with custom encoding."""
-        binarizer = Binarize(Params(binarization_method='text', text_encoding='ascii'))
+        binarizer = Binarize(Params(binarization_method='text',
+        file_paths='textfile_40b.txt', text_encoding='ascii'))
         self.assertEqual(binarizer.text_encoding, 'ascii')
     
     def test_binarize_single_file_success(self):

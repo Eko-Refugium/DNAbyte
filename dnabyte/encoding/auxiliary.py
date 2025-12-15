@@ -104,7 +104,7 @@ def create_json_file(type, filenames, assembly_structure, encoding_scheme, data,
     encoding_parameters = {
         "codeword_length": kwargs.get('codewordlength'),
         "dna_barcode_length": kwargs.get('dna_barcode_length'),
-        "codeword_max_lenght_positions": kwargs.get('codeword_maxlength_positions'),
+        "codeword_maxlength_positions": kwargs.get('codeword_maxlength_positions'),
         "percent_of_symbols": kwargs.get('percentofsymbols'),
         "index_carry_length": kwargs.get('indexcarrylength'),
         "theory": theory
@@ -328,7 +328,7 @@ def create_encode_object(json_data):
                   inner_error_correction = json_data['error_correction_parameters']['inner_error_correction'],
                   outer_error_correction = json_data['error_correction_parameters']['outer_error_correction'],
                   dna_barcode_length = json_data['encoding_parameters']['dna_barcode_length'],
-                  codeword_maxlength_positions = json_data['encoding_parameters']['codeword_max_lenght_positions'],
+                  codeword_maxlength_positions = json_data['encoding_parameters']['codeword_maxlength_positions'],
                   codewordlength = json_data['encoding_parameters']['codeword_length'],
                   library = library,
                   library_name = library_name,
@@ -612,18 +612,19 @@ def split_string_into_chunks_poly_chain(string, ngeneric, npossition, nmessage):
 
 
 def check_library(inputparams, default, assembly_structure):
+    print('current dir:', os.getcwd())
     if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
         # set default library
         library_name = default
-        library = Library(structure=assembly_structure, filename='./test/testlibrary/' + default)
+        library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + default)
     else:
         library_name = inputparams.library_name
-        with open('./test/testlibrary/' + inputparams.library_name, 'r') as f:
+        with open('./tests/testlibraries/' + inputparams.library_name, 'r') as f:
             first_line = f.readline().strip() 
             if first_line == 'Messages':
                 raise ValueError("Library not compatible with linear assembly")
             else:
-                library = Library(structure=assembly_structure, filename='./test/testlibrary/' + inputparams.library_name)
+                library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + inputparams.library_name)
 
     return library_name, library
 

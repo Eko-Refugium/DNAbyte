@@ -22,7 +22,7 @@ class Params:
         self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins, self.error_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method, self.error_methods)
 
         # Check binarization parameters
-        if self.binarization_method is None:
+        if self.binarization_method is None or not hasattr(self, 'binarization_method'):
             pass
         elif self.binarization_method in self.binarization_plugins:
             binarization = importlib.import_module(f"dnabyte.binarization.{self.binarization_method}.binarize")
@@ -32,7 +32,7 @@ class Params:
         else:
             raise ValueError(f"Invalid binarization method: {self.binarization_method}")
         # Check encoding parameters
-        if self.encoding_method is None:
+        if self.encoding_method is None or not hasattr(self, 'encoding_method'):
             pass
         elif self.encoding_method in self.encoding_plugins:
             encoding = importlib.import_module(f"dnabyte.encoding.{self.encoding_method}.encode")

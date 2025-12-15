@@ -130,7 +130,8 @@ class TestData(unittest.TestCase):
         self.assertIn("Type: Data", str_repr)
         self.assertIn("Total size:", str_repr)
         self.assertIn("Number of files: 1", str_repr)
-        self.assertIn(self.test_file1, str_repr)
+        # Check for escaped version of path (backslashes are escaped in repr)
+        self.assertIn(repr(self.test_file1)[1:-1], str_repr)  # Remove outer quotes from repr
 
 if __name__ == '__main__':
     unittest.main()

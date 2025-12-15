@@ -30,8 +30,9 @@ def decode(data, params, logger=None):
         }
 
     except Exception as e:
-        logger.error(f"Error during decoding: {str(e)}")
-        logger.error(traceback.format_exc())
+        if logger:
+            logger.error(f"Error during decoding: {str(e)}")
+            logger.error(traceback.format_exc())
         
         decoded_binary = None
         valid = False
@@ -80,14 +81,13 @@ def dna_to_binary_custom(dna_string):
 def decode_binary_codewords(data, params):
 
     check_ltcode, check_reedsolomon = True, True
-
+    print(data)
     if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
-        data, check_ltcode = undoltcodesynth(data, params.index_carry_length, params.dna_barcode_length, 1)
-
+        data, check_ltcode = undoltcodesynth(data, params.index_carry_length, params.ltcode_header, 1)
+    print(data)
     if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
-
         data, check_reedsolomon = undoreedsolomonsynthesis(data, params.bits_per_ec)
-
+    print(data)
     final_data = []
 
     for i in range(len(data)):

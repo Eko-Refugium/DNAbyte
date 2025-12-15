@@ -84,7 +84,8 @@ class Nanopore(SimulateSequencing):
         """
         new_sequence = list(sequence)
         counter = 0
-        for p in range(len(sequence)):
+        # Iterate backwards to avoid index issues when popping
+        for p in range(len(sequence) - 1, -1, -1):
             if np.random.rand() < del_prob:
                 counter += 1
                 new_sequence.pop(p)

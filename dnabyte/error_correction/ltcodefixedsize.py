@@ -109,6 +109,16 @@ def decode_lt(encoded_symbols, indexcarrylength, ninputlength):
     
     howmanyarethereonavrage = max(set(howmanyarethereonavragelist), key=howmanyarethereonavragelist.count)
     howmanyaretheredec = int(howmanyarethereonavrage, 2)
+    
+    # Sanity check: prevent overflow from corrupted header
+    MAX_REASONABLE_SIZE = 10**7  # 10 million elements max
+    if howmanyaretheredec > MAX_REASONABLE_SIZE:
+        raise ValueError(
+            f"LTcode header indicates unreasonably large number of messages: {howmanyaretheredec}. "
+            f"Header value: {howmanyarethereonavrage} (binary). "
+            f"This likely indicates data corruption in the LT code header."
+        )
+    
     decoded_strings = [None] * howmanyaretheredec
     unresolved_symbols = set(range(howmanyaretheredec))
     howmanybitsforoneindex = int(m.ceil(m.log2(howmanyaretheredec)))

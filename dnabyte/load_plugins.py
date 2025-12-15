@@ -33,6 +33,7 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         storage_conditions = storage_conditions.lower() if storage_conditions != None else None
     elif isinstance(storage_conditions, list):
         storage_conditions = [condition.lower() for condition in storage_conditions]
+    print(sequencing_method, type(sequencing_method))
     sequencing_method = sequencing_method.lower() if sequencing_method != None else None
         
 
@@ -165,6 +166,7 @@ def load_synthesis_plugins(synthesis_method):
     """
     Load synthesis plugins from the specified folder and return a dictionary of plugin classes.
     """
+    print("synthesis_method:", synthesis_method)
     plugin_folder = os.path.dirname(__file__)
     synthesis_plugins = {}  # Define the plugins dictionary
     if isinstance(synthesis_method, str):
@@ -178,7 +180,7 @@ def load_synthesis_plugins(synthesis_method):
         try:
             folders_synthesize = [name for name in os.listdir(plugin_folder + '/synthesis') 
                 if os.path.isdir(os.path.join(plugin_folder + '/synthesis', name))]
-            
+            print("folders_synthesize:", folders_synthesize, synthesis_method.lower())
             for filename in folders_synthesize:
                 if synthesis_method.lower() == filename.lower():
                     # Load the encode module
@@ -191,5 +193,6 @@ def load_synthesis_plugins(synthesis_method):
                             break
         except Exception as e:
             print(f"Error loading synthesis plugin '{filename}': {e}")
+        print("synthesis_plugins:", synthesis_plugins)
 
     return synthesis_plugins

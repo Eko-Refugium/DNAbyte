@@ -109,6 +109,7 @@ class Encode:
         """
         if isinstance(data, InSilicoDNA):
             try:
+                print(self.encoding_method, self.encoding_plugins)
                 encode_class = self.encoding_plugins[self.encoding_method]
                 plugin = encode_class(self.params, logger=self.logger)
                 processed, info = plugin.process(data)

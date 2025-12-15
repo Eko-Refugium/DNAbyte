@@ -112,6 +112,7 @@ class TestBase(unittest.TestCase):
 
                 try:
                     syn = SimulateSynthesis(self.params, logger=self.testlogger)
+                    print("here")
                     data_syn, info = syn.simulate(data_enc)
                     self.testlogger.info('STATUS: SUCCESS')
                     self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
@@ -128,7 +129,8 @@ class TestBase(unittest.TestCase):
                     self.fail(f"Synthesis simulation failed: {str(e)}")
             else:
                 self.testlogger.info('STEP03: SIMULATE SYNTHESIS - SKIPPED (synthesis_method is None)')
-                data_syn = data_enc
+                data_syn = InSilicoDNA(data_enc.data)
+
 
 #######################################################################################################################
 ##### STEP 4: SIMULATE STORAGE ########################################################################################
@@ -236,6 +238,8 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
+                print("Decoding...")
+                print(data_cor.data)
                 data_dec, valid, info = enc.decode(data_cor)
 
                 # TODO: Add the info to the log
@@ -263,7 +267,8 @@ class TestBase(unittest.TestCase):
      
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
-
+            print("Comparing...")
+            print(data_dec.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 
