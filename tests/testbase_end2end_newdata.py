@@ -238,6 +238,8 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
+                print("Decoding...")
+                print(data_cor.data)
                 data_dec, valid, info = enc.decode(data_cor)
 
                 # TODO: Add the info to the log
@@ -265,7 +267,8 @@ class TestBase(unittest.TestCase):
      
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
-
+            print("Comparing...")
+            print(data_dec.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 

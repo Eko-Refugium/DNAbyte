@@ -33,6 +33,7 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         storage_conditions = storage_conditions.lower() if storage_conditions != None else None
     elif isinstance(storage_conditions, list):
         storage_conditions = [condition.lower() for condition in storage_conditions]
+    print(sequencing_method, type(sequencing_method))
     sequencing_method = sequencing_method.lower() if sequencing_method != None else None
         
 

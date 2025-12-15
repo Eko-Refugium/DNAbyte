@@ -129,7 +129,7 @@ class NoHomoPoly(Encode):
 
         # Step 2: Calculate the message length
         if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
-            message_length = params.codeword_length - 2 * params.dna_barcode_length - zfill_bits - params.index_carry_length
+            message_length = params.codeword_length - params.dna_barcode_length - zfill_bits - params.index_carry_length - params.ltcode_header
         else:
             message_length = params.codeword_length - params.dna_barcode_length - zfill_bits
 
@@ -160,9 +160,9 @@ class NoHomoPoly(Encode):
 
         # TODO: Check whether this is correct
         # Determine the length of the DNA barcode
-        if hasattr(self.params, 'outer_error_correction') and self.params.outer_error_correction == 'reedsolomon':
-            dna_barcode_length = params.codeword_length - params.message_length
-            params.dna_barcode_length = dna_barcode_length
+        # if hasattr(self.params, 'outer_error_correction') and self.params.outer_error_correction == 'reedsolomon':
+        #     dna_barcode_length = params.codeword_length - params.message_length
+        #     params.dna_barcode_length = dna_barcode_length
 
         return params
 
@@ -193,7 +193,7 @@ class NoHomoPoly(Encode):
  
          # Step 3: apply inner error correction
         if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
-            binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.dna_barcode_length, 1)
+            binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.ltcode_header, 1)
 
         return binary_codewords
 
@@ -256,7 +256,7 @@ def attributes(inputparams):
 
         reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
                                               default=0.8,
-                                              min=0.5,
+                                              min=0.2,
                                               max=0.95,
                                               inputparams=inputparams)
 

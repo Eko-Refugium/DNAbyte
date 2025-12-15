@@ -104,7 +104,7 @@ def create_json_file(type, filenames, assembly_structure, encoding_scheme, data,
     encoding_parameters = {
         "codeword_length": kwargs.get('codewordlength'),
         "dna_barcode_length": kwargs.get('dna_barcode_length'),
-        "codeword_max_lenght_positions": kwargs.get('codeword_maxlength_positions'),
+        "codeword_maxlength_positions": kwargs.get('codeword_maxlength_positions'),
         "percent_of_symbols": kwargs.get('percentofsymbols'),
         "index_carry_length": kwargs.get('indexcarrylength'),
         "theory": theory
@@ -328,7 +328,7 @@ def create_encode_object(json_data):
                   inner_error_correction = json_data['error_correction_parameters']['inner_error_correction'],
                   outer_error_correction = json_data['error_correction_parameters']['outer_error_correction'],
                   dna_barcode_length = json_data['encoding_parameters']['dna_barcode_length'],
-                  codeword_maxlength_positions = json_data['encoding_parameters']['codeword_max_lenght_positions'],
+                  codeword_maxlength_positions = json_data['encoding_parameters']['codeword_maxlength_positions'],
                   codewordlength = json_data['encoding_parameters']['codeword_length'],
                   library = library,
                   library_name = library_name,
