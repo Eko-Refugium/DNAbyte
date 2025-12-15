@@ -25,7 +25,13 @@ class MESA(SimulateSynthesis):
         method_id = self.params.mesa_synthesis_id
 
         # Get the absolute path of the file relative to the parent directory
-        file_path = os.path.join(parent_dir, 'dnabyte', 'synthesis', 'mesa',  'syn_table.json')
+        #file_path = os.path.join(parent_dir, 'dnabyte', 'synthesis', 'mesa',  'syn_table.json')
+
+        # Get the directory where this module is located
+        module_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Get the absolute path of the JSON file in the same directory as this module
+        file_path = os.path.join(module_dir, 'syn_table.json')
 
         # get the error parameters for the designated method
         # get dictionary of synthesis parameters from JSON file
