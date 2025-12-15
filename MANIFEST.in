@@ -1,0 +1,2 @@
+include dnabyte/synthesis/mesa/syn_table.json
+include dnabyte/sequencing/mesa/seq_table.json
