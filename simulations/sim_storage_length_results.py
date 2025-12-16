@@ -12,7 +12,7 @@ from auxiliary import create_text_files
 
 
 # define parameters of the simulation
-repeats = 100
+repeats = 10
 years = [y for y in [10, 100, 1000, 10000, 20000, 40000, 60000, 80000, 90000, 100000, 110000, 120000] for _ in range(repeats)]
 
 
@@ -26,37 +26,35 @@ params = Params.params_range(
         vol=1000000 / Avogadro,
         std_dev=1,
         hybridisation_steps=10000,
-        inner_error_correction='ltcode',
+        inner_error_correction=None,
         outer_error_correction='reedsolomon',
         dna_barcode_length=34,  
         codeword_maxlength_positions=18,
+        binarization_method='compressed',
         years=years,
         storage_conditions='biogene',
         codeword_length=501,
         percent_of_symbols=2,
         index_carry_length=34,
-        synthesis_method='mesa',
-        mesa_synthesis_id=68,
-        sequencing_method='mesa',
-        mesa_sequencing_id=38,
+        # synthesis_method='mesa',
+        # mesa_synthesis_id=68,
+        # sequencing_method='mesa',
+        # mesa_sequencing_id=41,
         reed_solo_percentage=0.9,
         seed=42,
         theory='no'
 )
 
-job_identifier = '20250407_084254'
+# run simulation
+sim = Simulation(params)
+res = sim.run(paralel=False)
 
-pickle_file_path = os.path.join('simulations', 'simlogs', f'res_{job_identifier}.pickle')
-
-# Load the res object
-try:
-    with open(pickle_file_path, 'rb') as pickle_file:
-        res = pickle.load(pickle_file)
-    print(f"Loaded res object from {pickle_file_path}")
-except FileNotFoundError:
-    print(f"Pickle file not found: {pickle_file_path}")
-except Exception as e:
-    print(f"An error occurred while loading the pickle file: {e}")
+# Debug: Check the structure of res
+if len(res) > 0:
+    first_key = list(res.keys())[0]
+    print(f"Sample key: {first_key}")
+    print(f"Sample value: {res[first_key]}")
+    print(f"Total results: {len(res)}")
 
 # extract the success and failure counts for every year
 unique_years = list(set(years))

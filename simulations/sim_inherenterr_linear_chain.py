@@ -13,35 +13,26 @@ from auxiliary import create_text_files
 
 # define parameters of the simulation
 repeats = 10
-iid_error_rate = [y for y in [0] for _ in range(repeats)]
+iid_error_rate = [y for y in [0,0.02,0.04,0.06,0.08,0.1] for _ in range(repeats)]
 
 
 # set other parameters
 params = Params.params_range(
         name='sim_linear_chain_noEC',
-        file_paths=['./simulations/simfiles/textfile_40b_restored.txt'],
+        file_paths=['./simulations/simfiles/textfile_40b.txt'],
         binarization_method='compressed',
         assembly_structure='linear_assembly',
         encoding_method='linear_chain',
         library_name='lib_simple_30_400.csv',
-        mean=10,
+        mean=1,
         vol=1000000 / Avogadro,
         std_dev=0,
         hybridisation_steps=10000,
-        inner_error_correction=None,
-        outer_error_correction='reedsolomon',
-        dna_barcode_length=5,  
-        codeword_maxlength_positions=5,
-        years=0,
-        storage_conditions='biogene',
+        dna_barcode_length=2,  
+        codeword_maxlength_positions=2,
         codeword_length=100,
-        percent_of_symbols=2,
-        ltcode_header=4,
-        index_carry_length=3,
-        synthesis_method=None,
         sequencing_method='iid',
         iid_error_rate=iid_error_rate,
-        reed_solo_percentage=0.9,
         sigma_amount=None,
         seed=42,
         theory='no'

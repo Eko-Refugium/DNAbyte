@@ -24,7 +24,7 @@ class IID(SimulateSequencing):
                     # randomly select a new base
                     new_base = random.choice(['A', 'C', 'G', 'T'])
                     # replace the base at the mutation position with the new base
-                    sequenceserror[i] = (data[i][:k] + new_base + data[i][k + 1:])      
+                    sequenceserror[i] = (sequenceserror[i][:k] + new_base + sequenceserror[i][k + 1:])      
                
         info = {}
         info['error_counter'] = error_counter

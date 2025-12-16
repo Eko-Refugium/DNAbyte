@@ -11,24 +11,23 @@ from simulations.auxiliary import create_text_files
 # define parameters of the simulation
 
 # create files
-sizes = [40 * (2 ** i) for i in range(17)]  # Sizes: 10, 20, 40, 80, ..., 40960 bytes
+sizes = [20 * (2 ** i) for i in range(7)]  # Sizes: 10, 20, 40, 80, ..., 40960 bytes
 directory = "./simulations/simfiles"
 filenames = create_text_files(directory, sizes)
 
 
 # set remaining parameters
 params = Params.params_range(
-        name='Linear_chain',
-        file_paths=filenames,
-        assembly_structure='linear_assembly',
-        encoding_method='linear_encoding',
-        binarization_method='compressed',
+        name='poly_chain',
+        filename=filenames,
+        encoding_method='poly_chain',
+        binarization_method='default',
         library_name='20bp_Lib.csv',
         inner_error_correction=None,
         outer_error_correction='reedsolomon',
         reed_solo_percentage=0.8,
-        dna_barcode_length=34,  
-        codeword_maxlength_positions=18,
+        dna_barcode_length=2,  
+        codeword_maxlength_positions=2,
         codeword_length=501
 
 )

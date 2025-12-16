@@ -377,16 +377,24 @@ def reduce_to_n_most_used_elements(list_of_lists, n):
     return reduced_lists
 
 def sort_lists_by_first_n_entries(lists, n, theory):
-    # Sort the entire list of lists based on the first n entries
+    # Filter out lists that have strings in the first n positions (keep only numeric entries)
+    filtered_lists = []
     for lst in lists:
-        for k in range(n):
+        has_string = False
+        for k in range(min(n, len(lst))):
             if isinstance(lst[k], str):
-                lists.remove(lst)
-    lists.sort(key=lambda x: x[:n])
+                has_string = True
+                break
+        if not has_string:
+            filtered_lists.append(lst)
     
+    # Sort the filtered lists by the first n numeric entries
+    filtered_lists.sort(key=lambda x: x[:n])
+    
+    # Group lists that have the same first n entries
     grouped_lists = {}
     
-    for lst in lists:
+    for lst in filtered_lists:
         key = tuple(lst[:n])
         if key not in grouped_lists:
             grouped_lists[key] = []

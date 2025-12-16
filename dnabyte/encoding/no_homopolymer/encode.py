@@ -254,11 +254,14 @@ def attributes(inputparams):
     # parameter group: outer_error_correction
     if getattr(inputparams, 'outer_error_correction', None) == 'reedsolomon':
 
-        reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
-                                              default=0.8,
-                                              min=0.2,
-                                              max=0.95,
-                                              inputparams=inputparams)
+        if inputparams.reed_solo_percentage == 1:
+            inputparams.outer_error_correction = None
+        else:
+            reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
+                                                default=0.8,
+                                                min=0.1,
+                                                max=0.99,
+                                                inputparams=inputparams)
 
     elif getattr(inputparams, 'outer_error_correction', None) is None:
         pass
