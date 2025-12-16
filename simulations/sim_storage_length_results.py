@@ -7,8 +7,8 @@ from scipy.constants import Avogadro
 import pickle
 
 from dnabyte.params import Params
-from simulation import Simulation
-from auxiliary import create_text_files
+from simulations.simulation import Simulation
+from simulations.auxiliary import create_text_files
 
 
 # define parameters of the simulation
