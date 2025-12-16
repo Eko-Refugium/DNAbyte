@@ -25,6 +25,8 @@ class Random(SimulateStorage):
             strand_breaks = math.ceil(len(oligo[0])/460)
 
         info = {"number_of_strand_breaks": total_strand_breaks}
+        if remaining_oligos == []:
+            raise ValueError("All DNA strands have decayed during storage in random conditions. No sequences remain.")
         return remaining_oligos, info
 
 def check_parameter(parameter, default, min, max, inputparams):

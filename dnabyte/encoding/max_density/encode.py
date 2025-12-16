@@ -31,7 +31,8 @@ class MaxDensity(Encode):
 
             # Creates binary codewords from the provided data given the specified parameters
             binary_codewords = self.create_binary_codewords(data, self.params)
-
+            if len(binary_codewords) < self.params.dna_barcode_length * 2:
+                raise ValueError("The number of binary codewords exceeds the maximum indices. increase dna_barcode_length.")
             # Sanity checks
             if self.params.debug:
                 self.logger.info(f"SANITY CHECK: Number of binary codewords: {len(binary_codewords)}")
@@ -126,6 +127,9 @@ class MaxDensity(Encode):
         # Step 3: calculate bits per codeword
         bits_per_codeword = message_length * 2
 
+        if bits_per_codeword <= 0:
+            raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. codeword_length, dna_barcode_length, codeword_maxlength_positions, ltcode_header, index_carry_length, reed_solo_percentage")
+
         if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             bits_per_codeword = m.floor(bits_per_codeword * params.reed_solo_percentage)
             bits_per_ec = (message_length * 2 - bits_per_codeword)
@@ -135,6 +139,9 @@ class MaxDensity(Encode):
             bits_per_codeword += adjustment
             bits_per_ec -= adjustment
             params.bits_per_ec = bits_per_ec
+
+            if bits_per_codeword <= 0:
+                raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. Including the reedsolomon correction prcentage carrying length is given")
 
         params.bits_per_codeword = bits_per_codeword
 
@@ -228,7 +235,7 @@ def attributes(inputparams):
 
     codeword_maxlength_positions = check_parameter(parameter="codeword_maxlength_positions",
                                                   default=m.ceil(codeword_length * 0.15),
-                                                  min=1,
+                                                  min=4,
                                                   max=codeword_length - dna_barcode_length - 1,
                                                   inputparams=inputparams)
 
@@ -240,14 +247,14 @@ def attributes(inputparams):
         index_carry_length = check_parameter(parameter="index_carry_length",
                                             default=m.ceil(codeword_length * 0.15),
                                             #min=0.5 * codeword_length,
-                                            min=1,
+                                            min=4,
                                             #max=0.9 * codeword_length,
                                             max=codeword_length - dna_barcode_length - codeword_maxlength_positions - 1,
                                             inputparams=inputparams)
         
         ltcode_header = check_parameter(parameter="ltcode_header",
                                        default=m.ceil(codeword_length * 0.15),
-                                       min=1,
+                                       min=4,
                                        max=codeword_length - dna_barcode_length - codeword_maxlength_positions - index_carry_length - 1,
                                        inputparams=inputparams)
 

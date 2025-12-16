@@ -27,6 +27,8 @@ class Permafrost(SimulateStorage):
                 strand_breaks += 1
 
         info = {"number_of_strand_breaks": strand_breaks}
+        if remaining_oligos == []:
+            raise ValueError("All DNA strands have decayed during storage in permafrost conditions. No sequences remain.")
         return remaining_oligos, info
     
 def check_parameter(parameter, default, min, max, inputparams):

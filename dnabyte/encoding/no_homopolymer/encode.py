@@ -37,7 +37,8 @@ class NoHomoPoly(Encode):
 
             # Create binary codewords
             binary_codewords = self.create_binary_codewords(data, self.params)
-
+            if len(binary_codewords) < self.params.dna_barcode_length * 2:
+                raise ValueError("The number of binary codewords exceeds the maximum indices. increase dna_barcode_length.")
             # Sanity checks
             if self.params.debug:
                 self.logger.info(f"SANITY CHECK: Number of binary codewords: {len(binary_codewords)}")
@@ -142,6 +143,9 @@ class NoHomoPoly(Encode):
 
         # Step 3: calculate the bits per codeword
         bits_per_codeword = message_length
+        if bits_per_codeword <= 0:
+            raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. codeword_length, dna_barcode_length, codeword_maxlength_positions, ltcode_header, index_carry_length, reed_solo_percentage")
+
         
         if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             
@@ -153,6 +157,8 @@ class NoHomoPoly(Encode):
             bits_per_codeword += adjustment
             bits_per_ec -= adjustment
             params.bits_per_ec = bits_per_ec
+            if bits_per_codeword <= 0:
+                raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. Including the reedsolomon correction prcentage carrying length is given")
 
         params.bits_per_codeword = bits_per_codeword
 

@@ -268,7 +268,7 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
             print("Comparing...")
-            print(data_dec.data)
+            print(data_dec.data, binary_code.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 
