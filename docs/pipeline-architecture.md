@@ -1,11 +1,11 @@
 
 ## Data Classes
 
-Data Classes are the stored intermediate states of the pipline, this means between every step of the pipline the structure of the ingoing and resoulting data is checkt to be compatible with the rest of the pipeline. Each data class represents a structure that errises in the pipeline. The type system prevents mismatches, ensuring you can't accidentally pass binary data to a function expecting DNA sequences.
+Data Classes are the stored intermediate states of the pipeline, this means between every step of the pipeline the structure of the ingoing and resulting data is checked to be compatible with the rest of the pipeline. Each data class represents a structure that arises in the pipeline. The type system prevents mismatches, ensuring you can't accidentally pass binary data to a function expecting DNA sequences.
 
-Classes carry additional a dictionray that can be used by the modules to store metadata used in debuging and benchmarking.
+Classes carry additional a dictionary that can be used by the modules to store metadata used in debugging and benchmarking.
 
-### The Data througout the pipeline
+### The Data throughout the pipeline
 
 ```
 Data                   → Raw file content, filesystem representation
@@ -16,7 +16,7 @@ NucleobaseCode        → Encoded DNA sequences with structure needed in the syn
     ↓
 InSilicoDNA           → Simulated physical DNA molecules
     ↓
-InSilicoDNA           → After errors chanels and sequencing
+InSilicoDNA           → After errors channels and sequencing
     ↓
 NucleobaseCode        → Recovered encoded sequences
     ↓
@@ -40,11 +40,11 @@ Stores data as string of '0' and '1' characters. Inherits from Data to maintain 
 #### **NucleobaseCode (extends Data)**
 *Encoded DNA sequences*
 
-- De novo sythesised encodings
-Assumes a list structure containg each codeword once and maintains metadata of the encoding.
+- De novo synthesized encodings
+Assumes a list structure containing each codeword once and maintains metadata of the encoding.
 
 - Enzymatic assembly  
-Aussumes as a Multi-level list structure representing encoded data. Top level contains codewords, lower levels contain motifs/nucleotides organized by pooling hierarchy. Supports random assembly, iterative assembly, comparison, slicing, and reverse complement operations. Maintains encoding scheme metadata and biological constraints.
+Assumes as a Multi-level list structure representing encoded data. Top level contains codewords, lower levels contain motifs/nucleotides organized by pooling hierarchy. Supports random assembly, iterative assembly, comparison, slicing, and reverse complement operations. Maintains encoding scheme metadata and biological constraints.
 
 #### **InSilicoDNA (extends Data)**
 *Simulated DNA molecules as oligonucleotide strings*
@@ -53,7 +53,7 @@ Contains list of DNA sequences (strings of 'A', 'C', 'G', 'T'). Used throughout 
 
 ### Modularity
 
-The Type system enforces that plugins accept and return appropriate classes. A error chanell simulator only accepts `InSilicoDNA` and returns `InSilicoDNA`, preventing incompatible combinations. Within interface constraints, plugins have complete freedom. One encoding scheme might produce long heavily error resistant codes and store extensive metadata in `EncodedData` while another is minimalist. Both work as long as they satisfy the interface contract.
+The Type system enforces that plugins accept and return appropriate classes. An error channel simulator only accepts `InSilicoDNA` and returns `InSilicoDNA`, preventing incompatible combinations. Within interface constraints, plugins have complete freedom. One encoding scheme might produce long heavily error resistant codes and store extensive metadata in `EncodedData` while another is minimalist. Both work as long as they satisfy the interface contract.
 
 Clear input-output relationships mean stages compose naturally. Any synthesis simulator chains with any storage simulator because output type matches input type, enabling arbitrary combinations without custom glue code. Further data class boundaries provide natural unit testing seams. Test an encoder by feeding mock `BinaryCode` and validating the resulting `EncodedData`, without running the full pipeline.
 
@@ -64,7 +64,7 @@ To make this concrete, imagine storing an image file:
 1. **Data**: 10,000-byte JPEG file with path "/path/to/photo.jpg"
 2. **BinaryCode**: 80,000-bit string ('0' and '1' chars) plus original file_paths from Data
 3. **NucleobaseCode**: Multi-level structure with ~500 DNA codewords organized hierarchically, each 200 nt
-4. **InSilicoDNA**: Flat list of ~500 DNA sequence strings, ~2% now contain synthesis errors and reduandancy
+4. **InSilicoDNA**: Flat list of ~500 DNA sequence strings, ~2% now contain synthesis errors and redundancy
 5. **InSilicoDNA** (after sequencing): Same structure but sequences now include sequencing errors and coverage variations (some sequences read multiple times, others missing)
 6. **NucleobaseCode**: Reconstructed hierarchical structure during decoding
 7. **BinaryCode**: bit string recovered (ideally identical to step 2)
@@ -94,7 +94,7 @@ Sequencing → Process → Decode → Compare → Restore File
 
 Binarization produces the input for the `BinaryCode` data class containing pure binary representation plus reconstruction metadata, abstracting away file format complexity.
 
-**Modularity**: Plugins are to be added to the `binarization/` folder. The read file is to be named `binarize.py` and has to implement `binarize()` and `debinarize()` methods. aditional auxilaray files may be added in the folder. Strategies may include compression, encryption, or format-specific optimizations. Rest of pipeline operates on standardized binary, independent of source formats.
+**Modularity**: Plugins are to be added to the `binarization/` folder. The read file is to be named `binarize.py` and has to implement `binarize()` and `debinarize()` methods. Additional auxiliary files may be added in the folder. Strategies may include compression, encryption, or format-specific optimizations. Rest of pipeline operates on standardized binary, independent of source formats.
 
 ---
 
@@ -103,9 +103,9 @@ Binarization produces the input for the `BinaryCode` data class containing pure 
 
 **Conceptual Purpose**: Map binary to quaternary DNA alphabet while adding error resilience or any other required additions.
 
-This tep provides the input for the `NucleobaseCode` data class.
+This step provides the input for the `NucleobaseCode` data class.
 
-**Modularity**: Plugins in added in the `encoding/` folder and implement `encode()`, `decode()` and `processing()` methods in a file that must be named `encode.py`. The reason why the encofing plugin contains all three is beacuse these are intertwied. `encode()` turns the binary string given into the quartarny code and if needed the assembly structure. Additional error correction methods that are more general that can be used in encodings are stored in `error_corretion`. These can be e.g. fountain codes.
+**Modularity**: Plugins in added in the `encoding/` folder and implement `encode()`, `decode()` and `processing()` methods in a file that must be named `encode.py`. The reason why the encoding plugin contains all three is because these are intertwined. `encode()` turns the binary string given into the quaternary code and if needed the assembly structure. Additional error correction methods that are more general that can be used in encodings are stored in `error_correction`. These can be e.g. fountain codes.
 
 ---
 
@@ -160,7 +160,7 @@ Sequencing operates on `InSilicoDNA`, producing observed sequences with sequenci
 
 Processing operates on `InSilicoDNA`, applying quality filtering, clustering, and consensus building to refine sequence quality and reduce redundancy.
 
-**Modularity**: Plugins in are read in with the encoding and should be the step for cleaing up the reads, from simple quality filtering to machine learning, graph-based assembly, or statistical models could be implemented here.
+**Modularity**: Plugins in are read in with the encoding and should be the step for cleaning up the reads, from simple quality filtering to machine learning, graph-based assembly, or statistical models could be implemented here.
 
 ---
 
@@ -190,7 +190,7 @@ Restoration reverses Step 1, using metadata in `BinaryCode` to reconstruct `Data
 
 Each step can be tested independently and Swapped with alternative implementations to try different encoding schemes or error models by changing plugin files
 
-The pipeline now needs to be configured. This can be done through the `Params` object. this gives a dictionary of all the parameters needed for the modules. For this reason every modle needs a function called `atributes()` this takes the Params object and test if all neecisary parameters are given for all modules that is loded in. If not they can add defoult values this function in up to the user.
+The pipeline now needs to be configured. This can be done through the `Params` object. this gives a dictionary of all the parameters needed for the modules. For this reason every module needs a function called `attributes()` this takes the Params object and test if all necessary parameters are given for all modules that is loaded in. If not they can add default values this function in up to the user.
 
 Examples of what the `Params` object can configure:
 - **File inputs**: Specify which files to store, supporting single or multiple file scenarios
@@ -246,7 +246,7 @@ params.encoding_method = "my_encoder"
 ### Folder-Specific Guidelines
 
 #### **`encoding/`** - Encoding Schemes
-Must implement: `encode(data)`, `prosess(data)` and `decode(data)` methods
+Must implement: `encode(data)`, `process(data)` and `decode(data)` methods
 
 Examples: Reed-Solomon, Fountain codes, HEDGES, DNA Fountain
 

@@ -103,8 +103,10 @@ class BinaryCode(Data):
 
         if res == [] and len(data_dec.data) == len(data_bin.data):
             return 'SUCCESS', res
+        elif len(data_dec.data) <= len(data_bin.data):
+            return 'ERROR_short', res
         else:
-            return 'ERROR', res
+            return 'ERROR_long', res
 
     def random(n):
         """
