@@ -268,7 +268,7 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
             print("Comparing...")
-            print(data_dec.data)
+            print(data_dec.data, binary_code.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 
@@ -276,11 +276,16 @@ class TestBase(unittest.TestCase):
                     self.testlogger.info('STATUS: SUCCESS')
                     self.testlogger.info('DURATION: %.2f seconds' + "\n", time.time() - start_time)
 
-                if comparison == 'ERROR':
+                if comparison == 'ERROR_short':
                     self.testlogger.info('STATUS: ERROR')
                     self.testlogger.error('TRACEBACK:' + traceback.format_exc())
                     self.testlogger.error('COMPARISON RESULT: %s', res)
-                    self.fail("Decoded data does not match the original data")
+                    self.fail("Decoded data does not match the original data, decoded data is shorter. This can mean codeword loss due to errors or encoding scheme specific complications. Try using different encoding methods or parameters or less error introducing channels.")
+                if comparison == 'ERROR_long':
+                    self.testlogger.info('STATUS: ERROR')
+                    self.testlogger.error('TRACEBACK:' + traceback.format_exc())
+                    self.testlogger.error('COMPARISON RESULT: %s', res)
+                    self.fail("Decoded data does not match the original data, decoded data is longer. This can mean codeword duplication due to errors or encoding scheme specific complications (like index headers). Try using different encoding methods or parameters or less error introducing channels.")
 
             except Exception as e:
                 self.testlogger.error('TYPE: %s', str(e))

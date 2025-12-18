@@ -311,7 +311,8 @@ class ReedSolomon (InnerErrorCorrection):
                 else:
                     Xj = GF(0)
                 prod = prod * (Xl - Xj)
-            if prod==0:
+            if prod == 0:
+                # Avoid division by zero in Forney's formula
                 Yl = 0
             else:
                 Yl = Yl * prod** -1

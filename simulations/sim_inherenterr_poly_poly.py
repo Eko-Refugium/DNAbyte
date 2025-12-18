@@ -13,31 +13,21 @@ from auxiliary import create_text_files
 
 # define parameters of the simulation
 repeats = 10
-iid_error_rate = [y for y in [0] for _ in range(repeats)]
+iid_error_rate = [y for y in [0,0.02,0.04,0.06,0.08,0.1,0.12,0.14,0.16,0.18,0.2] for _ in range(repeats)]
 
 
 # set other parameters
 params = Params.params_range(
         name='sim_linear_chain_noEC',
-        file_paths=['./simulations/simfiles/textfile_640b.txt'],
+        file_paths=['./simulations/simfiles/textfile_400b.txt'],
         binarization_method='compressed',
-        assembly_structure='positional_assembly',
         encoding_method='poly_chain',
         library_name='polymeraselibinparts_500(40)_100(35)_70.csv',
         mean=1,
-        vol=1000000 / Avogadro,
         std_dev=0,
         hybridisation_steps=10000,
-        inner_error_correction='ltcode',
-        outer_error_correction='reedsolomon',
-        dna_barcode_length=5,  
-        codeword_maxlength_positions=6,
-        years=0,
-        storage_conditions='biogene',
-        codeword_length=100,
-        percent_of_symbols=2,
-        ltcode_header=2,
-        index_carry_length=3,
+        dna_barcode_length=2,  
+        codeword_maxlength_positions=2,
         synthesis_method=None,
         sequencing_method='iid',
         iid_error_rate=iid_error_rate,
@@ -47,7 +37,7 @@ params = Params.params_range(
         theory='no'
 )
 
-filename='./simulations/simfiles/textfile_640b.txt'
+filename='./simulations/simfiles/textfile_400b.txt'
 
 sim = Simulation(params)
 #res = sim.run(paralel=True, max_workers=8)

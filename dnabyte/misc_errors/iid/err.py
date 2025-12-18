@@ -30,7 +30,7 @@ class Err_IID(SimulateMiscErrors):
                         # randomly select a new base
                         new_base = random.choice(['A', 'C', 'G', 'T'])
                         # replace the base at the mutation position with the new base
-                        sequenceserror[i][j] = (data[i][j][:k] + new_base + data[i][j][k + 1:])      
+                        sequenceserror[i][j] = (sequenceserror[i][j][:k] + new_base + sequenceserror[i][j][k + 1:])      
                
         info = {}
         info['error_counter'] = error_counter

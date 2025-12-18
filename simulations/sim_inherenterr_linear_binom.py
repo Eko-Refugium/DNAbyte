@@ -10,8 +10,8 @@ from auxiliary import create_text_files
 
 
 # define parameters of the simulation
-repeats = 1
-iid_error_rate = [y for y in [0,0.1] for _ in range(repeats)]
+repeats = 10
+iid_error_rate = [y for y in [0,0.02,0.04,0.06,0.08,0.1] for _ in range(repeats)]
 
 # set other parameters
 params = Params.params_range(
@@ -22,23 +22,12 @@ params = Params.params_range(
         encoding_method='linear_binom',
         library_name='lib_simple_30_400.csv',
         mean=1,
-        vol=1000000 / Avogadro,
         std_dev=0,
-        hybridisation_steps=10000,
-        inner_error_correction=None,
-        outer_error_correction='reedsolomon',
-        dna_barcode_length=5,  
+        dna_barcode_length=2,  
         codeword_maxlength_positions=2,
-        years=0,
-        storage_conditions='biogene',
         codeword_length=100,
-        percent_of_symbols=2,
-        ltcode_header=2,
-        index_carry_length=3,
-        synthesis_method=None,
         sequencing_method='iid',
         iid_error_rate=iid_error_rate,
-        reed_solo_percentage=0.9,
         sigma_amount=3,
         seed=42,
         theory='no'
