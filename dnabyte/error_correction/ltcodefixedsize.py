@@ -48,8 +48,9 @@ def robust_soliton_distribution(N, c=0.1, delta=0.5, max_degree=None):
     p /= p.sum()
 
     # Add the extra term for the robust soliton distribution
-    denominator = (np.arange(1, max_degree + 1) * (np.arange(1, max_degree + 1) - 1))
-    denominator[0] = N
+    denominator = np.arange(1, max_degree + 1) * (np.arange(1, max_degree + 1) - 1)
+    denominator = denominator.astype(float)  # Ensure array is mutable and float type
+    denominator[0] = float(N)
     tau = R/denominator
    
 

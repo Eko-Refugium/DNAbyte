@@ -45,7 +45,9 @@ class Encode:
             try:
                 encode_class = self.encoding_plugins[self.encoding_method]
                 plugin = encode_class(self.params, logger=self.logger)
+                print(data.data)
                 encoded_data, info = plugin.encode(data)
+                print(encoded_data)
                 obj = NucleobaseCode(encoded_data)
                 obj.file_paths = data.file_paths
                 return obj, info

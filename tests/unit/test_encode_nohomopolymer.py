@@ -27,9 +27,9 @@ class TestNoHomopolymerEncodingDecoding(unittest.TestCase):
                     assembly_structure='synthesis',
                     inner_error_correction=None,
                     outer_error_correction=None,
-                    dna_barcode_length=10,
+                    dna_barcode_length=50,
                     codeword_maxlength_positions=100,
-                    codeword_length=200
+                    codeword_length=900
                 ),
                 'expect_perfect_decode': True,
                 'note': 'Basic encoding/decoding without error correction'

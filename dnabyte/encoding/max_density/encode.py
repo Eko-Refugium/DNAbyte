@@ -31,8 +31,6 @@ class MaxDensity(Encode):
 
             # Creates binary codewords from the provided data given the specified parameters
             binary_codewords = self.create_binary_codewords(data, self.params)
-            if len(binary_codewords) < self.params.dna_barcode_length * 2:
-                raise ValueError("The number of binary codewords exceeds the maximum indices. increase dna_barcode_length.")
             # Sanity checks
             if self.params.debug:
                 self.logger.info(f"SANITY CHECK: Number of binary codewords: {len(binary_codewords)}")
@@ -223,6 +221,23 @@ def attributes(inputparams):
     encoding_method = inputparams.encoding_method
     assembly_structure = 'synthesis'
 
+    if hasattr(inputparams, 'mean'):
+        mean = check_parameter(parameter='mean', 
+                               default=1, 
+                               min=1, 
+                               max=200, 
+                               inputparams=inputparams)
+    if hasattr(inputparams, 'std_dev'):
+        if hasattr(inputparams, 'mean'):
+            
+            std_dev = check_parameter(parameter='std_dev', 
+                                    default=0, 
+                                    min=0, 
+                                    max=mean *0.1, 
+                                    inputparams=inputparams)
+        else:
+            std_dev = 0
+
     codeword_length = check_parameter(parameter="codeword_length",
                                       default=500,
                                       min=20,
@@ -304,6 +319,8 @@ def attributes(inputparams):
         "codeword_length": codeword_length, 
         "dna_barcode_length": dna_barcode_length, 
         "codeword_maxlength_positions": codeword_maxlength_positions,
+        "mean": mean,
+        "std_dev": std_dev
     }
     
     # Add inner error correction parameters only if ltcode is used

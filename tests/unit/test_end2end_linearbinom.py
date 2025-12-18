@@ -22,7 +22,7 @@ params_list = [
         # error_methods=['iid', 'homopolymer_issue'],
         # error_params={'iid': {'iid_error_rate': 0.1}},
 
-        mean=100,
+        mean=1,
         std_dev=0,
         
         binarization_method='default',

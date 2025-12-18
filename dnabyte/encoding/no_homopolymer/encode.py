@@ -37,9 +37,7 @@ class NoHomoPoly(Encode):
 
             # Create binary codewords
             binary_codewords = self.create_binary_codewords(data, self.params)
-            if len(binary_codewords) < self.params.dna_barcode_length * 2:
-                raise ValueError("The number of binary codewords exceeds the maximum indices. increase dna_barcode_length.")
-            # Sanity checks
+            
             if self.params.debug:
                 self.logger.info(f"SANITY CHECK: Number of binary codewords: {len(binary_codewords)}")
                 if not all(len(codeword) == len(binary_codewords[0]) for codeword in binary_codewords):
@@ -103,7 +101,7 @@ class NoHomoPoly(Encode):
 
             dna_codewords = None
             info = {}
-
+        print(dna_codewords)
         return dna_codewords, info
 
     def decode(self, data):
@@ -119,6 +117,43 @@ class NoHomoPoly(Encode):
         Wraps the standalone process function to use self.params.
         """
         return self._process_function(data, self.params, self.logger)
+    
+    def dna_to_binary_custom(self, dna_string):
+        """
+        Converts a DNA string to a binary string using a custom mapping to avoid homopolymers.
+
+        Parameters:
+        dna_string (str): The DNA string to be converted.
+
+        Returns:
+        str: The corresponding binary string.
+        """
+        binary_string = []
+        if dna_string[0] == 'T' or dna_string[0] == 'G':
+            for i, base in enumerate(dna_string):
+                if i % 2 == 0:  # Even position
+                    if base == 'T':
+                        binary_string.append('0')
+                    elif base == 'G':
+                        binary_string.append('1')
+                else:  # Odd position
+                    if base == 'C':
+                        binary_string.append('0')
+                    elif base == 'A':
+                        binary_string.append('1')
+        else:
+            for i, base in enumerate(dna_string):
+                if i % 2 == 0:
+                    if base == 'C':
+                        binary_string.append('0')
+                    elif base == 'A':
+                        binary_string.append('1')
+                else:
+                    if base == 'T':
+                        binary_string.append('0')
+                    elif base == 'G':
+                        binary_string.append('1')
+        return ''.join(binary_string)
 
     def binary_to_dna_custom(self, binary_sequence):
         """
@@ -232,6 +267,17 @@ def attributes(inputparams):
 
     encoding_method = inputparams.encoding_method
     assembly_structure = 'synthesis'
+
+    mean = check_parameter(parameter='mean', 
+                               default=1, 
+                               min=1, 
+                               max=200, 
+                               inputparams=inputparams)
+    std_dev = check_parameter(parameter='std_dev', 
+                                    default=0, 
+                                    min=0, 
+                                    max=mean *0.1, 
+                                    inputparams=inputparams)
     
     codeword_length = check_parameter(parameter="codeword_length",
                                       default=500,
@@ -311,6 +357,8 @@ def attributes(inputparams):
         "codeword_length": codeword_length, 
         "dna_barcode_length": dna_barcode_length, 
         "codeword_maxlength_positions": codeword_maxlength_positions,
+        "mean": mean,
+        "std_dev": std_dev
     }
     
     # Add inner error correction parameters only if ltcode is used

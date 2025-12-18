@@ -84,6 +84,7 @@ class TestBase(unittest.TestCase):
 
             self.testlogger.info('STEP02: ENCODE DATA')
             start_time = time.time()
+            print(binary_code)
 
             try:
                 enc = Encode(self.params, logger=self.testlogger)
