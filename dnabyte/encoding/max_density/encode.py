@@ -60,9 +60,11 @@ class MaxDensity(Encode):
                     self.logger.info(f"SANITY CHECK: Length of each DNA codeword: {len(dna_codewords[0])}")   
 
             # create info return dictionary
+            codeword_lengths = [len(codeword) for codeword in dna_codewords]
             info = {
                 "number_of_codewords": len(binary_codewords),
-                "length_of_each_codeword": len(binary_codewords[0]),
+                "min_codeword_length": min(codeword_lengths) if codeword_lengths else 0,
+                "max_codeword_length": max(codeword_lengths) if codeword_lengths else 0,
                 "barcode_length": self.params.dna_barcode_length,
                 "data_length": len(data.data)
             }

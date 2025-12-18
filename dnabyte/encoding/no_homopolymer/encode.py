@@ -54,7 +54,30 @@ class NoHomoPoly(Encode):
                 barcode_base2 = create_counter_list(self.params.dna_barcode_length, 2, i)            
                 barcode = ''.join(str(x) for x in barcode_base2)
                 binary_codewords[i] = barcode + binary_codewords[i]
-                dna_codewords.append(self.binary_to_dna_custom(binary_codewords[i]))
+                dna_codeword = self.binary_to_dna_custom(binary_codewords[i])
+                dna_codewords.append(dna_codeword)
+            
+            # Calculate the actual barcode length in DNA (nucleotides) and in binary (after decoding)
+            # The first DNA codeword's barcode length can be determined by encoding just the barcode
+            if dna_codewords:
+                # Store the original binary barcode length (before DNA encoding) for LT code
+                original_binary_barcode_length = self.params.dna_barcode_length
+                
+                barcode_base2_first = create_counter_list(self.params.dna_barcode_length, 2, 0)
+                barcode_first = ''.join(str(x) for x in barcode_base2_first)
+                dna_barcode_first = self.binary_to_dna_custom(barcode_first)
+                actual_dna_barcode_length = len(dna_barcode_first)
+                # Convert DNA barcode back to binary to get the binary barcode length for decoding
+                binary_barcode_decoded = self.dna_to_binary_custom(dna_barcode_first)
+                actual_binary_barcode_length = len(binary_barcode_decoded)
+                # Update params with the actual binary barcode length for decoding
+                self.params.dna_barcode_length = actual_binary_barcode_length
+                # Store the original for use in LT code encoding (which happens with binary, not DNA)
+                self.params.original_binary_barcode_length = original_binary_barcode_length
+            else:
+                actual_dna_barcode_length = self.params.dna_barcode_length
+                actual_binary_barcode_length = self.params.dna_barcode_length
+                self.params.original_binary_barcode_length = self.params.dna_barcode_length
 
             # Sanity checks
             if self.params.debug:
@@ -65,9 +88,11 @@ class NoHomoPoly(Encode):
                     self.logger.info(f"SANITY CHECK: Length of each DNA codeword: {len(dna_codewords[0])}")   
 
             # create info return dictionary
+            codeword_lengths = [len(codeword) for codeword in dna_codewords]
             info = {
                 "number_of_codewords": len(dna_codewords),
-                "length_of_each_codeword": [len(codeword) for codeword in binary_codewords],
+                "min_codeword_length": min(codeword_lengths) if codeword_lengths else 0,
+                "max_codeword_length": max(codeword_lengths) if codeword_lengths else 0,
                 "barcode_length": self.params.dna_barcode_length
                 }
 
