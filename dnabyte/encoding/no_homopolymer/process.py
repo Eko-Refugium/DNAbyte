@@ -1,5 +1,6 @@
 import random
 from collections import Counter
+from tqdm import tqdm
 from dnabyte.encoding.auxiliary import sort_lists_by_first_n_entries_synth
 
 def process(data, params, logger=None):
@@ -9,7 +10,7 @@ def process(data, params, logger=None):
     # TODO: where are the spaces created?
     sequenceddata = [seq.replace(' ', '') for seq in data.data] 
 
-    for i in range(len(sequenceddata)):
+    for i in tqdm(range(len(sequenceddata)), desc="Processing codewords", disable=logger is not None):
         
         bases = ['A', 'C', 'T', 'G']
         
@@ -70,7 +71,7 @@ def process(data, params, logger=None):
     
     listoflikley = []
     
-    for evrycodeword in listssorted:
+    for evrycodeword in tqdm(listssorted, desc="Finding consensus", disable=logger is not None):
         listoflikley.append(most_common_string(evrycodeword))
 
     info = {}

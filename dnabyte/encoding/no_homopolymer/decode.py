@@ -1,5 +1,6 @@
 import math as m
 import traceback
+from tqdm import tqdm
 
 from dnabyte.error_correction.auxiliary import undoreedsolomonsynthesis, undoltcodesynth
 from dnabyte.encoding.auxiliary import split_string
@@ -19,7 +20,7 @@ def decode(data, params, logger=None):
     try:
         binary_codewords = []
         
-        for i in range(len(data.data)):
+        for i in tqdm(range(len(data.data)), desc="Decoding: DNA to binary", disable=logger is not None):
             binary_codewords.append(dna_to_binary_custom(data.data[i]))
         
         decoded_binary, valid = decode_binary_codewords(binary_codewords, params)
@@ -81,16 +82,13 @@ def dna_to_binary_custom(dna_string):
 def decode_binary_codewords(data, params):
 
     check_ltcode, check_reedsolomon = True, True
-    print(data)
     if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
         data, check_ltcode = undoltcodesynth(data, params.index_carry_length, params.ltcode_header, 1)
-    print(data)
     if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
         data, check_reedsolomon = undoreedsolomonsynthesis(data, params.bits_per_ec)
-    print(data)
     final_data = []
 
-    for i in range(len(data)):
+    for i in tqdm(range(len(data)), desc="Decoding: Removing padding", disable=logger is not None):
         informationoflength, actualdata = split_string(data[i], (params.zfill_bits) * 1)
         informationoflength = int(informationoflength, 2)
         if informationoflength != 0:
