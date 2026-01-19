@@ -1,53 +1,46 @@
-import random
+from bitarray import bitarray
+from bitarray.util import urandom
+
 from .base import Data
 
 class BinaryCode(Data):
     """
-    Represents binary data as a sequence of '0' and '1' characters.
-    
+    Represents binary data as a bitarray for efficient storage and manipulation.
+
     BinaryCode stores and manipulates binary data streams created from file 
     binarization processes. It provides validation, indexing, and iteration 
     capabilities for working with binary representations of original data.
-    
+
     Extends the Data base class to maintain compatibility with the DNAbyte 
     pipeline while providing binary-specific functionality.
-
-    Can be created either:
-        - from file data using a Binarize method, or
-        - directly by providing a binary string.
-
-    :param bitstream: A string of binary data (only '0' and '1' characters).
-    :param file_paths: Optional list of original file paths (for inheritance compatibility).
-    :param size: Optional original file size in bytes.
-    :raises TypeError: If bitstream is not a string.
-    :raises ValueError: If bitstream is empty or contains non-binary characters.
-    
-    Example:
-        >>> binary = BinaryCode("10110010", file_paths=["/path/to/file.txt"])
-        >>> print(len(binary))  # 8
-        >>> print(binary[0])    # '1'
     """
-
     def __init__(self, data, file_paths=None, size=None):
-        """
-        Creates a BinaryCode object from a bitstream.
 
-        :param data: A string of binary data.
-        :param file_paths: Optional list of original file paths.
-        :param size: Optional original file size in bytes.
-        """
-        
         # Validate the bitstream before setting any attributes
         self._validate_bitstream(data)
 
-        # Set binary-specific attributes
-        self.data = data
-        self.length = len(data)
+        if isinstance(data, str):
+            # Convert bit string to bytes
+            self.data = bitarray(data)
+            self.length = len(data)  # number of bits
+            self.size = (self.length + 7) // 8  # size in bytes
 
-        # Handle inheritance - set attributes for parent class compatibility
+        elif isinstance(data, bitarray):
+            self.data = data
+            self.length = len(data)
+            self.size = (self.length + 7) // 8  # size in bytes
+
+        else:
+            raise TypeError(
+                f"Bitstream must be a string or bitarray, got {type(data).__name__}"
+            )
+        
         self.file_paths = file_paths or []
-        self.size = size  # Keep track of original file size
-
+    
+    def to_bitstring(self):
+        """Convert bytes back to '01010...' string for compatibility."""
+        return self.data.to01()
+    
     def _validate_bitstream(self, data):
         """
         Validates that the input is a proper bitstream.
@@ -56,37 +49,43 @@ class BinaryCode(Data):
         :raises TypeError: If bitstream is not a string
         :raises ValueError: If bitstream is empty or contains invalid characters
         """
-        # Check if data is a string
-        if not isinstance(data, str):
-            raise TypeError(
-                f"Bitstream must be a string, got {type(data).__name__}"
-            )
+
+        if isinstance(data, str):
+            # Check if all characters are either '0' or '1'
+            invalid_chars = set(char for char in data if char not in "01")
+            if invalid_chars:
+                raise ValueError(
+                    f"Bitstream contains invalid characters: {invalid_chars}. "
+                    f"Only '0' and '1' are allowed."
+                )
 
         # Check if data is empty
         if len(data) == 0:
             raise ValueError("Bitstream cannot be empty")
 
-        # Check if all characters are either '0' or '1'
-        invalid_chars = set(char for char in data if char not in "01")
-        if invalid_chars:
-            raise ValueError(
-                f"Bitstream contains invalid characters: {invalid_chars}. "
-                f"Only '0' and '1' are allowed."
-            )
-
-    def compare_binary_strings(self, bin_str1, bin_str2):
+    def compare_binary_strings(self, ba1, ba2):
         """
-        Helper function for compare(). Compare two binary strings and return the indices of the differing bits.
+        Compare two bitarrays and return the indices of the differing bits.
+        
+        Uses XOR operation for efficient comparison of bitarrays.
+        
+        :param ba1: First bitarray to compare
+        :param ba2: Second bitarray to compare
+        :return: List of indices where bits differ
         """
         differences = []
-        min_length = min(len(bin_str1), len(bin_str2))
+        min_length = min(len(ba1), len(ba2))
         
-        for i in range(min_length):
-            if bin_str1[i] != bin_str2[i]:
+        # XOR the two bitarrays to find differences (1 = different, 0 = same)
+        # Only compare up to the minimum length
+        xor_result = ba1[:min_length] ^ ba2[:min_length]
+        
+        # Find all indices where the bit is 1 (i.e., different)
+        for i in range(len(xor_result)):
+            if xor_result[i]:
                 differences.append(i)
         
         return differences
-
 
     def compare(self, data_dec, data_bin, logger=None):
         """
@@ -115,15 +114,17 @@ class BinaryCode(Data):
         :param n: Length of the binary string to generate.
         :return: BinaryCode object with random binary data.
         """
-        bitstream = ''.join(random.choice('01') for _ in range(n))
+        bitstream = urandom(n)
         return BinaryCode(bitstream)
-
+    
     def __str__(self):
         output = f"Type: {type(self).__name__}\n"
         output += f"Length: {self.length} bits\n"
         if self.size is not None:
             output += f"Size: {self.size} bytes\n"
-        output += f"Data: {self.data[0:50]}...\n"
+        # Convert bitarray to string for display
+        preview = self.data[:50].to01() if len(self.data) > 50 else self.data.to01()
+        output += f"Data: {preview}{'...' if len(self.data) > 50 else ''}\n"
         return output
 
     def __repr__(self):
@@ -134,12 +135,12 @@ class BinaryCode(Data):
         """
         # Truncate data if too long for readable repr
         if len(self.data) > 20:
-            data_repr = f"{self.data[:20]}..."
+            data_repr = f"{self.data[:20].to01()}..."
         else:
-            data_repr = self.data
+            data_repr = self.data.to01()
 
         return f"BinaryCode(bitstream='{data_repr}', length={self.length})"
-
+    
     def __len__(self):
         """Return the number of bits in the bitstream."""
         return len(self.data)
