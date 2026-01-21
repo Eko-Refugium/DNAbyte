@@ -455,16 +455,121 @@ def count_each_list_occurrences(list_of_lists: List[List]) -> Dict[Tuple, int]:
     return dict(count_dict)
 
 def find_closest_string(target, string_list):
-    min_distance = float('inf')
-    closest_strings = []
-
-    for s in string_list:
-        distance = damerau_levenshtein_distance(target, s)
-        if distance < min_distance:
-            min_distance = distance
-            closest_strings = [s]
-        elif distance == min_distance:
-            closest_strings.append(s)
+    """
+    Find the closest string(s) to target from string_list using edit distance.
+    Uses PyCUDA for GPU parallelization on Linux for maximum performance.
+    """
+    if os.name == 'posix':  # Linux/Unix systems
+        import pycuda.autoinit
+        import pycuda.driver as cuda
+        from pycuda.compiler import SourceModule
+        import numpy as np
+        
+        # DNA to integer mapping: A=0, C=1, G=2, T=3
+        dna_map = {'A': 0, 'C': 1, 'G': 2, 'T': 3}
+        
+        # Convert target and candidates to integer arrays
+        target_len = len(target)
+        target_arr = np.array([dna_map.get(c, 0) for c in target], dtype=np.int32)
+        
+        num_candidates = len(string_list)
+        max_len = max(len(s) for s in string_list)
+        
+        # Pad all candidates to same length and flatten into 1D array
+        candidates_flat = np.zeros(num_candidates * max_len, dtype=np.int32)
+        candidate_lens = np.zeros(num_candidates, dtype=np.int32)
+        
+        for i, s in enumerate(string_list):
+            candidate_lens[i] = len(s)
+            for j, c in enumerate(s):
+                candidates_flat[i * max_len + j] = dna_map.get(c, 0)
+        
+        # Allocate output array for distances
+        distances = np.zeros(num_candidates, dtype=np.int32)
+        
+        # CUDA kernel - each block computes one Levenshtein distance
+        mod = SourceModule("""
+        __global__ void levenshtein_batch(int *target, int target_len, 
+                                            int *candidates, int *candidate_lens, 
+                                            int *distances, int max_len, int num_candidates)
+        {
+            int idx = blockIdx.x;
+            if(idx >= num_candidates)
+                return;
+            
+            int cand_len = candidate_lens[idx];
+            int *candidate = candidates + idx * max_len;
+            
+            // Allocate shared memory for DP matrix (limited to short sequences)
+            extern __shared__ int dp[];
+            
+            int rows = target_len + 1;
+            int cols = cand_len + 1;
+            
+            // Initialize first row and column
+            for(int i = threadIdx.x; i < rows; i += blockDim.x)
+                dp[i * cols] = i;
+            for(int j = threadIdx.x; j < cols; j += blockDim.x)
+                dp[j] = j;
+            __syncthreads();
+            
+            // Fill DP matrix diagonal by diagonal
+            for(int diag = 2; diag < rows + cols; diag++) {
+                for(int i = threadIdx.x + 1; i < rows && i < diag; i += blockDim.x) {
+                    int j = diag - i;
+                    if(j > 0 && j < cols) {
+                        int cost = (target[i-1] == candidate[j-1]) ? 0 : 1;
+                        int min_val = dp[(i-1)*cols + j-1] + cost;
+                        int del = dp[(i-1)*cols + j] + 1;
+                        int ins = dp[i*cols + j-1] + 1;
+                        if(del < min_val) min_val = del;
+                        if(ins < min_val) min_val = ins;
+                        dp[i*cols + j] = min_val;
+                    }
+                }
+                __syncthreads();
+            }
+            
+            if(threadIdx.x == 0)
+                distances[idx] = dp[target_len * cols + cand_len];
+        }
+        """)
+        
+        levenshtein_batch = mod.get_function("levenshtein_batch")
+        
+        # Calculate shared memory size needed
+        max_matrix_size = (target_len + 1) * (max_len + 1) * 4  # 4 bytes per int32
+        
+        # Launch kernel with one block per candidate
+        block_size = 256
+        levenshtein_batch(
+            cuda.In(target_arr),
+            np.int32(target_len),
+            cuda.In(candidates_flat),
+            cuda.In(candidate_lens),
+            cuda.Out(distances),
+            np.int32(max_len),
+            np.int32(num_candidates),
+            block=(block_size, 1, 1),
+            grid=(num_candidates, 1),
+            shared=max_matrix_size
+        )
+        
+        # Find minimum distance and all strings with that distance
+        min_distance = int(distances.min())
+        closest_strings = [string_list[i] for i in range(num_candidates) if distances[i] == min_distance]
+            
+            
+    else:  # Windows - sequential CPU
+        min_distance = float('inf')
+        closest_strings = []
+        for s in string_list:
+            distance = damerau_levenshtein_distance(target, s)
+            if distance < min_distance:
+                min_distance = distance
+                closest_strings = [s]
+            elif distance == min_distance:
+                closest_strings.append(s)
 
     return random.choice(closest_strings)
 
