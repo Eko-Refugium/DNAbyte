@@ -2,6 +2,10 @@ import numpy as np
 from dnabyte.synthesize import SimulateSynthesis
 
 class NoSynthPoly(SimulateSynthesis):
+    def __init__(self, params, logger=None):
+        self.params = params
+        self.mean = params.mean
+        self.std_dev = params.std_dev
 
     def simulate(self, data):
         """

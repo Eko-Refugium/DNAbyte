@@ -235,24 +235,22 @@ def attributes(inputparams):
     checker = codeword_length - codeword_maxlength_positions - dna_barcode_length
 
     # parameter group: inner_error_correction
-    if getattr(inputparams, 'inner_error_correction', None) is None:
+    if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
 
         index_carry_length = check_parameter(parameter="index_carry_length",
-                                            default=m.ceil(codeword_length * 0.15),
-                                            #min=0.5 * codeword_length,
+                                            default=m.ceil(codeword_length * 0.2),
                                             min=1,
-                                            #max=0.9 * codeword_length,
-                                            max=codeword_length - dna_barcode_length - codeword_maxlength_positions - 1,
+                                            max=m.ceil(codeword_length * 0.9),
                                             inputparams=inputparams)
-        
-        ltcode_header = check_parameter(parameter="ltcode_header",
-                                       default=m.ceil(codeword_length * 0.15),
-                                       min=1,
-                                       max=codeword_length - dna_barcode_length - codeword_maxlength_positions - index_carry_length - 1,
-                                       inputparams=inputparams)
 
+        ltcode_header = check_parameter(parameter="ltcode_header",
+                                        default=m.ceil(codeword_length * 0.2),
+                                        min=1,
+                                        max=m.ceil(codeword_length * 0.3),
+                                        inputparams=inputparams)
+        
         percent_of_symbols = check_parameter(parameter="percent_of_symbols",
-                                            default=2,
+                                            default=5,
                                             min=1,
                                             max=5,
                                             inputparams=inputparams)
@@ -263,7 +261,6 @@ def attributes(inputparams):
         pass
     else: 
         raise ValueError("Invalid inner_error_correction method")
-
 
     # parameter group: outer_error_correction
     if getattr(inputparams, 'outer_error_correction', None) == 'reedsolomon':

@@ -12,7 +12,7 @@ class MESA(SimulateSynthesis):
     MESA (Molecular Error Simulation Algorithm) is a class that simulates sequencing errors in DNA sequences.
     It uses a graph-based approach to model the sequencing process and introduces errors based on specified parameters.
     """
-
+    
     def simulate(self, data):
         """
         Simulate sequencing errors using the MESA model.

@@ -128,7 +128,8 @@ class TestBase(unittest.TestCase):
                     self.fail(f"Synthesis simulation failed: {str(e)}")
             else:
                 self.testlogger.info('STEP03: SIMULATE SYNTHESIS - SKIPPED (synthesis_method is None)')
-                data_syn = data_enc
+                datainsilco = InSilicoDNA(data_enc.data)
+                data_syn = datainsilco
 
 #######################################################################################################################
 ##### STEP 4: SIMULATE STORAGE ########################################################################################
