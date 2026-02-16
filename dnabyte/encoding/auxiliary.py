@@ -446,6 +446,27 @@ def count_each_list_occurrences(list_of_lists: List[List]) -> Dict[Tuple, int]:
     # Convert defaultdict to a regular dictionary
     return dict(count_dict)
 
+def find_closest_strings(queries, library, fixed_len=100):
+    from dnabyte.encoding.gpu_dna_levenshtein import init_gpu_cache, gpu_levenshtein_dna_batch
+    # 1) Initialize GPU with library once
+    init_gpu_cache(library, length=fixed_len)
+
+    # 2) Run GPU matching on all queries
+    results = gpu_levenshtein_dna_batch(queries)
+
+    # 3) Convert indices to strings
+    matches = []
+    for q, (idx, dist) in zip(queries, results):
+        closest = library[idx]
+        matches.append((q, closest, dist))
+    return matches
+
+def chunk_list(lst, m):
+    """Split list into chunks of size m. Last chunk may be smaller."""
+    if m <= 0:
+        raise ValueError("m must be > 0")
+    return [lst[i:i+m] for i in range(0, len(lst), m)]
+
 def find_closest_string(target, string_list):
     min_distance = float('inf')
     closest_strings = []
@@ -615,15 +636,15 @@ def check_library(inputparams, default, assembly_structure):
     if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
         # set default library
         library_name = default
-        library = Library(structure=assembly_structure, filename='./test/testlibrary/' + default)
+        library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + default)
     else:
         library_name = inputparams.library_name
-        with open('./test/testlibrary/' + inputparams.library_name, 'r') as f:
+        with open('./tests/testlibraries/' + inputparams.library_name, 'r') as f:
             first_line = f.readline().strip() 
             if first_line == 'Messages':
                 raise ValueError("Library not compatible with linear assembly")
             else:
-                library = Library(structure=assembly_structure, filename='./test/testlibrary/' + inputparams.library_name)
+                library = Library(structure=assembly_structure, filename='./tests/testlibraries/' + inputparams.library_name)
 
     return library_name, library
 
