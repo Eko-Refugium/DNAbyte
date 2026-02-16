@@ -20,7 +20,7 @@ class TestArchiveBinarize(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
-        self.binarizer = Binarize(Params(binarization_method='compressed'))
+        self.binarizer = Binarize(Params(binarization_method='compressed', file_paths='textfile_40b.txt'))
         self.test_dir = tempfile.mkdtemp()
         
         # Create multiple test files

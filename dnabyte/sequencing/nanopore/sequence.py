@@ -82,12 +82,14 @@ class Nanopore(SimulateSequencing):
         """
         Simulate deletions in a sequence.
         """
-        new_sequence = list(sequence)
+        # Build a new sequence by skipping bases chosen for deletion.
+        new_sequence = []
         counter = 0
-        for p in range(len(sequence)):
+        for base in sequence:
             if np.random.rand() < del_prob:
                 counter += 1
-                new_sequence.pop(p)
+                continue
+            new_sequence.append(base)
         return ''.join(new_sequence), counter
     
     # Positional error rate function

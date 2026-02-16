@@ -18,14 +18,13 @@ class IID(SimulateSequencing):
         sequenceserror = list(data)  # Create a copy of the data
         error_counter = 0
         for i in range(len(sequenceserror)):
-            for j in range(len(sequenceserror[i])):
-                for k in range(len(sequenceserror[i][j])):
-                    if random.random() < self.params.iid_error_rate:
-                        error_counter += 1
-                        # randomly select a new base
-                        new_base = random.choice(['A', 'C', 'G', 'T'])
-                        # replace the base at the mutation position with the new base
-                        sequenceserror[i][j] = (data.data[i][j][:k] + new_base + data.data[i][j][k + 1:])      
+            for k in range(len(sequenceserror[i])):
+                if random.random() < self.params.iid_error_rate:
+                    error_counter += 1
+                    # randomly select a new base
+                    new_base = random.choice(['A', 'C', 'G', 'T'])
+                    # replace the base at the mutation position with the new base
+                    sequenceserror[i] = (data[i][:k] + new_base + data[i][k + 1:])      
                
         info = {}
         info['error_counter'] = error_counter

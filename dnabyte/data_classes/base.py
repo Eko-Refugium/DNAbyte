@@ -93,5 +93,6 @@ class Data:
         output = f"Type: {type(self).__name__}\n"
         output += f"Total size: {self.size} bytes ({self.size / (1024*1024):.2f} MB)\n"
         output += f"Number of files: {len(self.file_paths)}\n"
-        output += f"File paths: {self.file_paths}\n"
+        # Show file paths in a readable form (joined) so backslashes are not escaped
+        output += f"File paths: {', '.join(self.file_paths)}\n"
         return output

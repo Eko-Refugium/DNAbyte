@@ -20,7 +20,7 @@ class TestAssembly(unittest.TestCase):
 
     def test_assembly(self):
         params = Params(encoding_method='linear_chain', 
-                        codeword_length=200, 
+                        codeword_length=100, 
                         dna_barcode_length=20, 
                         assembly_structure='assembly', 
                         synthesis_method='assembly', 
@@ -34,7 +34,7 @@ class TestAssembly(unittest.TestCase):
 
     def test_assembly_linear_binom(self):
 
-        nucleobase_code = NucleobaseCode.random(type='linear_binom', library='20bp_Lib.csv', m=15, n=5)
+        nucleobase_code = NucleobaseCode.random(type='linear_assembly', library='20bp_Lib.csv', m=15, n=5)
 
         params = Params(encoding_method='linear_binom', 
                         sigma=5,
