@@ -23,6 +23,7 @@ class Oligo:
         self.motifs = motifs
         self.sequence = sequence
         self.type = type
+        self._end_cache = {}
 
         if motifs:
             if isinstance(motifs[0], tuple):
@@ -55,21 +56,32 @@ class Oligo:
         if strand is not None and side is None:
             side, strand = strand, None
 
+        cache_key = (strand, side)
+        if cache_key in self._end_cache:
+            return self._end_cache[cache_key]
+
         if self.type == 'single_stranded':
             if side == '5' or side == 'r':
-                return self.motifs[1]
+                result = self.motifs[1]
             elif side == '3' or side == 'l':
-                return self.motifs[0]
+                result = self.motifs[0]
+            else:
+                result = None
 
         else:
             if strand == 'f' and (side == '5' or side == 'r'):
-                return self.motifs[0][-1]
+                result = self.motifs[0][-1]
             elif strand == 'f' and (side == '3' or side == 'l'):
-                return self.motifs[0][0]
+                result = self.motifs[0][0]
             elif strand == 'r' and (side == '5' or side == 'l'):
-                return self.motifs[1][0]
+                result = self.motifs[1][0]
             elif strand == 'r' and (side == '3' or side == 'r'):
-                return self.motifs[1][-1]
+                result = self.motifs[1][-1]
+            else:
+                result = None
+
+        self._end_cache[cache_key] = result
+        return result
 
 
     def __str__(self):

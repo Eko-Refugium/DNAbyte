@@ -77,14 +77,14 @@ class TestBase(unittest.TestCase):
                 self.testlogger.info('STATUS: ERROR')
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error('TRACEBACK:' + traceback.format_exc())
-
+            print('Binarization time:', time.time() - start_time)
 #######################################################################################################################
 ##### STEP 2: ENCODE DATA #############################################################################################
 #######################################################################################################################
 
             self.testlogger.info('STEP02: ENCODE DATA')
             start_time = time.time()
-            print(binary_code)
+            # print(binary_code)
 
             try:
                 enc = Encode(self.params, logger=self.testlogger)
@@ -102,7 +102,7 @@ class TestBase(unittest.TestCase):
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error(traceback.format_exc())
                 self.fail(f"Encoding failed: {str(e)}")
-
+            print('Encoding time:', time.time() - start_time)
 #######################################################################################################################
 ##### STEP 3: SIMULATE SYNTHESIS ######################################################################################
 #######################################################################################################################
@@ -113,7 +113,7 @@ class TestBase(unittest.TestCase):
 
                 try:
                     syn = SimulateSynthesis(self.params, logger=self.testlogger)
-                    print("here")
+                    #   print("here")
                     data_syn, info = syn.simulate(data_enc)
                     self.testlogger.info('STATUS: SUCCESS')
                     self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
@@ -131,7 +131,7 @@ class TestBase(unittest.TestCase):
             else:
                 self.testlogger.info('STEP03: SIMULATE SYNTHESIS - SKIPPED (synthesis_method is None)')
                 data_syn = InSilicoDNA(data_enc.data)
-
+            print('Synthesis simulation time:', time.time() - start_time)
 
 #######################################################################################################################
 ##### STEP 4: SIMULATE STORAGE ########################################################################################
@@ -156,7 +156,7 @@ class TestBase(unittest.TestCase):
             else:
                 self.testlogger.info('STEP04: SIMULATE STORAGE - SKIPPED (storage_conditions is None)')
                 data_sto = data_syn
-
+            print('Storage simulation time:', time.time() - start_time)
 #######################################################################################################################
 ##### STEP 5: SIMULATE MISC ERRORS ####################################################################################
 #######################################################################################################################
@@ -180,7 +180,7 @@ class TestBase(unittest.TestCase):
             else:
                 self.testlogger.info('STEP05: SIMULATE MISC ERRORS - SKIPPED (error_methods is None)')
                 data_err = data_sto
-
+            print('Misc error simulation time:', time.time() - start_time)
 #######################################################################################################################
 ##### STEP 6: SIMULATE SEQUENCING #####################################################################################
 #######################################################################################################################
@@ -209,7 +209,7 @@ class TestBase(unittest.TestCase):
                 # Convert NucleobaseCode to InSilicoDNA when no sequencing is done
                 if not isinstance(data_seq, InSilicoDNA):
                     data_seq = InSilicoDNA(data_seq.data)
-
+            print('Sequencing simulation time:', time.time() - start_time)
 #######################################################################################################################
 ##### STEP 7: PROCESSING ##############################################################################################
 #######################################################################################################################
@@ -230,7 +230,7 @@ class TestBase(unittest.TestCase):
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error(traceback.format_exc())
                 self.fail(f"Data processing failed: %s")
-
+            print('Processing time:', time.time() - start_time) 
 #######################################################################################################################
 ##### STEP 8: DECODING THE DATA #######################################################################################
 #######################################################################################################################
@@ -261,7 +261,7 @@ class TestBase(unittest.TestCase):
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error(traceback.format_exc())
                 self.fail(f"Decoding failed: {str(e)}")
-
+            print('Decoding time:', time.time() - start_time)
 #######################################################################################################################
 ##### STEP 9: COMPARE DATA ############################################################################################
 #######################################################################################################################
@@ -302,7 +302,14 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
-                success = bin_obj.debinarize(data=data_dec, output_directory='./tests/testfiles/testdecode/')
+                # For 'default' binarization, provide a file path; for 'compressed', a directory is acceptable
+                if self.params.binarization_method == 'compressed':
+                    success = bin_obj.debinarize(data=data_dec, output_directory='./tests/testfiles/testdecode/')
+                else:
+                    # Generate output file path based on original filename
+                    original_filename = os.path.basename(self.params.file_paths[0] if hasattr(self.params, 'file_paths') else self.params.filename)
+                    output_file = os.path.join('./tests/testfiles/testdecode/', f'restored_{original_filename}')
+                    success = bin_obj.debinarize(data=data_dec, output_directory=output_file)
                 self.testlogger.info('STATUS: SUCCESS')
                 self.testlogger.info('DURATION: %.2f seconds' + "\n", time.time() - start_time)
 

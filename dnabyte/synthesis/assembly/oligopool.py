@@ -99,38 +99,48 @@ class OligoPool:
         if n is None:
             n = 10*len(self.pool)
 
+        pool = self.pool
+        motif_dict = library.dictmotives
+        pair = self.pair
+        append = pool.append
+
         for _ in range(n):
-            if len(self.pool) > 1:  # Ensure there are at least two oligos to hybridize
-                # Randomly pick two distinct oligos
-                oligo_A, oligo_B = random.sample(self.pool, 2)
+            if len(pool) > 1:  # Ensure there are at least two oligos to hybridize
+                # Randomly pick two distinct oligos by index
+                idx1 = random.randrange(len(pool))
+                idx2 = random.randrange(len(pool) - 1)
+                if idx2 >= idx1:
+                    idx2 += 1
+
+                oligo_A = pool[idx1]
+                oligo_B = pool[idx2]
 
                 # Pair the selected oligos
-                hybridised_oligo = self.pair(oligo_A, oligo_B,library)
+                hybridised_oligo = pair(oligo_A, oligo_B, library, motif_dict=motif_dict)
 
                 # Check if the hybridisation was successful
                 if hybridised_oligo.motifs:
-                    # Remove the original oligos from the pool
-                    self.pool.remove(oligo_A)
-                    self.pool.remove(oligo_B)
+                    # Remove the original oligos using swap/pop to avoid linear-time remove
+                    for idx in sorted((idx1, idx2), reverse=True):
+                        pool[idx] = pool[-1]
+                        pool.pop()
 
                     # Append the new hybridised oligo to the pool
-                    self.pool.append(hybridised_oligo)
-
-                    #if info:  # Optionally print information about the hybridisation event
-
+                    append(hybridised_oligo)
 
         return self
 
 
-    def pair(self, oligo_A, oligo_B,library):
-        self.motif_dict=library.dictmotives
+    def pair(self, oligo_A, oligo_B, library, motif_dict=None):
+        if motif_dict is None:
+            motif_dict = library.dictmotives
         
         if oligo_A.type == 'single_stranded' and oligo_B.type == 'single_stranded':  
 
-            if complement(oligo_A.end('3'),self.motif_dict) == oligo_B.end('3'):
+            if complement(oligo_A.end('3'), motif_dict) == oligo_B.end('3'):
                 new_motifs = ((None, oligo_A.motifs[0], oligo_A.motifs[1]), (oligo_B.motifs[1], oligo_B.motifs[0], None))
 
-            elif complement(oligo_A.end('5'),self.motif_dict) == oligo_B.end('5'):
+            elif complement(oligo_A.end('5'), motif_dict) == oligo_B.end('5'):
                 new_motifs = ((oligo_A.motifs[0], oligo_A.motifs[1], None), (None, oligo_B.motifs[1], oligo_B.motifs[0]))                
             
             else:
@@ -141,50 +151,50 @@ class OligoPool:
 
 
         if oligo_A.type == 'double_stranded' and oligo_B.type == 'double_stranded':  
-            if oligo_A.end('f', '5') and oligo_B.end('r', '5') and oligo_A.end('f', '5') == complement(oligo_B.end('r', '5'),self.motif_dict):
+            if oligo_A.end('f', '5') and oligo_B.end('r', '5') and oligo_A.end('f', '5') == complement(oligo_B.end('r', '5'), motif_dict):
 
                 new_motifs = (oligo_A.motifs[0] + oligo_B.motifs[0][1:],    # forward strand
                                 oligo_A.motifs[1][0:-1] + oligo_B.motifs[1])  # reverse strand
             
             # case: dsA forward 5' sticky end binds to dsB forward 5' sticky end
-            elif oligo_A.end('f', '5') and oligo_B.end('f', '5') and oligo_A.end('f', '5') == complement(oligo_B.end('f', '5'),self.motif_dict):
+            elif oligo_A.end('f', '5') and oligo_B.end('f', '5') and oligo_A.end('f', '5') == complement(oligo_B.end('f', '5'), motif_dict):
 
                 new_motifs = (oligo_A.motifs[0] + oligo_B.motifs[1][-2::-1],        # forward strand
                                 oligo_A.motifs[1][0:-1] + oligo_B.motifs[0][::-1])    # reverse strand
 
             # case: the sticky end is on the reverse strand on the right and on the forward strand on the left
-            elif oligo_A.end('r', '3') and oligo_B.end('f', '3') and oligo_A.end('r', '3') == complement(oligo_B.end('f', '3'),self.motif_dict):
+            elif oligo_A.end('r', '3') and oligo_B.end('f', '3') and oligo_A.end('r', '3') == complement(oligo_B.end('f', '3'), motif_dict):
 
                 new_motifs = (oligo_A.motifs[0][0:-1] + oligo_B.motifs[0],    # forward strand
                                 oligo_A.motifs[1] + oligo_B.motifs[1][1:])        # reverse strand
             
             # case: the sticky ends are on the reverse strands on the right
             
-            elif oligo_A.end('r', '3') and oligo_B.end('r', '3') and oligo_A.end('r', '3') == complement(oligo_B.end('r', '3'),self.motif_dict):
+            elif oligo_A.end('r', '3') and oligo_B.end('r', '3') and oligo_A.end('r', '3') == complement(oligo_B.end('r', '3'), motif_dict):
 
                 new_motifs = (oligo_A.motifs[0][:-1] + oligo_B.motifs[1][::-1],    # forward strand
                                 oligo_A.motifs[1] + oligo_B.motifs[0][:-1][::-1])        # reverse strand
 
             # case: the sticky end is on the forward strand on the left and on the reverse strand on the right
-            elif oligo_A.end('f', '3') and oligo_B.end('r', '3') and oligo_A.end('f', '3') == complement(oligo_B.end('r', '3'),self.motif_dict):
+            elif oligo_A.end('f', '3') and oligo_B.end('r', '3') and oligo_A.end('f', '3') == complement(oligo_B.end('r', '3'), motif_dict):
 
                 new_motifs = ( oligo_B.motifs[0][0:-1] + oligo_A.motifs[0],    # forward strand
                                 oligo_B.motifs[1] + oligo_A.motifs[1][1:])  # reverse strand
 
             # case: the sticky ends are on the forward strand on the left
-            elif oligo_A.end('f', '3') and oligo_B.end('f', '3') and oligo_A.end('f', '3') == complement(oligo_B.end('f', '3'),self.motif_dict):
+            elif oligo_A.end('f', '3') and oligo_B.end('f', '3') and oligo_A.end('f', '3') == complement(oligo_B.end('f', '3'), motif_dict):
 
                 new_motifs = ( oligo_B.motifs[1][1:][::-1] + oligo_A.motifs[0],    # forward strand
                                 oligo_B.motifs[0][::-1] + oligo_A.motifs[1][1:])  # reverse strand
 
             # case: the sticky end is on the reverse strand on the left and the forward strand on the right
-            elif oligo_A.end('r', '5') and oligo_B.end('f', '5') and oligo_A.end('r', '5') == complement(oligo_B.end('f', '5'),self.motif_dict):
+            elif oligo_A.end('r', '5') and oligo_B.end('f', '5') and oligo_A.end('r', '5') == complement(oligo_B.end('f', '5'), motif_dict):
 
                 new_motifs = (oligo_B.motifs[0] + oligo_A.motifs[0][1:],    # forward strand
                                 oligo_B.motifs[1][:-1] + oligo_A.motifs[1])  # reverse strand
             
             # case: the sticky ends are on the reverse strand on the left
-            elif oligo_A.end('r', '5') and oligo_B.end('r', '5') and oligo_A.end('r', '5') == complement(oligo_B.end('r', '5'),self.motif_dict):
+            elif oligo_A.end('r', '5') and oligo_B.end('r', '5') and oligo_A.end('r', '5') == complement(oligo_B.end('r', '5'), motif_dict):
 
                 new_motifs = (oligo_B.motifs[1][::-1] + oligo_A.motifs[0][1:],    # forward strand
                                 oligo_B.motifs[0][:0:-1] + oligo_A.motifs[1])  # reverse strand
@@ -204,25 +214,25 @@ class OligoPool:
                 ss = oligo_A
 
             # case: double strand forward 5' sticky end binds to ss 5' sticky end
-            if ds.end('f', '5') and ds.end('f', '5') == complement(ss.end('5'),self.motif_dict):
+            if ds.end('f', '5') and ds.end('f', '5') == complement(ss.end('5'), motif_dict):
 
                 new_motifs=(ds.motifs[0] + (None,),                                 # forward strand
                                 ds.motifs[1][:-1] + (ss.motifs[1], ss.motifs[0]))   # reverse strand
             
             # case: ds reverse 3' sticky end binds to ss 3' sticky end
-            elif ds.end('r', '3') and ds.end('r', '3') == complement(ss.end('3'),self.motif_dict):
+            elif ds.end('r', '3') and ds.end('r', '3') == complement(ss.end('3'), motif_dict):
 
                 new_motifs = (ds.motifs[0][0:-1] + (ss.motifs[0], ss.motifs[1]),    # forward strand
                                 ds.motifs[1] + (None,))                             # reverse strand
             
             # case: ds forward 3' sticky end binds to ss 5' sticky end
-            elif ds.end('f', '3') and ds.end('f', '3') == complement(ss.end('3'),self.motif_dict):  
+            elif ds.end('f', '3') and ds.end('f', '3') == complement(ss.end('3'), motif_dict):  
 
                 new_motifs = ((None,) + ds.motifs[0],                               # forward strand
                                 (ss.motifs[1], ss.motifs[0]) + ds.motifs[1][1:])    # reverse strand
             
             # case: ds reverse 5' sticky end binds to ss 5' sticky end
-            elif ds.end('r', '5') and ds.end('r', '5') == complement(ss.end('5'),self.motif_dict):
+            elif ds.end('r', '5') and ds.end('r', '5') == complement(ss.end('5'), motif_dict):
 
                 new_motifs = ((ss.motifs[0], ss.motifs[1]) + ds.motifs[0][1:],      # forward strand
                                 (None,) + ds.motifs[1])                             # reverse strand

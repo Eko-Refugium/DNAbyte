@@ -70,7 +70,7 @@ params_list = [
         reed_solo_percentage=0.5,
 
         # synthesis error channel
-        mean=100,
+        mean=500,
         vol=1000000 / Avogadro,
         std_dev=0,
         hybridisation_steps=10000,
