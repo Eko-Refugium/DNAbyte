@@ -209,13 +209,13 @@ def attributes(inputparams):
                                       inputparams=inputparams)
 
     dna_barcode_length = check_parameter(parameter="dna_barcode_length",
-                                         default=m.ceil(codeword_length * 0.15),
+                                         default=10,
                                          min=2,
                                          max=codeword_length - 2,
                                          inputparams=inputparams)
 
     codeword_maxlength_positions = check_parameter(parameter="codeword_maxlength_positions",
-                                                   default=m.ceil(codeword_length * 0.15),
+                                                   default=10,
                                                    min=2,
                                                    max=codeword_length - dna_barcode_length,
                                                    inputparams=inputparams)
@@ -226,13 +226,13 @@ def attributes(inputparams):
     if getattr(inputparams, 'inner_error_correction', None) == 'ltcode':
 
         index_carry_length = check_parameter(parameter="index_carry_length",
-                                             default=m.ceil(codeword_length * 0.15),
+                                             default=5,
                                              min=1,
                                              max=0.9 * codeword_length,
                                              inputparams=inputparams)
 
         ltcode_header = check_parameter(parameter="ltcode_header",
-                                        default=m.ceil(codeword_length * 0.15),
+                                        default=5,
                                         min=1,
                                         max=0.3 * codeword_length,
                                         inputparams=inputparams)
