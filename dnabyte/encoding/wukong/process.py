@@ -1,0 +1,268 @@
+import os
+from collections import Counter, defaultdict
+
+
+def process(data, params, logger=None):
+    """
+    Processes DNA strands after synthesis/sequencing simulation.
+    
+    Groups duplicate/similar sequences and performs majority voting per
+    nucleotide position to reconstruct the most likely original sequences.
+    This is important because synthesis and sequencing can introduce errors
+    into individual copies, but the consensus across many copies recovers
+    the correct sequence.
+    
+    Approach:
+    1. Strip primers from each sequence to get the payload.
+    2. Normalize payload lengths (trim or pad to expected length).
+    3. Group payloads by similarity (cluster around unique originals).
+    4. For each group, perform position-wise majority voting.
+    5. Re-attach primers and return the consensus sequences.
+    
+    Args:
+        data: Data object containing DNA sequences in data.data
+        params: Parameters object with primer_length, sequence_length, etc.
+        logger: Optional logger for info/error messages
+    
+    Returns:
+        tuple: (consensus DNA sequences list, info dictionary)
+    """
+    try:
+        dna_strands = data.data
+        total_count = len(dna_strands) if dna_strands else 0
+        
+        if not dna_strands:
+            if logger:
+                logger.warning("No DNA sequences to process")
+            return [], {}
+        
+        # Clean sequences
+        dna_strands = [seq.replace(' ', '').strip() for seq in dna_strands]
+        
+        primer_length = int(getattr(params, 'primer_length', 20))
+        add_primer = bool(getattr(params, 'add_primer', True))
+        sequence_length = int(getattr(params, 'sequence_length', 200))
+        
+        # Expected payload length (sequence without primers)
+        expected_payload_len = sequence_length - (2 * primer_length) if add_primer else sequence_length
+        
+        if add_primer and primer_length > 0:
+            # Extract primers from metadata on params (set during encoding)
+            # Fall back to extracting from the most common primer in the reads
+            left_primer, right_primer = _extract_primers(dna_strands, primer_length)
+            
+            # Strip primers to get payloads
+            payloads = []
+            for seq in dna_strands:
+                payload = seq[primer_length:-primer_length] if primer_length > 0 else seq
+                payloads.append(payload)
+        else:
+            left_primer = ""
+            right_primer = ""
+            payloads = list(dna_strands)
+        
+        if logger:
+            logger.info(f"Processing {total_count} DNA sequences")
+            logger.info(f"Expected payload length: {expected_payload_len}")
+        
+        # Normalize payload lengths to the expected length
+        # Insertions/deletions from sequencing change lengths, which breaks grouping
+        normalized_payloads = _normalize_lengths(payloads, expected_payload_len)
+        
+        # Group identical payloads together
+        groups = defaultdict(list)
+        for payload in normalized_payloads:
+            groups[payload].append(payload)
+        
+        if logger:
+            logger.info(f"Found {len(groups)} unique payload groups after normalization")
+        
+        # Cluster and vote to find consensus for each original sequence
+        num_original = _estimate_num_originals(groups, total_count, logger)
+        consensus_payloads = _cluster_and_vote(groups, num_original, logger)
+        
+        # Re-attach primers
+        consensus_sequences = []
+        for payload in consensus_payloads:
+            consensus_sequences.append(left_primer + payload + right_primer)
+        
+        if logger:
+            logger.info(f"Consensus: {len(consensus_sequences)} sequences from {total_count} inputs")
+            if consensus_sequences:
+                logger.info(f"DNA sequence length: {len(consensus_sequences[0])}")
+        
+        info = {
+            'number_of_sequences_input': total_count,
+            'number_of_sequences_output': len(consensus_sequences),
+            'unique_groups': len(groups),
+            'duplicates_removed': total_count - len(consensus_sequences),
+            'status': 'consensus'
+        }
+        
+        return consensus_sequences, info
+    
+    except Exception as e:
+        if logger:
+            logger.error(f"Error processing DNA strands: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+        return None, {}
+
+
+def _extract_primers(dna_strands, primer_length):
+    """
+    Extract the most common left and right primer from the reads.
+    With many copies, the correct primer will dominate even if some reads have errors.
+    """
+    left_counts = Counter(seq[:primer_length] for seq in dna_strands)
+    right_counts = Counter(seq[-primer_length:] for seq in dna_strands)
+    left_primer = left_counts.most_common(1)[0][0]
+    right_primer = right_counts.most_common(1)[0][0]
+    return left_primer, right_primer
+
+
+def _normalize_lengths(payloads, expected_length):
+    """
+    Normalize all payloads to the expected length.
+    - Too long (insertion): trim from the end
+    - Too short (deletion): pad with the most common base at that position
+    
+    This ensures all payloads have the same length for grouping and voting.
+    """
+    normalized = []
+    for payload in payloads:
+        if len(payload) == expected_length:
+            normalized.append(payload)
+        elif len(payload) > expected_length:
+            # Trim excess (likely from insertions)
+            normalized.append(payload[:expected_length])
+        else:
+            # Pad with 'N' placeholder (will be resolved by majority vote)
+            normalized.append(payload + 'N' * (expected_length - len(payload)))
+    return normalized
+
+
+def _estimate_num_originals(groups, total_count, logger=None):
+    """
+    Estimate the number of original unique sequences before errors.
+    Uses the distribution of group sizes: large groups are likely originals,
+    tiny groups are error variants.
+    """
+    sizes = sorted([len(copies) for copies in groups.values()], reverse=True)
+    
+    if not sizes:
+        return 0
+    
+    # The original sequences should each have roughly total_count/N copies.
+    # Look for a natural gap in group sizes.
+    # Heuristic: count groups that have at least 10% of the average expected copies.
+    # Start with a rough estimate.
+    avg_if_3 = total_count / 3  # assume at least 3 originals as a start
+    
+    # Count groups with significant membership
+    significant = [s for s in sizes if s >= max(2, avg_if_3 * 0.1)]
+    estimated = max(1, len(significant))
+    
+    if logger:
+        logger.info(f"Group sizes (top 10): {sizes[:10]}")
+        logger.info(f"Estimated {estimated} original sequences")
+    
+    return estimated
+
+
+def _cluster_and_vote(groups, num_expected, logger=None):
+    """
+    Cluster similar payloads and perform majority voting within each cluster.
+    
+    Uses a greedy approach: start with the largest groups as cluster centers,
+    then assign all smaller groups to the nearest center.
+    
+    Args:
+        groups: dict mapping payload string -> list of payload copies
+        num_expected: estimated number of original sequences
+        logger: Optional logger
+    
+    Returns:
+        list: consensus payload strings (one per original sequence)
+    """
+    sorted_groups = sorted(groups.items(), key=lambda x: len(x[1]), reverse=True)
+    
+    if not sorted_groups:
+        return []
+    
+    # Take the top N largest groups as cluster centers
+    num_centers = min(num_expected, len(sorted_groups))
+    centers = {}
+    for i in range(num_centers):
+        key, copies = sorted_groups[i]
+        centers[key] = list(copies)
+    
+    # Assign remaining groups to the nearest center
+    remaining = sorted_groups[num_centers:]
+    orphan_count = 0
+    for payload, copies in remaining:
+        center_keys = list(centers.keys())
+        best_center = _find_closest(payload, center_keys)
+        centers[best_center].extend(copies)
+        orphan_count += len(copies)
+    
+    # Majority vote within each cluster
+    consensus_payloads = []
+    for center_key, all_copies in centers.items():
+        consensus = _majority_vote(all_copies)
+        consensus_payloads.append(consensus)
+    
+    if logger:
+        logger.info(f"Clustering: {num_centers} clusters, "
+                     f"{orphan_count} orphans merged")
+    
+    return consensus_payloads
+
+
+def _find_closest(query, candidates):
+    """
+    Find the candidate string with the smallest distance to query.
+    Uses Hamming distance for same-length strings.
+    All strings should be normalized to the same length at this point.
+    """
+    best = candidates[0]
+    best_dist = float('inf')
+    
+    for candidate in candidates:
+        # Hamming distance (strings should be same length after normalization)
+        min_len = min(len(query), len(candidate))
+        dist = sum(a != b for a, b in zip(query[:min_len], candidate[:min_len]))
+        dist += abs(len(query) - len(candidate))  # penalty for length difference
+        if dist < best_dist:
+            best_dist = dist
+            best = candidate
+    
+    return best
+
+
+def _majority_vote(sequences):
+    """
+    Position-wise majority vote across a list of DNA sequences.
+    Returns the consensus string where each position is the most frequent base.
+    Ignores 'N' padding characters in the vote.
+    """
+    if not sequences:
+        return ""
+    if len(sequences) == 1:
+        return sequences[0]
+    
+    # Use the most common length as the target
+    lengths = Counter(len(s) for s in sequences)
+    target_len = lengths.most_common(1)[0][0]
+    
+    consensus = []
+    for i in range(target_len):
+        bases_at_pos = [s[i] for s in sequences if i < len(s) and s[i] != 'N']
+        if bases_at_pos:
+            most_common = Counter(bases_at_pos).most_common(1)[0][0]
+            consensus.append(most_common)
+        elif any(i < len(s) for s in sequences):
+            # All are N at this position, pick any real base
+            consensus.append('A')
+    
+    return ''.join(consensus)

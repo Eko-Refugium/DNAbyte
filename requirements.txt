@@ -9,6 +9,7 @@ galois
 networkx
 psycopg2-binary
 regex
+primer3-py
 mkdocs
 mkdocs-material
 mkdocstrings[python]
