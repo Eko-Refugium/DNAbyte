@@ -17,6 +17,7 @@ from norec4dna.distributions.RaptorDistribution import RaptorDistribution
 from norec4dna.rules.FastDNARules import FastDNARules
 from norec4dna.ErrorCorrection import nocode, get_error_correction_encode, get_error_correction_decode
 from norec4dna.helper.quaternary2Bin import tranlate_quat_to_byte
+from norec4dna.helper.RU10Helper import intermediate_symbols
 
 # ---------------------------------------------------------------------------
 # Format-string constants — must match between encoder and decoder
@@ -43,7 +44,7 @@ class DNAAeon(Encode):
     - ``dna_aeon_chunk_size`` – bytes per data chunk (default 10)
     - ``dna_aeon_overhead`` – fractional overhead for fountain redundancy (default 0.40)
     - ``dna_aeon_insert_header`` – whether to store a header chunk (default False)
-    - ``dna_aeon_error_correction`` – error correction method name (default 'nocode')
+    - ``dna_aeon_error_correction`` – error correction method name (default 'crc')
     - ``dna_aeon_repair_symbols`` – number of RS repair symbols (default 2)
     - ``dna_aeon_use_dna_rules`` – enforce ACGT homopolymer/GC rules (default True)
     - ``dna_aeon_drop_upper_bound`` – upper bound for dropping rule-violating packets (default 0.5)
@@ -74,7 +75,7 @@ class DNAAeon(Encode):
             chunk_size = int(getattr(self.params, 'dna_aeon_chunk_size', 10))
             overhead = float(getattr(self.params, 'dna_aeon_overhead', 0.40))
             insert_header = bool(getattr(self.params, 'dna_aeon_insert_header', False))
-            error_correction_name = str(getattr(self.params, 'dna_aeon_error_correction', 'nocode'))
+            error_correction_name = str(getattr(self.params, 'dna_aeon_error_correction', 'crc'))
             repair_symbols = int(getattr(self.params, 'dna_aeon_repair_symbols', 2))
             use_dna_rules = bool(getattr(self.params, 'dna_aeon_use_dna_rules', True))
             drop_upper_bound = float(getattr(self.params, 'dna_aeon_drop_upper_bound', 0.5))
@@ -119,6 +120,26 @@ class DNAAeon(Encode):
                 dist = RaptorDistribution(num_chunks_estimate)
                 rules = FastDNARules() if use_dna_rules else None
 
+                # ----------------------------------------------------------
+                # Compute minimum overhead from the Raptor intermediate block
+                # The GEPP solver needs at least L = K + S + H rows (packets)
+                # to be solvable, where S and H are LDPC/Half check symbols.
+                # We use 2× L to provide ample headroom: the random packet
+                # selection does not guarantee linearly independent equations,
+                # and in a full error pipeline some packets may be lost.
+                # ----------------------------------------------------------
+                L, S, H = intermediate_symbols(num_chunks_estimate, dist)
+                min_packets = L * 2
+                min_overhead = (min_packets / num_chunks_estimate) - 1.0
+                effective_overhead = max(overhead, min_overhead)
+
+                if effective_overhead > overhead and self.logger:
+                    self.logger.info(
+                        f"DNA-Aeon: overhead {overhead:.2f} too low for "
+                        f"{num_chunks_estimate} chunks (L={L}, S={S}, H={H}). "
+                        f"Auto-increased to {effective_overhead:.2f}"
+                    )
+
                 # Create the RU10 encoder
                 # Pass chunk_size so the encoder recalculates number_of_chunks internally
                 encoder = RU10Encoder(
@@ -137,7 +158,7 @@ class DNAAeon(Encode):
                     save_number_of_chunks_in_packet=True,
                     drop_upper_bound=drop_upper_bound,
                 )
-                encoder.set_overhead_limit(overhead)
+                encoder.set_overhead_limit(effective_overhead)
 
                 # Encode
                 encoder.encode_to_packets()
@@ -157,7 +178,7 @@ class DNAAeon(Encode):
                 if self.logger:
                     self.logger.info(
                         f"DNA-Aeon encoded {len(dna_oligos)} oligos, "
-                        f"chunk_size={effective_chunk_size}, overhead={overhead}, "
+                        f"chunk_size={effective_chunk_size}, overhead={effective_overhead:.2f}, "
                         f"number_of_chunks={actual_number_of_chunks}, "
                         f"insert_header={insert_header}"
                     )
@@ -172,12 +193,10 @@ class DNAAeon(Encode):
                     'total_bits': total_bits,
                     'original_fasta_metadata': '',
                     'dna_aeon_chunk_size': effective_chunk_size,
-                    'dna_aeon_overhead': overhead,
+                    'dna_aeon_overhead': effective_overhead,
                     'dna_aeon_number_of_chunks': actual_number_of_chunks,
                     'dna_aeon_number_of_packets': len(dna_oligos),
                 }
-
-                print(dna_oligos)
 
                 return dna_oligos, info
 
@@ -231,7 +250,7 @@ def attributes(inputparams):
     dna_aeon_chunk_size = int(getattr(inputparams, 'dna_aeon_chunk_size', 10))
     dna_aeon_overhead = float(getattr(inputparams, 'dna_aeon_overhead', 0.40))
     dna_aeon_insert_header = bool(getattr(inputparams, 'dna_aeon_insert_header', False))
-    dna_aeon_error_correction = str(getattr(inputparams, 'dna_aeon_error_correction', 'nocode'))
+    dna_aeon_error_correction = str(getattr(inputparams, 'dna_aeon_error_correction', 'crc'))
     dna_aeon_repair_symbols = int(getattr(inputparams, 'dna_aeon_repair_symbols', 2))
     dna_aeon_use_dna_rules = bool(getattr(inputparams, 'dna_aeon_use_dna_rules', True))
     dna_aeon_drop_upper_bound = float(getattr(inputparams, 'dna_aeon_drop_upper_bound', 0.5))

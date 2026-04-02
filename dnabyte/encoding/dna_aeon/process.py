@@ -6,18 +6,20 @@ def process(data, params, logger=None):
     """
     Process DNA strands after synthesis/sequencing for DNA-Aeon encoding.
 
-    DNA-Aeon (NOREC4DNA fountain code) produces multiple oligos; after
-    synthesis each oligo is copied many times and sequencing may introduce
-    per-copy errors.
+    DNA-Aeon uses NOREC4DNA fountain codes where each oligo is a
+    self-identifying packet (carries its own ID and chunk-mapping in a
+    header).  The fountain-code decoder handles corruption detection
+    internally — ``parse_raw_packet`` returns ``"CORRUPT"`` for packets
+    whose headers are damaged.
 
-    Processing:
-    1. Group identical (or near-identical) sequences together.
-    2. Majority-vote within each group to reconstruct the original oligo.
-    3. Return one consensus sequence per group.
-
-    The fountain code is robust to some oligo losses, so singletons
-    (likely corrupted copies) are filtered out when multi-copy groups
-    exist.
+    Processing strategy for fountain codes:
+    1. Group identical sequences to de-duplicate synthesis copies.
+    2. For each group with ≥ 2 copies, take a majority-vote consensus.
+    3. **Keep singletons as well** — unlike fixed-position codes, every
+       unique packet potentially carries new information.  Discarding
+       singletons risks losing valid packets that the decoder needs.
+    4. Return ALL unique/consensus sequences and let the fountain-code
+       decoder decide which are usable.
 
     Args:
         data:   Data object with ``data.data`` = list of DNA strings.
@@ -52,7 +54,7 @@ def process(data, params, logger=None):
 
         # ----- Separate multi-copy groups from singletons -------------------
         large_groups = {s: c for s, c in groups.items() if len(c) >= 2}
-        singletons = {s: c for s, c in groups.items() if len(c) == 1}
+        singletons  = {s: c for s, c in groups.items() if len(c) == 1}
 
         if logger:
             logger.info(
@@ -60,30 +62,33 @@ def process(data, params, logger=None):
                 f"singletons: {len(singletons)}"
             )
 
-        if large_groups:
-            consensus_sequences = []
-            for representative, copies in large_groups.items():
-                consensus = _majority_vote(copies)
-                consensus_sequences.append(consensus)
-            if logger:
-                logger.info(
-                    f"Filtered {len(singletons)} singleton sequences "
-                    "(likely corrupted)"
-                )
-        else:
-            # No multi-copy groups — keep everything (e.g. no synthesis copies)
-            consensus_sequences = list(groups.keys())
+        # ----- Build consensus list -----------------------------------------
+        # For multi-copy groups: majority-vote to get best consensus
+        consensus_sequences = []
+        for representative, copies in large_groups.items():
+            consensus = _majority_vote(copies)
+            consensus_sequences.append(consensus)
+
+        # For fountain codes: KEEP singletons — they may carry unique
+        # packet IDs that the decoder needs.  The NOREC4DNA decoder will
+        # reject any packet whose header is corrupted, so there is no
+        # harm in passing them through.
+        for seq in singletons:
+            consensus_sequences.append(seq)
 
         if logger:
             logger.info(
                 f"Consensus: {len(consensus_sequences)} unique sequences "
-                f"from {total_count} inputs"
+                f"from {total_count} inputs "
+                f"({len(large_groups)} voted, {len(singletons)} singletons kept)"
             )
 
         info = {
             'number_of_sequences_input': total_count,
             'number_of_sequences_output': len(consensus_sequences),
             'unique_groups': len(groups),
+            'multi_copy_groups': len(large_groups),
+            'singletons_kept': len(singletons),
             'duplicates_removed': total_count - len(consensus_sequences),
             'status': 'consensus',
         }

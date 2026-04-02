@@ -52,9 +52,9 @@ def decode(data, params, logger=None):
 
     try:
         total_bits = int(getattr(params, 'dna_aeon_total_bits', 0))
-        error_correction_name = str(getattr(params, 'dna_aeon_error_correction', 'nocode'))
+        error_correction_name = str(getattr(params, 'dna_aeon_error_correction', 'crc'))
         repair_symbols = int(getattr(params, 'dna_aeon_repair_symbols', 2))
-        insert_header = bool(getattr(params, 'dna_aeon_insert_header', True))
+        insert_header = bool(getattr(params, 'dna_aeon_insert_header', False))
         number_of_chunks = getattr(params, 'dna_aeon_number_of_chunks', None)
 
         # Get the error correction decode function
@@ -83,7 +83,7 @@ def decode(data, params, logger=None):
             use_headerchunk=insert_header,
             static_number_of_chunks=None,
         )
-        decoder.read_all_before_decode = False
+        decoder.read_all_before_decode = True
 
         # Feed DNA oligos into the decoder one by one
         decoded = False
@@ -109,24 +109,20 @@ def decode(data, params, logger=None):
                     continue
 
                 success_count += 1
-                decoded = decoder.input_new_packet(packet)
-
-                if decoded:
-                    break
+                decoder.input_new_packet(packet)
             except Exception:
                 corrupt_count += 1
                 continue
+
+        # Now attempt to solve with ALL collected packets
+        if decoder.GEPP is not None and decoder.GEPP.isPotentionallySolvable():
+            decoded = decoder.GEPP.solve(partial=False)
 
         if logger:
             logger.info(
                 f"DNA-Aeon decoder: {success_count} valid, {corrupt_count} corrupt, "
                 f"decoded={decoded}"
             )
-
-        if not decoded:
-            # Try solving with what we have
-            if decoder.GEPP is not None and decoder.GEPP.isPotentionallySolvable():
-                decoded = decoder.GEPP.solve()
 
         if not decoded:
             if logger:
