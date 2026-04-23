@@ -50,7 +50,7 @@ class TestTextBinarize(unittest.TestCase):
         
         self.assertIsInstance(result, BinaryCode)
         self.assertEqual(result.file_paths, [self.text_file])
-        self.assertEqual(result.size, len(self.text_content.encode('utf-8')))
+        self.assertEqual(result.size, os.path.getsize(self.text_file))
         self.assertTrue(len(result.data) > 0)
         self.assertTrue(all(bit in '01' for bit in result.data))
     

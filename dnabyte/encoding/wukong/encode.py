@@ -46,6 +46,8 @@ class Wukong(Encode):
                 self.logger.info(f"Binary data written to temporary file: {temp_file_path}")
 
             # Use Wukong encoding
+            add_primer = getattr(self.params, 'add_primer', True)
+            primer_length = getattr(self.params, 'primer_length', 20) if add_primer else 0
             encode_worker = WukongEncode(
                 input_file_path=temp_file_path,
                 output_dir=output_dir,
@@ -56,8 +58,8 @@ class Wukong(Encode):
                 rule_num=getattr(self.params, 'rule_num', 1),
                 rs_num=getattr(self.params, 'rs_num', 0),
                 add_redundancy=getattr(self.params, 'add_redundancy', True),
-                add_primer=getattr(self.params, 'add_primer', True),
-                primer_length=getattr(self.params, 'primer_length', 20)
+                add_primer=add_primer,
+                primer_length=primer_length
             )
             
             # Perform encoding
@@ -211,7 +213,7 @@ def attributes(inputparams):
     if max_homopolymer < 1:
         raise ValueError("max_homopolymer must be at least 1")
     
-    if primer_length < 1:
+    if add_primer and primer_length < 1:
         raise ValueError("primer_length must be at least 1")
 
     # Build return dictionary
