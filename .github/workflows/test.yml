@@ -24,14 +24,20 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install system dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -y python3-dev gcc g++ build-essential
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pytest
-        pip install -e . --no-deps
-        pip install scipy numpy biopython reedsolo matplotlib pandas galois networkx regex || true
-        pip install pyxdameraulevenshtein || echo "pyxdameraulevenshtein optional, skipping"
+        pip install scipy numpy biopython reedsolo matplotlib pandas galois networkx regex tqdm
+        pip install pyxdameraulevenshtein || echo "pyxdameraulevenshtein not available, skipping"
         pip install primer3-py
+        pip install -e . --no-deps
 
     - name: Run unit tests
       run: |
