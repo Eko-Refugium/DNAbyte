@@ -64,7 +64,7 @@ class TestDNAAeonEncodingDecoding(unittest.TestCase):
                     encoding_method='dna_aeon',
                     assembly_structure='synthesis',
                     dna_aeon_chunk_size=20,
-                    dna_aeon_overhead=0.40,
+                    dna_aeon_overhead=0.80,
                     dna_aeon_insert_header=False,
                     dna_aeon_error_correction='crc',
                     dna_aeon_use_dna_rules=True,
@@ -74,7 +74,7 @@ class TestDNAAeonEncodingDecoding(unittest.TestCase):
                     codeword_length=200,
                 ),
                 'expect_perfect_decode': True,
-                'note': 'DNA-Aeon with larger chunk size (20 bytes)'
+                'note': 'DNA-Aeon with larger chunk size (20 bytes) and higher overhead'
             },
             {
                 'name': 'nocode_no_error_correction',

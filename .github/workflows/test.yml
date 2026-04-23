@@ -31,6 +31,7 @@ jobs:
         pip install -e . --no-deps
         pip install scipy numpy biopython reedsolo matplotlib pandas galois networkx regex || true
         pip install pyxdameraulevenshtein || echo "pyxdameraulevenshtein optional, skipping"
+        pip install primer3-py
 
     - name: Run unit tests
       run: |
