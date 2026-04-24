@@ -225,7 +225,7 @@ class Wukong():
                     break
                 
                 # generate a virtual segment with an index first of 1
-                random_index = random.randint(math.pow(2, self.index_length - 1), math.pow(2, self.index_length) - 1)
+                random_index = random.randint(2 ** (self.index_length - 1), (2 ** self.index_length) - 1)
                 created_bin = bin(random_index)[2:]
                 for i in range(self.bin_split_length - self.index_length):
                     created_bin += str(random.randrange(0, 2))

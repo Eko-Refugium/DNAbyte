@@ -2,7 +2,7 @@ import unittest
 
 from dnabyte.params import Params
 from simulations.RandomParams import create_random_valid_paramset
-from tests.testbase_end2end import TestBase
+from tests.testbase_end2end_newdata import TestBase
 
 params_list = create_random_valid_paramset()
 

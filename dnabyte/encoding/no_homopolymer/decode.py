@@ -23,7 +23,7 @@ def decode(data, params, logger=None):
         for i in tqdm(range(len(data.data)), desc="Decoding: DNA to binary", disable=logger is not None):
             binary_codewords.append(dna_to_binary_custom(data.data[i]))
         
-        decoded_binary, valid = decode_binary_codewords(binary_codewords, params)
+        decoded_binary, valid = decode_binary_codewords(binary_codewords, params, logger=logger)
 
         # Additional info
         info = {
@@ -79,7 +79,7 @@ def dna_to_binary_custom(dna_string):
     return ''.join(binary_string)
 
 
-def decode_binary_codewords(data, params):
+def decode_binary_codewords(data, params, logger=None):
 
     check_ltcode, check_reedsolomon = True, True
     if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':

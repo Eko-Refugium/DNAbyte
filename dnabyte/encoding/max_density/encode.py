@@ -227,6 +227,8 @@ def attributes(inputparams):
                                min=1, 
                                max=200, 
                                inputparams=inputparams)
+    else:
+        mean = 1
     if hasattr(inputparams, 'std_dev'):
         if hasattr(inputparams, 'mean'):
             
@@ -235,8 +237,8 @@ def attributes(inputparams):
                                     min=0, 
                                     max=mean *0.1, 
                                     inputparams=inputparams)
-        else:
-            std_dev = 0
+    else:
+        std_dev = 0
 
     codeword_length = check_parameter(parameter="codeword_length",
                                       default=500,

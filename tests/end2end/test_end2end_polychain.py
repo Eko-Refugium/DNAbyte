@@ -9,7 +9,7 @@ from tests.testbase_end2end_newdata import TestBase
 params_list = [
     Params(
         name='end2end_polychain_noEC_noErrors',
-        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
+        file_paths=['textfile_40b.txt'],
 
         # binarization method
         binarization_method='compressed',

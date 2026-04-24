@@ -53,43 +53,43 @@ params_list = [
         synthesis_method=None,
         sequencing_method=None,
 
-    ),
-    Params(
-        name='end2end_maxdensity_allErrors',
-        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
+    # ),
+    # Params(
+    #     name='end2end_maxdensity_allErrors',
+    #     file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
 
-        # binarization method
-        binarization_method='compressed',
+    #     # binarization method
+    #     binarization_method='compressed',
 
-        # encoding parameters
-        encoding_method='max_density',
-        codeword_length=501,
-        dna_barcode_length=34,
-        codeword_maxlength_positions=18,  # in bp here not in oligos
+    #     # encoding parameters
+    #     encoding_method='max_density',
+    #     codeword_length=501,
+    #     dna_barcode_length=34,
+    #     codeword_maxlength_positions=18,  # in bp here not in oligos
 
-        # error correction
-        inner_error_correction='ltcode',
-        percent_of_symbols=2,
-        ltcode_header=34,
+    #     # error correction
+    #     inner_error_correction='ltcode',
+    #     percent_of_symbols=2,
+    #     ltcode_header=34,
 
-        outer_error_correction='reedsolomon',
-        reed_solo_percentage=0.8,
+    #     outer_error_correction='reedsolomon',
+    #     reed_solo_percentage=0.8,
 
-        # synthesis error channel
-        synthesis_method='mesa',
-        synthesis_mesa_id=68,
-        mean=20,
-        vol=1000000 / Avogadro,
-        std_dev=1,
-        hybridisation_steps=10000,
+    #     # synthesis error channel
+    #     synthesis_method='mesa',
+    #     synthesis_mesa_id=68,
+    #     mean=20,
+    #     vol=1000000 / Avogadro,
+    #     std_dev=1,
+    #     hybridisation_steps=10000,
 
-        # storage error channel
-        storage_conditions='biogene',
-        years=10,
+    #     # storage error channel
+    #     storage_conditions='biogene',
+    #     years=10,
 
-        # sequencing error channel
-        sequencing_method='mesa',
-        sequencing_mesa_id=68,
+    #     # sequencing error channel
+    #     sequencing_method='mesa',
+    #     sequencing_mesa_id=68,
 
     )]
 
