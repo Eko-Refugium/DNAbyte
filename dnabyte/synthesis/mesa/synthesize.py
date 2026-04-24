@@ -20,12 +20,10 @@ class MESA(SimulateSynthesis):
         :param data: A list of DNA sequences.
         :return: A list of sequenced DNA sequences.
         """
-        parent_dir = os.getcwd()
-        
         method_id = self.params.mesa_synthesis_id
 
-        # Get the absolute path of the file relative to the parent directory
-        file_path = os.path.join(parent_dir, 'dnabyte', 'synthesis', 'mesa',  'syn_table.json')
+        # Get the absolute path of syn_table.json relative to this source file
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'syn_table.json')
 
         # get the error parameters for the designated method
         # get dictionary of synthesis parameters from JSON file

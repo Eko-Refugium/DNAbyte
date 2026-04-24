@@ -37,3 +37,6 @@ class TestMESA(unittest.TestCase):
                 self.assertIn('average_copy_number', info)
                 self.assertIn('number_of_synthesis_errors', info)
                 self.assertIn('error_dict', info)
+
+if __name__ == '__main__':
+    unittest.main()
