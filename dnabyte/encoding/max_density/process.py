@@ -1,5 +1,6 @@
 import random
 from collections import Counter
+from tqdm import tqdm
 
 from dnabyte.encoding.auxiliary import sort_lists_by_first_n_entries_synth
 
@@ -15,7 +16,6 @@ def process(data, params, logger=None):
     # Step 1: ensure that all codewords have the same length by filling random bases or deleting random bases
     for i in range(len(data.data)):
         
-
         while len(data.data[i]) < params.codeword_length:
             # Randomly choose a position to insert a base
             insert_position = random.randint(0, len(data.data[i]))

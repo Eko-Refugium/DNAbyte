@@ -37,8 +37,7 @@ class NoHomoPoly(Encode):
 
             # Create binary codewords
             binary_codewords = self.create_binary_codewords(data, self.params)
-
-            # Sanity checks
+            
             if self.params.debug:
                 self.logger.info(f"SANITY CHECK: Number of binary codewords: {len(binary_codewords)}")
                 if not all(len(codeword) == len(binary_codewords[0]) for codeword in binary_codewords):
@@ -54,7 +53,30 @@ class NoHomoPoly(Encode):
                 barcode_base2 = create_counter_list(self.params.dna_barcode_length, 2, i)            
                 barcode = ''.join(str(x) for x in barcode_base2)
                 binary_codewords[i] = barcode + binary_codewords[i]
-                dna_codewords.append(self.binary_to_dna_custom(binary_codewords[i]))
+                dna_codeword = self.binary_to_dna_custom(binary_codewords[i])
+                dna_codewords.append(dna_codeword)
+            
+            # Calculate the actual barcode length in DNA (nucleotides) and in binary (after decoding)
+            # The first DNA codeword's barcode length can be determined by encoding just the barcode
+            if dna_codewords:
+                # Store the original binary barcode length (before DNA encoding) for LT code
+                original_binary_barcode_length = self.params.dna_barcode_length
+                
+                barcode_base2_first = create_counter_list(self.params.dna_barcode_length, 2, 0)
+                barcode_first = ''.join(str(x) for x in barcode_base2_first)
+                dna_barcode_first = self.binary_to_dna_custom(barcode_first)
+                actual_dna_barcode_length = len(dna_barcode_first)
+                # Convert DNA barcode back to binary to get the binary barcode length for decoding
+                binary_barcode_decoded = self.dna_to_binary_custom(dna_barcode_first)
+                actual_binary_barcode_length = len(binary_barcode_decoded)
+                # Update params with the actual binary barcode length for decoding
+                self.params.dna_barcode_length = actual_binary_barcode_length
+                # Store the original for use in LT code encoding (which happens with binary, not DNA)
+                self.params.original_binary_barcode_length = original_binary_barcode_length
+            else:
+                actual_dna_barcode_length = self.params.dna_barcode_length
+                actual_binary_barcode_length = self.params.dna_barcode_length
+                self.params.original_binary_barcode_length = self.params.dna_barcode_length
 
             # Sanity checks
             if self.params.debug:
@@ -65,9 +87,11 @@ class NoHomoPoly(Encode):
                     self.logger.info(f"SANITY CHECK: Length of each DNA codeword: {len(dna_codewords[0])}")   
 
             # create info return dictionary
+            codeword_lengths = [len(codeword) for codeword in dna_codewords]
             info = {
                 "number_of_codewords": len(dna_codewords),
-                "length_of_each_codeword": [len(codeword) for codeword in binary_codewords],
+                "min_codeword_length": min(codeword_lengths) if codeword_lengths else 0,
+                "max_codeword_length": max(codeword_lengths) if codeword_lengths else 0,
                 "barcode_length": self.params.dna_barcode_length
                 }
 
@@ -77,7 +101,7 @@ class NoHomoPoly(Encode):
 
             dna_codewords = None
             info = {}
-
+        print(dna_codewords)
         return dna_codewords, info
 
     def decode(self, data):
@@ -93,6 +117,43 @@ class NoHomoPoly(Encode):
         Wraps the standalone process function to use self.params.
         """
         return self._process_function(data, self.params, self.logger)
+    
+    def dna_to_binary_custom(self, dna_string):
+        """
+        Converts a DNA string to a binary string using a custom mapping to avoid homopolymers.
+
+        Parameters:
+        dna_string (str): The DNA string to be converted.
+
+        Returns:
+        str: The corresponding binary string.
+        """
+        binary_string = []
+        if dna_string[0] == 'T' or dna_string[0] == 'G':
+            for i, base in enumerate(dna_string):
+                if i % 2 == 0:  # Even position
+                    if base == 'T':
+                        binary_string.append('0')
+                    elif base == 'G':
+                        binary_string.append('1')
+                else:  # Odd position
+                    if base == 'C':
+                        binary_string.append('0')
+                    elif base == 'A':
+                        binary_string.append('1')
+        else:
+            for i, base in enumerate(dna_string):
+                if i % 2 == 0:
+                    if base == 'C':
+                        binary_string.append('0')
+                    elif base == 'A':
+                        binary_string.append('1')
+                else:
+                    if base == 'T':
+                        binary_string.append('0')
+                    elif base == 'G':
+                        binary_string.append('1')
+        return ''.join(binary_string)
 
     def binary_to_dna_custom(self, binary_sequence):
         """
@@ -129,7 +190,7 @@ class NoHomoPoly(Encode):
 
         # Step 2: Calculate the message length
         if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
-            message_length = params.codeword_length - 2 * params.dna_barcode_length - zfill_bits - params.index_carry_length
+            message_length = params.codeword_length - params.dna_barcode_length - zfill_bits - params.index_carry_length - params.ltcode_header
         else:
             message_length = params.codeword_length - params.dna_barcode_length - zfill_bits
 
@@ -142,6 +203,9 @@ class NoHomoPoly(Encode):
 
         # Step 3: calculate the bits per codeword
         bits_per_codeword = message_length
+        if bits_per_codeword <= 0:
+            raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. codeword_length, dna_barcode_length, codeword_maxlength_positions, ltcode_header, index_carry_length, reed_solo_percentage")
+
         
         if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             
@@ -153,6 +217,8 @@ class NoHomoPoly(Encode):
             bits_per_codeword += adjustment
             bits_per_ec -= adjustment
             params.bits_per_ec = bits_per_ec
+            if bits_per_codeword <= 0:
+                raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. Including the reedsolomon correction prcentage carrying length is given")
 
         params.bits_per_codeword = bits_per_codeword
 
@@ -160,9 +226,9 @@ class NoHomoPoly(Encode):
 
         # TODO: Check whether this is correct
         # Determine the length of the DNA barcode
-        if hasattr(self.params, 'outer_error_correction') and self.params.outer_error_correction == 'reedsolomon':
-            dna_barcode_length = params.codeword_length - params.message_length
-            params.dna_barcode_length = dna_barcode_length
+        # if hasattr(self.params, 'outer_error_correction') and self.params.outer_error_correction == 'reedsolomon':
+        #     dna_barcode_length = params.codeword_length - params.message_length
+        #     params.dna_barcode_length = dna_barcode_length
 
         return params
 
@@ -193,7 +259,7 @@ class NoHomoPoly(Encode):
  
          # Step 3: apply inner error correction
         if hasattr(params, 'inner_error_correction') and params.inner_error_correction == 'ltcode':
-            binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.dna_barcode_length, 1)
+            binary_codewords = makeltcodesynth(binary_codewords, params.percent_of_symbols, params.index_carry_length, params.ltcode_header, 1)
 
         return binary_codewords
 
@@ -201,6 +267,17 @@ def attributes(inputparams):
 
     encoding_method = inputparams.encoding_method
     assembly_structure = 'synthesis'
+
+    mean = check_parameter(parameter='mean', 
+                               default=1, 
+                               min=1, 
+                               max=200, 
+                               inputparams=inputparams)
+    std_dev = check_parameter(parameter='std_dev', 
+                                    default=0, 
+                                    min=0, 
+                                    max=mean *0.1, 
+                                    inputparams=inputparams)
     
     codeword_length = check_parameter(parameter="codeword_length",
                                       default=500,
@@ -254,11 +331,14 @@ def attributes(inputparams):
     # parameter group: outer_error_correction
     if getattr(inputparams, 'outer_error_correction', None) == 'reedsolomon':
 
-        reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
-                                              default=0.8,
-                                              min=0.5,
-                                              max=0.95,
-                                              inputparams=inputparams)
+        if inputparams.reed_solo_percentage == 1:
+            inputparams.outer_error_correction = None
+        else:
+            reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
+                                                default=0.8,
+                                                min=0.1,
+                                                max=0.99,
+                                                inputparams=inputparams)
 
     elif getattr(inputparams, 'outer_error_correction', None) is None:
         pass
@@ -277,6 +357,8 @@ def attributes(inputparams):
         "codeword_length": codeword_length, 
         "dna_barcode_length": dna_barcode_length, 
         "codeword_maxlength_positions": codeword_maxlength_positions,
+        "mean": mean,
+        "std_dev": std_dev
     }
     
     # Add inner error correction parameters only if ltcode is used

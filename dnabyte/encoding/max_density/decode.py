@@ -1,5 +1,6 @@
 import math as m
 import traceback
+from tqdm import tqdm
 
 from dnabyte.encode import Encode
 from dnabyte.error_correction.auxiliary import undoreedsolomonsynthesis, undoltcodesynth
@@ -56,7 +57,6 @@ def recreate_binary_codewords(data, params):
     # Step 2: undo couter error correction
     if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
         data, check_reedsolomon = undoreedsolomonsynthesis(data, params.bits_per_ec)
-
     # Step 3: remove the zfill bits
     final_data = []
 

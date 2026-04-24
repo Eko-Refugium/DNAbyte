@@ -104,7 +104,7 @@ def create_json_file(type, filenames, assembly_structure, encoding_scheme, data,
     encoding_parameters = {
         "codeword_length": kwargs.get('codewordlength'),
         "dna_barcode_length": kwargs.get('dna_barcode_length'),
-        "codeword_max_lenght_positions": kwargs.get('codeword_maxlength_positions'),
+        "codeword_maxlength_positions": kwargs.get('codeword_maxlength_positions'),
         "percent_of_symbols": kwargs.get('percentofsymbols'),
         "index_carry_length": kwargs.get('indexcarrylength'),
         "theory": theory
@@ -328,7 +328,7 @@ def create_encode_object(json_data):
                   inner_error_correction = json_data['error_correction_parameters']['inner_error_correction'],
                   outer_error_correction = json_data['error_correction_parameters']['outer_error_correction'],
                   dna_barcode_length = json_data['encoding_parameters']['dna_barcode_length'],
-                  codeword_maxlength_positions = json_data['encoding_parameters']['codeword_max_lenght_positions'],
+                  codeword_maxlength_positions = json_data['encoding_parameters']['codeword_maxlength_positions'],
                   codewordlength = json_data['encoding_parameters']['codeword_length'],
                   library = library,
                   library_name = library_name,
@@ -377,16 +377,24 @@ def reduce_to_n_most_used_elements(list_of_lists, n):
     return reduced_lists
 
 def sort_lists_by_first_n_entries(lists, n, theory):
-    # Sort the entire list of lists based on the first n entries
+    # Filter out lists that have strings in the first n positions (keep only numeric entries)
+    filtered_lists = []
     for lst in lists:
-        for k in range(n):
+        has_string = False
+        for k in range(min(n, len(lst))):
             if isinstance(lst[k], str):
-                lists.remove(lst)
-    lists.sort(key=lambda x: x[:n])
+                has_string = True
+                break
+        if not has_string:
+            filtered_lists.append(lst)
     
+    # Sort the filtered lists by the first n numeric entries
+    filtered_lists.sort(key=lambda x: x[:n])
+    
+    # Group lists that have the same first n entries
     grouped_lists = {}
     
-    for lst in lists:
+    for lst in filtered_lists:
         key = tuple(lst[:n])
         if key not in grouped_lists:
             grouped_lists[key] = []
@@ -633,6 +641,7 @@ def split_string_into_chunks_poly_chain(string, ngeneric, npossition, nmessage):
 
 
 def check_library(inputparams, default, assembly_structure):
+    print('current dir:', os.getcwd())
     if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
         # set default library
         library_name = default

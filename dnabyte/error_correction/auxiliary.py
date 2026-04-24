@@ -74,7 +74,7 @@ def undoreedsolomonsynthesis(data,errorlength):
         except:
             #logger.debug(f'Error in Reed Solomon decoding: codeword={codewords}, errorlength={errorlength}')
             valuechack = False
-            reedsolomonencodedwords.append(codewords[len(codewords)-errorlength:])
+            reedsolomonencodedwords.append(codewords[:len(codewords)-errorlength])
     return reedsolomonencodedwords, valuechack
 
 def undoreedsolomon(data,codewordlength,bitsinpos):

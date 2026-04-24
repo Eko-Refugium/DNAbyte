@@ -621,16 +621,16 @@ def fastq_errors(input, sequence, sanger=True, modified=False):
         for i in range(0, len(tmp)):
             if 0 < tmp[i] <= 1:
                 q_score = round((-10 * math.log(tmp[i], 10)))
-            elif tmp[i] > 0 and tmp[i] > 1:
+            elif tmp[i] > 1:
                 q_score = 0
             else:
                 q_score = 40
             res.append(chr(q_score + 33))
     if not sanger:
         for i in range(0, len(tmp)):
-            if 0 < tmp[i] <= 1:
+            if 0 < tmp[i] < 1:
                 q_score = round((-10 * math.log((tmp[i] / (1 - tmp[i])), 10)))
-            elif tmp[i] > 0 and tmp[i] > 1:
+            elif tmp[i] >= 1:
                 q_score = 0
             else:
                 q_score = 40

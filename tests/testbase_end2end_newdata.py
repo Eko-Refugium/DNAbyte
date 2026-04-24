@@ -84,6 +84,7 @@ class TestBase(unittest.TestCase):
 
             self.testlogger.info('STEP02: ENCODE DATA')
             start_time = time.time()
+            print(binary_code)
 
             try:
                 enc = Encode(self.params, logger=self.testlogger)
@@ -112,6 +113,7 @@ class TestBase(unittest.TestCase):
 
                 try:
                     syn = SimulateSynthesis(self.params, logger=self.testlogger)
+                    print("here")
                     data_syn, info = syn.simulate(data_enc)
                     self.testlogger.info('STATUS: SUCCESS')
                     self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
@@ -128,8 +130,8 @@ class TestBase(unittest.TestCase):
                     self.fail(f"Synthesis simulation failed: {str(e)}")
             else:
                 self.testlogger.info('STEP03: SIMULATE SYNTHESIS - SKIPPED (synthesis_method is None)')
-                datainsilco = InSilicoDNA(data_enc.data)
-                data_syn = datainsilco
+                data_syn = InSilicoDNA(data_enc.data)
+
 
 #######################################################################################################################
 ##### STEP 4: SIMULATE STORAGE ########################################################################################
@@ -237,6 +239,8 @@ class TestBase(unittest.TestCase):
             start_time = time.time()
 
             try:
+                print("Decoding...")
+                print(data_cor.data)
                 data_dec, valid, info = enc.decode(data_cor)
 
                 # TODO: Add the info to the log
@@ -264,7 +268,8 @@ class TestBase(unittest.TestCase):
      
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
-
+            print("Comparing...")
+            print(data_dec.data, binary_code.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 
@@ -272,11 +277,16 @@ class TestBase(unittest.TestCase):
                     self.testlogger.info('STATUS: SUCCESS')
                     self.testlogger.info('DURATION: %.2f seconds' + "\n", time.time() - start_time)
 
-                if comparison == 'ERROR':
+                if comparison == 'ERROR_short':
                     self.testlogger.info('STATUS: ERROR')
                     self.testlogger.error('TRACEBACK:' + traceback.format_exc())
                     self.testlogger.error('COMPARISON RESULT: %s', res)
-                    self.fail("Decoded data does not match the original data")
+                    self.fail("Decoded data does not match the original data, decoded data is shorter. This can mean codeword loss due to errors or encoding scheme specific complications. Try using different encoding methods or parameters or less error introducing channels.")
+                if comparison == 'ERROR_long':
+                    self.testlogger.info('STATUS: ERROR')
+                    self.testlogger.error('TRACEBACK:' + traceback.format_exc())
+                    self.testlogger.error('COMPARISON RESULT: %s', res)
+                    self.fail("Decoded data does not match the original data, decoded data is longer. This can mean codeword duplication due to errors or encoding scheme specific complications (like index headers). Try using different encoding methods or parameters or less error introducing channels.")
 
             except Exception as e:
                 self.testlogger.error('TYPE: %s', str(e))

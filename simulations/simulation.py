@@ -19,6 +19,7 @@ from dnabyte.library import Library
 from dnabyte.synthesize import SimulateSynthesis
 from dnabyte.store import SimulateStorage
 from dnabyte.sequence import SimulateSequencing
+from dnabyte.misc_err import SimulateMiscErrors
 from dnabyte.params import Params
 from dnabyte.binarize import Binarize
 
@@ -69,7 +70,14 @@ class Simulation():
                     try:
                         bin = Binarize(params)
 
-                        data_obj = Data(file_paths=params.file_paths)
+                        # Handle both file_paths (for compressed) and filename (for default binarization)
+                        if hasattr(params, 'file_paths'):
+                            data_obj = Data(file_paths=params.file_paths)
+                        elif hasattr(params, 'filename'):
+                            data_obj = Data(file_paths=[params.filename])
+                        else:
+                            raise ValueError("params must have either 'file_paths' or 'filename' attribute")
+                        
                         binary_code = bin.binarize(data_obj)
 
                     except Exception as e:
@@ -98,7 +106,7 @@ class Simulation():
     #######################################################################################################################
     ##### STEP 2: ENCODE DATA #############################################################################################
     #######################################################################################################################
-
+                    
                     self.simlogger.info('STEP02: ENCODE DATA')
                     start_time = time.time()
 
@@ -132,102 +140,145 @@ class Simulation():
     ##### STEP 3: SIMULATE SYNTHESIS ######################################################################################
     #######################################################################################################################
 
-                    self.simlogger.info('STEP03: SIMULATE SYNTHESIS')
-                    start_time = time.time()
+                    if params.synthesis_method is not None:
+                        self.simlogger.info('STEP03: SIMULATE SYNTHESIS')
+                        start_time = time.time()
 
-                    try:
-                        syn = SimulateSynthesis(params, logger=self.simlogger)
-                        data_syn, info = syn.simulate(data_enc)
-                        
-                        
-                    except Exception as e:
-                        self.simlogger.info('STATUS: ERROR')
-                        self.simlogger.error('TYPE: %s', str(e))
-                        self.simlogger.error(traceback.format_exc())
-                        results[name]['status'] = 'FAILURE'
-                        continue
-                    # print('data_syn', data_syn.data)
-                    # generate the info
-                    duration = time.time() - start_time
-                    info['duration'] = duration
+                        try:
+                            syn = SimulateSynthesis(params, logger=self.simlogger)
+                            data_syn, info = syn.simulate(data_enc)
+                            
+                            
+                        except Exception as e:
+                            self.simlogger.info('STATUS: ERROR')
+                            self.simlogger.error('TYPE: %s', str(e))
+                            self.simlogger.error(traceback.format_exc())
+                            results[name]['status'] = 'FAILURE'
+                            continue
+                        # print('data_syn', data_syn.data)
+                        # generate the info
+                        duration = time.time() - start_time
+                        info['duration'] = duration
 
-                    # logging
-                    self.simlogger.info('STATUS: SUCCESS')
-                    self.simlogger.info('DURATION: %.2f seconds', duration)
-                    self.simlogger.info('NUMBER OF CODEWORDS: %d', len(data_syn.data))
-                    self.simlogger.info(data_syn.__str__())
+                        # logging
+                        self.simlogger.info('STATUS: SUCCESS')
+                        self.simlogger.info('DURATION: %.2f seconds', duration)
+                        self.simlogger.info('NUMBER OF CODEWORDS: %d', len(data_syn.data))
+                        self.simlogger.info(data_syn.__str__())
 
-                    # save to results
-                    results[name]['step3'] = info
+                        # save to results
+                        results[name]['step3'] = info
+                    else:
+                        self.simlogger.info('STEP03: SKIP SYNTHESIS SIMULATION')
+                        data_syn = data_enc
+                        if not isinstance(data_syn, InSilicoDNA):
+                            data_syn = InSilicoDNA(data_syn.data)
+
 
     #######################################################################################################################
     ##### STEP 4: SIMULATE STORAGE ########################################################################################
     #######################################################################################################################
 
-                    self.simlogger.info('STEP04: SIMULATE STORAGE')
-                    start_time = time.time()
-                    try:
-                        sto = SimulateStorage(params, logger=self.simlogger)
-                        data_sto, info = sto.simulate(data_syn)
-                        
-                    except Exception as e:
+                    if params.storage_conditions is not None:
+                        self.simlogger.info('STEP04: SIMULATE STORAGE')
+                        start_time = time.time()
+                        try:
+                            sto = SimulateStorage(params, logger=self.simlogger)
+                            data_sto, info = sto.simulate(data_syn)
+                            
+                        except Exception as e:
+                            self.simlogger.info('STATUS: SUCCESS')
+                            self.simlogger.error('TYPE: %s', str(e))
+                            self.simlogger.error(traceback.format_exc())
+                            results[name]['status'] = 'FAILURE'
+                            continue
+
+                        # generate the info
+                        duration = time.time() - start_time
+                        info['duration'] = duration
+
+                        # logging
                         self.simlogger.info('STATUS: SUCCESS')
-                        self.simlogger.error('TYPE: %s', str(e))
-                        self.simlogger.error(traceback.format_exc())
-                        results[name]['status'] = 'FAILURE'
-                        continue
+                        self.simlogger.info('DURATION: %.2f seconds', duration)
+                        self.simlogger.info('NUMBER OF STRAND BREAKS: %d', info['number_of_strand_breaks'])
+                        self.simlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
+                        self.simlogger.info(data_sto.__str__())
 
-                    # generate the info
-                    duration = time.time() - start_time
-                    info['duration'] = duration
-
-                    # logging
-                    self.simlogger.info('STATUS: SUCCESS')
-                    self.simlogger.info('DURATION: %.2f seconds', duration)
-                    self.simlogger.info('NUMBER OF STRAND BREAKS: %d', info['number_of_strand_breaks'])
-                    self.simlogger.info('NUMBER OF CODEWORDS: %d', len(data_sto.data))
-                    self.simlogger.info(data_sto.__str__())
-
-                    # save to results
-                    results[name]['step4'] = info
+                        # save to results
+                        results[name]['step4'] = info
+                    else:
+                        self.simlogger.info('STEP04: SKIP STORAGE SIMULATION')
+                        data_sto = data_syn
 
     #######################################################################################################################
-    ##### STEP 5: SIMULATE SEQUENCING #####################################################################################
+    ##### STEP 5: SIMULATE MISC ERRORS ####################################################################################
     #######################################################################################################################
 
-                    self.simlogger.info('STEP05: SIMULATE SEQUENCING')
-                    start_time = time.time()
-                    try:
-                        seq = SimulateSequencing(params, logger=self.simlogger)
-                        data_seq, info = seq.simulate(data_sto)
-                        data_seq = InSilicoDNA(data_seq.data)
-
-                    except Exception as e:
-                        self.simlogger.info('STATUS: ERROR')
-                        self.simlogger.error('TYPE: %s', str(e))
-                        self.simlogger.error('Error during sequencing simulation: %s', str(e))
-                        self.simlogger.error(traceback.format_exc())
-                        results[name]['status'] = 'FAILURE'
-                        continue
-
-                    # generate the info
-                    duration = time.time() - start_time
-                    info['duration'] = duration
-
-                    # logging
-                    self.simlogger.info('STATUS: SUCCESS')
-                    self.simlogger.info('DURATION: %.2f seconds', duration)
-                    self.simlogger.info('NUMBER OF INTRODUCED ERRORS: %d', len(info))
-                    self.simlogger.info(data_seq.__str__())
-
-                    # save to results
-                    results[name]['step5'] = info
+                    if params.error_methods is not None:
+                        self.simlogger.info('STEP05: SIMULATE MISC ERRORS')
+                        start_time = time.time()
+                        try:
+                            sto = SimulateMiscErrors(params, logger=self.simlogger)
+                            data_err, info = sto.simulate(data_sto)
+                            self.simlogger.info('STATUS: SUCCESS')
+                            self.simlogger.info('DURATION: %.2f seconds', time.time() - start_time)
+                            self.simlogger.info(info)
+                            self.simlogger.info('NUMBER OF CODEWORDS: %d', len(data_err.data))
+                            self.simlogger.info(data_err.__str__())
+                            
+                            results[name]['step5'] = info
+                        except Exception as e:
+                            self.simlogger.info('STATUS: ERROR')
+                            self.simlogger.error('TYPE: %s', str(e))
+                            self.simlogger.error(traceback.format_exc())
+                            self.fail(f"Error simulation failed: %str(e)")
+                    else:
+                        self.simlogger.info('STEP05: SIMULATE MISC ERRORS - SKIPPED (error_methods is None)')
+                        data_err = data_sto
 
     #######################################################################################################################
-    ##### STEP 6: PROCESSING ##############################################################################################
+    ##### STEP 6: SIMULATE SEQUENCING #####################################################################################
+    #######################################################################################################################
+
+                    if params.sequencing_method is not None:
+                        self.simlogger.info('STEP06: SIMULATE SEQUENCING')
+                        start_time = time.time()
+                        try:
+                            seq = SimulateSequencing(params, logger=self.simlogger)
+                            data_seq, info = seq.simulate(data_sto)
+                            data_seq = InSilicoDNA(data_seq.data)
+
+                        except Exception as e:
+                            self.simlogger.info('STATUS: ERROR')
+                            self.simlogger.error('TYPE: %s', str(e))
+                            self.simlogger.error('Error during sequencing simulation: %s', str(e))
+                            self.simlogger.error(traceback.format_exc())
+                            results[name]['status'] = 'FAILURE'
+                            continue
+
+                        # generate the info
+                        duration = time.time() - start_time
+                        info['duration'] = duration
+
+                        # logging
+                        self.simlogger.info('STATUS: SUCCESS')
+                        self.simlogger.info('DURATION: %.2f seconds', duration)
+                        self.simlogger.info('NUMBER OF INTRODUCED ERRORS: %d', len(info))
+                        self.simlogger.info(data_seq.__str__())
+
+                        # save to results
+                        results[name]['step6'] = info
+                    else:
+                        self.simlogger.info('STEP06: SKIP SEQUENCING SIMULATION')
+                        data_seq = data_err
+                        if not isinstance(data_seq, InSilicoDNA):
+                            data_seq = InSilicoDNA(data_seq.data)
+
+    #######################################################################################################################
+    ##### STEP 7: PROCESSING ##############################################################################################
     #######################################################################################################################
                     # print('data_seq', data_seq.data)
-                    self.simlogger.info('STEP06: PROCESS DATA')
+                    self.simlogger.info('STEP07: PROCESS DATA')
                     start_time = time.time()
                     try:
                         data_cor, info = coder.process(data_seq)
@@ -250,13 +301,13 @@ class Simulation():
                     self.simlogger.info(data_cor.__str__())
 
                     # save to results
-                    results[name]['step6'] = info
+                    results[name]['step7'] = info
 
     #######################################################################################################################
-    ##### STEP 7: DECODING THE DATA #######################################################################################
+    ##### STEP 8: DECODING THE DATA #######################################################################################
     #######################################################################################################################
 
-                    self.simlogger.info('STEP07: DECODE DATA')
+                    self.simlogger.info('STEP08: DECODE DATA')
                     start_time = time.time()
                     # print('data_cor', data_cor.data)
                     try:
@@ -284,13 +335,13 @@ class Simulation():
                     self.simlogger.info(data_dec.__str__())
 
                     # save to results
-                    results[name]['step7'] = info
+                    results[name]['step8'] = info
 
     #######################################################################################################################
-    ##### STEP 8: COMPARE DATA ############################################################################################
+    ##### STEP 9: COMPARE DATA ############################################################################################
     #######################################################################################################################
 
-                    self.simlogger.info('STEP08: COMPARE DATA')
+                    self.simlogger.info('STEP09: COMPARE DATA')
                     start_time = time.time()
 
                     # print('data_dec', data_dec.data)
@@ -323,13 +374,13 @@ class Simulation():
                     self.simlogger.info('DURATION: %.2f seconds' + "\n", duration)
 
                     # save to results
-                    results[name]['step8'] = res
+                    results[name]['step9'] = res
 
     #######################################################################################################################
-    ##### STEP 9: RECREATE ORIGINAL DATA ##################################################################################
+    ##### STEP 10: RECREATE ORIGINAL DATA ##################################################################################
     #######################################################################################################################
 
-                    self.simlogger.info('STEP09: RESTORE DATA')
+                    self.simlogger.info('STEP10: RESTORE DATA')
                     start_time = time.time()
 
                     try:

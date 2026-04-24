@@ -339,7 +339,6 @@ class RScoderKaya(object):
                 final.append(codegiv[j])
             for i in range(lastbits):
                 final.pop()
-            len(final)
             quartfin=[]
             for i in range(len(final)):
                quartfin.extend(self.base_convert(int(final[i]),4))

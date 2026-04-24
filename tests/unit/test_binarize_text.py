@@ -26,7 +26,8 @@ class TestTextBinarize(unittest.TestCase):
         # Create test text file
         self.text_content = "Hello, DNAbyte!\nThis is a test file with UTF-8 content: áéíóú"
         self.text_file = os.path.join(self.test_dir, 'test.txt')
-        with open(self.text_file, 'w', encoding='utf-8') as f:
+        # Use newline='' to prevent platform-specific line ending conversion
+        with open(self.text_file, 'w', encoding='utf-8', newline='') as f:
             f.write(self.text_content)
     
     def tearDown(self):

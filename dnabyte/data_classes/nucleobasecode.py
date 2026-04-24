@@ -2,6 +2,20 @@ import random
 from .base import Data
 from dnabyte.library import Library
 
+def complementmap(string):
+    """Helper function to get reverse complement of DNA string."""
+    compliment = ''
+    for i in string:
+        if i == 'A':
+            compliment += 'T'
+        elif i == 'T':
+            compliment += 'A'
+        elif i == 'C':
+            compliment += 'G'
+        elif i == 'G':
+            compliment += 'C'
+    return compliment[::-1]
+
 class NucleobaseCode(Data):
     """
     NucleobaseCode is a subclass of Data. Its main attribute is the data object, which consists of a multi-leveled list. At the highest level, data consists of a list of codewords, there is one list for every codeword in the data object.
@@ -110,61 +124,254 @@ class NucleobaseCode(Data):
         self._validate_data(self.data)
         return True
 
-    def random(type='synthesis', library = None, n=1000, m=250):
+    def random(type='synthesis', library=None, n=1000, m=250):
         """
         Generates a random NucleobaseCode object with a specified number of codewords.
 
-        :param type: Type of nucleobase code (e.g., 'DNA', 'RNA')
+        :param type: Type of nucleobase code generation:
+            - 'synthesis': Simple flat DNA strings
+            - 'linear_assembly': Flat list of library elements
+            - 'linear_chain': List of [oligo, connector, oligo, ...] pattern
+            - 'linear_binom': List of [[trio1], [trio2], ...] nested structure
+            - 'max_density': Simple DNA string per codeword
+            - 'no_homopolymer': Simple DNA string per codeword
+            - 'poly_chain': List of nested triplets [[connector, [oligo1, connector, oligo2], connector], ...]
+            - 'poly_binom': List of list of triplets [[[connector, [o1, c, o2], connector]], ...]
+            - 'nested_assembly': Random depth nested structure
+        :param library: Library object or filename string (required for assembly types)
         :param n: Number of codewords to generate
+        :param m: Length/number of elements per codeword
         :return: NucleobaseCode object with random data
         """
         data = []
+        
+        # Helper to ensure we have a Library object
+        def get_library(lib):
+            import os
+            # Get workspace root (3 levels up from this file: data_classes -> dnabyte -> DNAbyte -> workspace)
+            workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+            
+            if lib is None:
+                # Try multiple default locations with absolute paths
+                possible_paths = [
+                    os.path.join(workspace_root, 'app', 'static', 'libraries', '20bp_Lib.csv'),
+                    os.path.join(workspace_root, 'tests', 'testlibraries', '20bp_Lib.csv'),
+                    os.path.join(workspace_root, 'DNAbyte', 'tests', 'testlibraries', '20bp_Lib.csv')
+                ]
+                for path in possible_paths:
+                    if os.path.exists(path):
+                        return Library(structure='linear_assembly', filename=path)
+                # Fallback to first path if none exist (will error downstream)
+                return Library(structure='linear_assembly', filename=possible_paths[0])
+            elif isinstance(lib, str):
+                # If it's a string, treat it as a filename
+                if '/' in lib or '\\' in lib:
+                    # Full path provided
+                    return Library(structure='linear_assembly', filename=lib)
+                else:
+                    # Just filename - try multiple locations with absolute paths
+                    possible_paths = [
+                        os.path.join(workspace_root, 'app', 'static', 'libraries', lib),
+                        os.path.join(workspace_root, 'tests', 'testlibraries', lib),
+                        os.path.join(workspace_root, 'DNAbyte', 'tests', 'testlibraries', lib)
+                    ]
+                    for path in possible_paths:
+                        if os.path.exists(path):
+                            return Library(structure='linear_assembly', filename=path)
+                    # If none found, use first path (will error if file doesn't exist)
+                    return Library(structure='linear_assembly', filename=possible_paths[0])
+            else:
+                # Assume it's already a Library object
+                return lib
+        
+        # Helper for poly libraries (positional_assembly structure)
+        def get_poly_library(lib):
+            import os
+            workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+            
+            if lib is None:
+                lib = 'polymeraselibinparts.txt'
+            
+            if isinstance(lib, str):
+                if '/' in lib or '\\' in lib:
+                    return Library(structure='positional_assembly', filename=lib)
+                else:
+                    possible_paths = [
+                        os.path.join(workspace_root, 'app', 'static', 'libraries', lib),
+                        os.path.join(workspace_root, 'tests', 'testlibraries', lib),
+                        os.path.join(workspace_root, 'DNAbyte', 'tests', 'testlibraries', lib)
+                    ]
+                    for path in possible_paths:
+                        if os.path.exists(path):
+                            return Library(structure='positional_assembly', filename=path)
+                    return Library(structure='positional_assembly', filename=possible_paths[0])
+            else:
+                return lib
 
         if type == 'synthesis':
-
+            # Simple flat DNA strings
             for _ in range(n):
                 codeword = ''.join(random.choice(['A', 'T', 'C', 'G']) for _ in range(m))
                 data.append(codeword)
 
-        elif type == 'nested_assembly':
-            if library is None:
-                raise ValueError("Library must be provided for assembly type")
-            
-            else:
-                library = Library(structure='linear_assembly', filename='./tests/testlibraries/20bp_Lib.csv')
-            
-                # Helper function to create nested list of random depth
-                def create_nested_structure(current_depth, max_depth):
-                    """Recursively create nested list structure with random depth."""
-                    # If we've reached max depth or randomly decide to stop, return a leaf element
-                    if current_depth >= max_depth or (current_depth > 0 and random.random() < 0.3):
-                        return random.choice(library.library)
-                    
-                    # Create a list with 1-3 children
-                    num_children = random.randint(1, 3)
-                    return [create_nested_structure(current_depth + 1, max_depth) for _ in range(num_children)]
-                
-                # Generate n codewords, each with random nested structure (depth 1-5)
-                for _ in range(n):
-                    max_depth = random.randint(1, 5)
-                    codeword = create_nested_structure(0, max_depth)
-                    data.append(codeword)
-
+        elif type == 'max_density' or type == 'no_homopolymer':
+            # Simple DNA string per codeword (like synthesis)
+            for _ in range(n):
+                codeword = ''.join(random.choice(['A', 'T', 'C', 'G']) for _ in range(m))
+                data.append(codeword)
 
         elif type == 'linear_assembly':
-            if library is None:
-                raise ValueError("Library must be provided for assembly type")
+            library = get_library(library)
             
-            else:
-                library = Library(structure='linear_assembly', filename='./tests/testlibraries/20bp_Lib.csv')
+            # Generate n codewords, each with m library elements
+            for _ in range(n):
+                codeword = random.choices(library.library, k=m)
+                data.append(codeword)
+
+        elif type == 'linear_chain':
+            # Pattern: [oligo, connector, oligo, connector, ..., oligo]
+            library = get_library(library)
             
-                # Generate n codewords, each with m library elements
-                for _ in range(n):
-                    codeword = random.choices(library.library, k=m)
-                    data.append(codeword)
+            for _ in range(n):
+                codeword = []
+                num_oligos = random.randint(5, m)
+                for i in range(num_oligos):
+                    # Add oligo
+                    codeword.append(random.choice(library.library))
+                    # Add connector (except after last oligo)
+                    if i < num_oligos - 1:
+                        connector = ''.join(random.choice(['A', 'T', 'C', 'G']) for _ in range(len(library.library[0])))
+                        codeword.append(connector)
+                data.append(codeword)
+
+        elif type == 'linear_binom':
+            # Pattern: [[trio1], [trio2], ...] where each trio is a simple structure
+            library = get_library(library)
+            
+            for _ in range(n):
+                codeword = []
+                num_trios = random.randint(5, m // 3)
+                for _ in range(num_trios):
+                    # Create a simple trio structure
+                    trio = [
+                        random.choice(library.library),
+                        random.choice(library.library),
+                        random.choice(library.library)
+                    ]
+                    codeword.append(trio)
+                data.append(codeword)
+
+        elif type == 'poly_chain':
+            # Pattern: [[connector, [oligo1, connector_inner, oligo2], connector], ...]
+            lib = get_poly_library(library)
+            
+            messages = lib.messages
+            generic = lib.generic
+            positions = lib.position
+            
+            for _ in range(n):
+                codeword = []
+                num_triplets = random.randint(3, max(3, m // 5))
+                for j in range(num_triplets):
+                    # Select a random message
+                    msg = random.choice(messages)
+                    msg_half = len(msg) // 2
+                    
+                    # Create triplet structure matching encode output
+                    # Alternating between even (5'->3') and odd (3'->5') encoding
+                    if j % 2 == 0:  # Even: info on 5' to 3' strand
+                        dnatriplet = [
+                            positions[j % len(positions)] + generic[0],
+                            [
+                                complementmap(msg[:msg_half]) + complementmap(generic[0]),
+                                msg,
+                                complementmap(generic[1]) + complementmap(msg[msg_half:])
+                            ],
+                            generic[1] + positions[(j + 1) % len(positions)]
+                        ]
+                    else:  # Odd: info on 3' to 5' strand
+                        dnatriplet = [
+                            complementmap(generic[0]) + complementmap(positions[j % len(positions)]),
+                            [
+                                generic[0] + msg[:msg_half],
+                                complementmap(msg),
+                                msg[msg_half:] + generic[1]
+                            ],
+                            complementmap(positions[(j + 1) % len(positions)]) + complementmap(generic[1])
+                        ]
+                    
+                    codeword.append(dnatriplet)
+                data.append(codeword)
+
+        elif type == 'poly_binom':
+            # Pattern: [[[triplet1, triplet2, ...]], [[group2...]], ...]
+            lib = get_poly_library(library)
+            
+            messages = lib.messages
+            generic = lib.generic
+            positions = lib.position
+            
+            for _ in range(n):
+                codeword = []
+                num_groups = random.randint(2, max(2, m // 10))
+                for j in range(num_groups):
+                    oligo_trios = []
+                    # Each group has multiple oligos (sigma amount)
+                    num_trios = random.randint(2, 5)
+                    for k in range(num_trios):
+                        # Select a random message
+                        msg = random.choice(messages)
+                        msg_half = len(msg) // 2
+                        
+                        # Create triplet structure matching encode output
+                        # Alternating based on position j
+                        if j % 2 == 0:  # Even: info on 5' to 3' strand
+                            dnatriple = [
+                                positions[j % len(positions)] + generic[0],
+                                [
+                                    complementmap(msg[:msg_half]) + complementmap(generic[0]),
+                                    msg,
+                                    complementmap(generic[1]) + complementmap(msg[msg_half:])
+                                ],
+                                generic[1] + positions[(j + 1) % len(positions)]
+                            ]
+                        else:  # Odd: info on 3' to 5' strand
+                            dnatriple = [
+                                complementmap(generic[0]) + complementmap(positions[j % len(positions)]),
+                                [
+                                    generic[0] + msg[:msg_half],
+                                    complementmap(msg),
+                                    msg[msg_half:] + generic[1]
+                                ],
+                                complementmap(positions[(j + 1) % len(positions)]) + complementmap(generic[1])
+                            ]
+                        
+                        oligo_trios.append(dnatriple)
+                    codeword.append(oligo_trios)
+                data.append(codeword)
+
+        elif type == 'nested_assembly':
+            library = get_library(library)
+            
+            # Helper function to create nested list of random depth
+            def create_nested_structure(current_depth, max_depth):
+                """Recursively create nested list structure with random depth."""
+                # If we've reached max depth or randomly decide to stop, return a leaf element
+                if current_depth >= max_depth or (current_depth > 0 and random.random() < 0.3):
+                    return random.choice(library.library)
+                
+                # Create a list with 1-3 children
+                num_children = random.randint(1, 3)
+                return [create_nested_structure(current_depth + 1, max_depth) for _ in range(num_children)]
+            
+            # Generate n codewords, each with random nested structure (depth 1-5)
+            for _ in range(n):
+                max_depth = random.randint(1, 5)
+                codeword = create_nested_structure(0, max_depth)
+                data.append(codeword)
 
         else:
-            raise ValueError(f"Invalid synthesis type: {type}")
+            raise ValueError(f"Invalid synthesis type: {type}. Must be one of: synthesis, linear_assembly, linear_chain, linear_binom, max_density, no_homopolymer, poly_chain, poly_binom, nested_assembly")
         
         return NucleobaseCode(data)
 

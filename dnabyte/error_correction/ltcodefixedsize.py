@@ -48,8 +48,9 @@ def robust_soliton_distribution(N, c=0.1, delta=0.5, max_degree=None):
     p /= p.sum()
 
     # Add the extra term for the robust soliton distribution
-    denominator = (np.arange(1, max_degree + 1) * (np.arange(1, max_degree + 1) - 1))
-    denominator[0] = N
+    denominator = np.arange(1, max_degree + 1) * (np.arange(1, max_degree + 1) - 1)
+    denominator = denominator.astype(float)  # Ensure array is mutable and float type
+    denominator[0] = float(N)
     tau = R/denominator
    
 
@@ -68,17 +69,17 @@ def robust_soliton_distribution(N, c=0.1, delta=0.5, max_degree=None):
 def encode_lt(input_strings, num_symbols, indexcarrylength, ninputlength):
     ninput = len(input_strings)
 
-    try:
-        if ninput > 2 ** ninputlength:
-            raise ValueError("The number of input strings is too large for the given input length.")
-        else:
-            ninputrember = bin(ninput)[2:].zfill(ninputlength)
-    except:
-        #logger.info('Encoding failed: The number of input strings is too large for the given input length.', exc_info=True)
-        pass
+    
+    if ninput > 2 ** ninputlength:
+        raise ValueError("The number of input strings is too large for the given input length. this means usaly that per codeword to little data containg space is given")
+    else:
+        ninputrember = bin(ninput)[2:].zfill(ninputlength)
+    
 
     howmanybitsforoneindex = max(1,int(m.ceil(m.log2(ninput))))
     max_degree = m.floor(indexcarrylength / howmanybitsforoneindex)
+    if max_degree == 0:
+        raise ValueError("Index carry length is too small to encode any indices.")
     p = robust_soliton_distribution(ninput, max_degree=max_degree)
     encoded_symbols = []
     for _ in range(num_symbols):
@@ -109,6 +110,16 @@ def decode_lt(encoded_symbols, indexcarrylength, ninputlength):
     
     howmanyarethereonavrage = max(set(howmanyarethereonavragelist), key=howmanyarethereonavragelist.count)
     howmanyaretheredec = int(howmanyarethereonavrage, 2)
+    
+    # Sanity check: prevent overflow from corrupted header
+    MAX_REASONABLE_SIZE = 10**7  # 10 million elements max
+    if howmanyaretheredec > MAX_REASONABLE_SIZE:
+        raise ValueError(
+            f"LTcode header indicates unreasonably large number of messages: {howmanyaretheredec}. "
+            f"Header value: {howmanyarethereonavrage} (binary). "
+            f"This likely indicates data corruption in the LT code header."
+        )
+    
     decoded_strings = [None] * howmanyaretheredec
     unresolved_symbols = set(range(howmanyaretheredec))
     howmanybitsforoneindex = int(m.ceil(m.log2(howmanyaretheredec)))
@@ -151,10 +162,12 @@ def decode_lt(encoded_symbols, indexcarrylength, ninputlength):
             
     except:
         #logger.info('Decoding failed: Too many errors in header of fountaincode in every codeword.', exc_info=True)
-        return [x for x in decoded_strings if x is not None], False
+        raise ValueError("Data likely to currupted from errorchenels to decode. Either too little redundancey try increasing it or the ratio codewordlenth to dna_barcode_length, lt_header and/or index_carry_length is to little.")
+        # return [x for x in decoded_strings if x is not None], False
+
     if None in decoded_strings:
         #logger.info('Decoding failed: Either too many errors in header of fountaincode in every codeword or too many lost codewords.')
-        return [x for x in decoded_strings if x is not None], False
+        raise ValueError("Data likely to currupted from errorchenels to decode. Either too little redundancey try increasing it or the ratio codewordlenth to dna_barcode_length, lt_header and/or index_carry_length is to little.")
 
     return decoded_strings, True
 

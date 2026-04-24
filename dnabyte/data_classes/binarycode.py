@@ -32,7 +32,7 @@ class BinaryCode(Data):
         """
         Creates a BinaryCode object from a bitstream.
 
-        :param bitstream: A string of binary data.
+        :param data: A string of binary data.
         :param file_paths: Optional list of original file paths.
         :param size: Optional original file size in bytes.
         """
@@ -103,8 +103,10 @@ class BinaryCode(Data):
 
         if res == [] and len(data_dec.data) == len(data_bin.data):
             return 'SUCCESS', res
+        elif len(data_dec.data) <= len(data_bin.data):
+            return 'ERROR_short', res
         else:
-            return 'ERROR', res
+            return 'ERROR_long', res
 
     def random(n):
         """

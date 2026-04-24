@@ -32,6 +32,7 @@ test = ["coverage"]
 
 [tool.setuptools]
 packages = { find = { where = ["."], include = ["dnabyte*"] } }
+include-package-data = true
 
 # Coverage configuration for unittest
 [tool.coverage.run]
@@ -59,3 +60,6 @@ dev = [
     "pytest>=8.3.5",
 ]
 
+[tool.setuptools.package-data]
+"dnabyte.synthesis.mesa" = ["syn_table.json"]
+"dnabyte.sequencing.mesa" = ["seq_table.json"]

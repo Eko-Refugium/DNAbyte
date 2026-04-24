@@ -80,8 +80,11 @@ class MESA(SimulateSequencing):
 
     def sequencing_simulation(self, sequences, method_id):
 
-        # Get the absolute path of seq_table.json relative to this source file
-        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'seq_table.json')
+        # Get the directory where this module is located
+        module_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Get the absolute path of the JSON file in the same directory as this module
+        file_path = os.path.join(module_dir, 'seq_table.json')
 
         # get the error parameters for the designated method
         # get dictionary of synthesis parameters from JSON file

@@ -85,11 +85,13 @@ class Nanopore(SimulateSequencing):
         # Build a new sequence by skipping bases chosen for deletion.
         new_sequence = []
         counter = 0
-        for base in sequence:
+        # Iterate backwards to avoid index issues when popping
+        for p in range(len(sequence) - 1, -1, -1):
             if np.random.rand() < del_prob:
                 counter += 1
                 continue
-            new_sequence.append(base)
+            new_sequence.append(sequence[p])
+        new_sequence.reverse()  # Reverse to restore original order after building backwards    
         return ''.join(new_sequence), counter
     
     # Positional error rate function

@@ -13,7 +13,7 @@ from auxiliary import create_text_files
 
 # define parameters of the simulation
 repeats = 10
-iid_error_rate = [y for y in [0] for _ in range(repeats)]
+iid_error_rate = [y for y in [0,0.02,0.04,0.06,0.08,0.1] for _ in range(repeats)]
 
 
 # set other parameters
@@ -25,24 +25,13 @@ params = Params.params_range(
         encoding_method='poly_chain',
         library_name='polymeraselibinparts_500(40)_100(35)_70.csv',
         mean=1,
-        vol=1000000 / Avogadro,
         std_dev=0,
         hybridisation_steps=10000,
-        inner_error_correction='ltcode',
-        outer_error_correction='reedsolomon',
-        dna_barcode_length=5,  
-        codeword_maxlength_positions=5,
-        years=0,
-        storage_conditions='biogene',
+        dna_barcode_length=2,  
+        codeword_maxlength_positions=2,
         codeword_length=100,
-        percent_of_symbols=4,
-        ltcode_header=4,
-        index_carry_length=3,
-        synthesis_method=None,
         sequencing_method='iid',
         iid_error_rate=iid_error_rate,
-        reed_solo_percentage=0.9,
-        sigma_amount=None,
         seed=42,
         theory='no'
 )

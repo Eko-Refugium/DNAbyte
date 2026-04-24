@@ -232,8 +232,14 @@ class SequencingError:
         else:
             check_range = range(len(self.seq))
         pos = " "
-        while pos == " ":
+        max_iterations = 100
+        iterations = 0
+        while pos == " " and iterations < max_iterations:
             pos = np.random.choice(check_range)
+            iterations += 1
+        # If all positions are spaces, return None instead of infinite loop
+        if pos == " ":
+            return None
         return self._indel_mismatch_base(pos, mode='mismatch')
 
     # A problem with pattern mismatches is now that it does not find patterns separated by a

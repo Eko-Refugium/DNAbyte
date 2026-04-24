@@ -31,7 +31,6 @@ class MaxDensity(Encode):
 
             # Creates binary codewords from the provided data given the specified parameters
             binary_codewords = self.create_binary_codewords(data, self.params)
-
             # Sanity checks
             if self.params.debug:
                 self.logger.info(f"SANITY CHECK: Number of binary codewords: {len(binary_codewords)}")
@@ -60,9 +59,11 @@ class MaxDensity(Encode):
                     self.logger.info(f"SANITY CHECK: Length of each DNA codeword: {len(dna_codewords[0])}")   
 
             # create info return dictionary
+            codeword_lengths = [len(codeword) for codeword in dna_codewords]
             info = {
                 "number_of_codewords": len(binary_codewords),
-                "length_of_each_codeword": len(binary_codewords[0]),
+                "min_codeword_length": min(codeword_lengths) if codeword_lengths else 0,
+                "max_codeword_length": max(codeword_lengths) if codeword_lengths else 0,
                 "barcode_length": self.params.dna_barcode_length,
                 "data_length": len(data.data)
             }
@@ -126,6 +127,9 @@ class MaxDensity(Encode):
         # Step 3: calculate bits per codeword
         bits_per_codeword = message_length * 2
 
+        if bits_per_codeword <= 0:
+            raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. codeword_length, dna_barcode_length, codeword_maxlength_positions, ltcode_header, index_carry_length, reed_solo_percentage")
+
         if hasattr(params, 'outer_error_correction') and params.outer_error_correction == 'reedsolomon':
             bits_per_codeword = m.floor(bits_per_codeword * params.reed_solo_percentage)
             bits_per_ec = (message_length * 2 - bits_per_codeword)
@@ -135,6 +139,9 @@ class MaxDensity(Encode):
             bits_per_codeword += adjustment
             bits_per_ec -= adjustment
             params.bits_per_ec = bits_per_ec
+
+            if bits_per_codeword <= 0:
+                raise ValueError("The calculated bits per codeword is less than or equal to zero. Please check the provided parameters. Including the reedsolomon correction prcentage carrying length is given")
 
         params.bits_per_codeword = bits_per_codeword
 
@@ -214,6 +221,23 @@ def attributes(inputparams):
     encoding_method = inputparams.encoding_method
     assembly_structure = 'synthesis'
 
+    if hasattr(inputparams, 'mean'):
+        mean = check_parameter(parameter='mean', 
+                               default=1, 
+                               min=1, 
+                               max=200, 
+                               inputparams=inputparams)
+    if hasattr(inputparams, 'std_dev'):
+        if hasattr(inputparams, 'mean'):
+            
+            std_dev = check_parameter(parameter='std_dev', 
+                                    default=0, 
+                                    min=0, 
+                                    max=mean *0.1, 
+                                    inputparams=inputparams)
+        else:
+            std_dev = 0
+
     codeword_length = check_parameter(parameter="codeword_length",
                                       default=500,
                                       min=20,
@@ -228,7 +252,7 @@ def attributes(inputparams):
 
     codeword_maxlength_positions = check_parameter(parameter="codeword_maxlength_positions",
                                                   default=m.ceil(codeword_length * 0.15),
-                                                  min=1,
+                                                  min=4,
                                                   max=codeword_length - dna_barcode_length - 1,
                                                   inputparams=inputparams)
 
@@ -238,10 +262,18 @@ def attributes(inputparams):
     if hasattr(inputparams, 'inner_error_correction') and inputparams.inner_error_correction == 'ltcode':
 
         index_carry_length = check_parameter(parameter="index_carry_length",
-                                            default=m.ceil(codeword_length * 0.2),
-                                            min=1,
-                                            max=m.ceil(codeword_length * 0.9),
+                                            default=m.ceil(codeword_length * 0.15),
+                                            #min=0.5 * codeword_length,
+                                            min=4,
+                                            #max=0.9 * codeword_length,
+                                            max=codeword_length - dna_barcode_length - codeword_maxlength_positions - 1,
                                             inputparams=inputparams)
+        
+        ltcode_header = check_parameter(parameter="ltcode_header",
+                                       default=m.ceil(codeword_length * 0.15),
+                                       min=4,
+                                       max=codeword_length - dna_barcode_length - codeword_maxlength_positions - index_carry_length - 1,
+                                       inputparams=inputparams)
 
         ltcode_header = check_parameter(parameter="ltcode_header",
                                         default=m.ceil(codeword_length * 0.2),
@@ -265,11 +297,14 @@ def attributes(inputparams):
     # parameter group: outer_error_correction
     if getattr(inputparams, 'outer_error_correction', None) == 'reedsolomon':
 
-        reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
-                                              default=0.8,
-                                              min=0.1,
-                                              max=0.95,
-                                              inputparams=inputparams)
+        if inputparams.reed_solo_percentage == 1:
+            inputparams.outer_error_correction = None
+        else:
+            reed_solo_percentage = check_parameter(parameter="reed_solo_percentage",
+                                                default=0.8,
+                                                min=0.1,
+                                                max=0.99,
+                                                inputparams=inputparams)
 
     elif getattr(inputparams, 'outer_error_correction', None) is None:
         pass
@@ -289,6 +324,8 @@ def attributes(inputparams):
         "codeword_length": codeword_length, 
         "dna_barcode_length": dna_barcode_length, 
         "codeword_maxlength_positions": codeword_maxlength_positions,
+        "mean": mean,
+        "std_dev": std_dev
     }
     
     # Add inner error correction parameters only if ltcode is used
