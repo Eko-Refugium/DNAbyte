@@ -13,6 +13,12 @@
 [submodule "dnabyte/encoding/poly_chain"]
 	path = dnabyte/encoding/poly_chain
 	url = https://github.com/Eko-Refugium/poly_chain
-branch = main[submodule "dnabyte/encoding/dna_aeon/DNA_Aeon"]
+	branch = main
+[submodule "dnabyte/encoding/dna_aeon/DNA_Aeon"]
 	path = dnabyte/encoding/dna_aeon/DNA_Aeon
 	url = https://github.com/MW55/DNA-Aeon
+	branch = main
+[submodule "dnabyte/encoding/gcplus/GCPlus"]
+	path = dnabyte/encoding/gcplus/GCPlus
+	url = https://github.com/sergekashanna/GCPlus
+	branch = main
