@@ -20,7 +20,7 @@ class Random(SimulateStorage):
                 bases = ['A', 'T', 'C', 'G']
                 randomposition = random.randint(0, len(oligo[0])-1)
                 randombase = random.choice(bases)
-                oligo[0] = oligo[0][:randomposition] + randombase + oligo[0][randomposition+1:]
+                oligo = oligo[:randomposition] + randombase + oligo[randomposition+1:]
             remaining_oligos.append([oligo[0], oligo[1]])
             strand_breaks = math.ceil(len(oligo[0])/460)
 

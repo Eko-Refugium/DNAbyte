@@ -17,24 +17,24 @@ class Err_IID(SimulateMiscErrors):
         """
         Simulate sequencing errors using an IID model.
         
-        :param data: A list of DNA sequences.
+        :param data: A list of DNA sequences (strings).
         :return: A list of sequenced DNA sequences.
         """
-        sequenceserror = list(data)  # Create a copy of the data
+        sequenceserror = []
         error_counter = 0
-        for i in range(len(sequenceserror)):
-            for j in range(len(sequenceserror[i])):
-                for k in range(len(sequenceserror[i][j])):
-                    if random.random() < self.iid_error_rate:
-                        error_counter += 1
-                        # randomly select a new base
-                        new_base = random.choice(['A', 'C', 'G', 'T'])
-                        # replace the base at the mutation position with the new base
-                        sequenceserror[i][j] = (sequenceserror[i][j][:k] + new_base + sequenceserror[i][j][k + 1:])      
-               
-        info = {}
-        info['error_counter'] = error_counter
-
+        for seq in data:
+            seq_list = list(seq)  # Convert string to list for mutation
+            for k in range(len(seq_list)):
+                if random.random() < self.iid_error_rate:
+                    error_counter += 1
+                    # randomly select a new base different from the current one
+                    current_base = seq_list[k]
+                    bases = ['A', 'C', 'G', 'T']
+                    bases.remove(current_base)
+                    new_base = random.choice(bases)
+                    seq_list[k] = new_base
+            sequenceserror.append(''.join(seq_list))
+        info = {'error_counter': error_counter}
         return sequenceserror, info
     
 def attributes(params):

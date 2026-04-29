@@ -34,9 +34,13 @@ class TestBase(unittest.TestCase):
             self.handler.close()
             self.testlogger.removeHandler(self.handler)
 
+
     def test_logic(self):
+        # Diagnostic print to confirm which tests are running and why any might be skipped
+        print(f"[DIAGNOSTIC] Running test: {self.__class__.__name__} | params: {getattr(self, 'params', None)}")
         # Skip test if no params provided (happens during test discovery)
         if self.params is None:
+            print(f"[DIAGNOSTIC] Skipping test: {self.__class__.__name__} (no params provided)")
             self.skipTest("No params provided - test should be run via load_tests()")
 
         job_identifier = datetime.now().strftime('%Y%m%d_%H%M%S')

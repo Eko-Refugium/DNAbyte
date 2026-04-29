@@ -16,36 +16,30 @@ class HomopolymerIssue(SimulateMiscErrors):
 
     def simulate(self, data):
         """
-        Simulate sequencing errors using an IID model.
+        Simulate sequencing errors using a homopolymer issue model.
         
-        :param data: A list of DNA sequences.
+        :param data: A list of DNA sequences (strings).
         :return: A list of sequenced DNA sequences.
         """
         triplets = ['AAAA', 'CCCC', 'TTTT', 'GGGG']
-        sequenceserror = list(data)  # Create a copy of the data
+        sequenceserror = []
         error_counter = 0
-        ticker = 0
-        for i in range(len(sequenceserror)):
-            for j in range(len(sequenceserror[i])):
-                sequence = list(sequenceserror[i][j])
-                while ticker <= len(sequence) - 4:
-                    triplet = ''.join(sequence[ticker:ticker+4])
-                    if triplet in triplets:
-                        if random.random() < self.deletion_prob:
-                            # Delete one random letter from the triplet
-                            del_index = ticker + random.randint(0, 2)
-                            sequence.pop(del_index)
-                            # Move back 2 positions to recheck overlapping triplets
-                            ticker = max(ticker - 2, 0)
-                            error_counter += 1
-                            continue  # Skip increment to handle updated indices
-                    ticker += 1  
-                sequenceserror[i][j] = ''.join(sequence)
-                ticker = 0  # Reset ticker for the next sequence
-               
-        info = {}
-        info['error_counter'] = error_counter
-
+        for seq in data:
+            sequence = list(seq)
+            ticker = 0
+            while ticker <= len(sequence) - 4:
+                triplet = ''.join(sequence[ticker:ticker+4])
+                if triplet in triplets:
+                    if random.random() < self.deletion_prob:
+                        # Delete one random letter from the triplet
+                        del_index = ticker + random.randint(0, 2)
+                        sequence.pop(del_index)
+                        ticker = max(ticker - 2, 0)
+                        error_counter += 1
+                        continue  # Skip increment to handle updated indices
+                ticker += 1
+            sequenceserror.append(''.join(sequence))
+        info = {'error_counter': error_counter}
         return sequenceserror, info
     
 def attributes(params):

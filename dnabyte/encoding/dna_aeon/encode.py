@@ -251,6 +251,10 @@ def attributes(inputparams):
     dna_aeon_overhead = float(getattr(inputparams, 'dna_aeon_overhead', 0.40))
     dna_aeon_insert_header = bool(getattr(inputparams, 'dna_aeon_insert_header', False))
     dna_aeon_error_correction = str(getattr(inputparams, 'dna_aeon_error_correction', 'crc'))
+    # Validate error correction
+    allowed_ec = {'crc', 'nocode', 'reedsolomon', 'dna_reedsolomon'}
+    if dna_aeon_error_correction not in allowed_ec:
+        dna_aeon_error_correction = 'crc'
     dna_aeon_repair_symbols = int(getattr(inputparams, 'dna_aeon_repair_symbols', 2))
     dna_aeon_use_dna_rules = bool(getattr(inputparams, 'dna_aeon_use_dna_rules', True))
     dna_aeon_drop_upper_bound = float(getattr(inputparams, 'dna_aeon_drop_upper_bound', 0.5))
