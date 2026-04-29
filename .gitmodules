@@ -18,3 +18,7 @@
 	path = dnabyte/encoding/dna_aeon/DNA_Aeon
 	url = https://github.com/MW55/DNA-Aeon
 	branch = main
+[submodule "dnabyte/encoding/gcplus/GCPlus"]
+	path = dnabyte/encoding/gcplus/GCPlus
+	url = https://github.com/sergekashanna/GCPlus
+	branch = main
