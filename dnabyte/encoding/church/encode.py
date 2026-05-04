@@ -54,12 +54,12 @@ class Church(Encode):
             encode_worker = ChurchEncode(
                 input_file_path=temp_file_path,
                 output_dir=output_dir,
-                sequence_length=getattr(self.params, 'sequence_length', 200),
-                max_homopolymer=getattr(self.params, 'max_homopolymer', 6),
-                rs_num=getattr(self.params, 'rs_num', 1),
-                add_redundancy=getattr(self.params, 'add_redundancy', False),
-                add_primer=getattr(self.params, 'add_primer', True),
-                primer_length=getattr(self.params, 'primer_length', 20)
+                sequence_length=getattr(self.params, 'sequence_length', None) or 200,
+                max_homopolymer=getattr(self.params, 'max_homopolymer', None) or 6,
+                rs_num=getattr(self.params, 'rs_num', None) if getattr(self.params, 'rs_num', None) is not None else 0,
+                add_redundancy=getattr(self.params, 'add_redundancy', None) if getattr(self.params, 'add_redundancy', None) is not None else False,
+                add_primer=getattr(self.params, 'add_primer', None) if getattr(self.params, 'add_primer', None) is not None else False,
+                primer_length=getattr(self.params, 'primer_length', None) or 20
             )
 
             # Perform encoding

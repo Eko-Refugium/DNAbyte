@@ -63,3 +63,8 @@ dev = [
 [tool.setuptools.package-data]
 "dnabyte.synthesis.mesa" = ["syn_table.json"]
 "dnabyte.sequencing.mesa" = ["seq_table.json"]
+
+[tool.hatch.build]
+include = [
+  "dnabyte/encoding/gcplus/src/GCPdna/codebook_DNA.txt"
+]
