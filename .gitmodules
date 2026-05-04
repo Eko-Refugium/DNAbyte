@@ -1,24 +1,31 @@
+# 
+
 [submodule "dnabyte/encoding/poly_binom"]
 	path = dnabyte/encoding/poly_binom
-	url = https://github.com/Eko-Refugium/poly_binom
+	url = git@github.com:Eko-Refugium/poly_binom.git
 	branch = main
+
 [submodule "dnabyte/encoding/linear_binom"]
 	path = dnabyte/encoding/linear_binom
-	url = https://github.com/Eko-Refugium/linear_binom
+	url = git@github.com:Eko-Refugium/linear_binom.git
 	branch = main
+
 [submodule "dnabyte/encoding/linear_chain"]
 	path = dnabyte/encoding/linear_chain
-	url = https://github.com/Eko-Refugium/linear_chain
+	url = git@github.com:Eko-Refugium/linear_chain.git
 	branch = main
+
 [submodule "dnabyte/encoding/poly_chain"]
 	path = dnabyte/encoding/poly_chain
-	url = https://github.com/Eko-Refugium/poly_chain
+	url = git@github.com:Eko-Refugium/poly_chain.git
 	branch = main
+
 [submodule "dnabyte/encoding/dna_aeon/DNA_Aeon"]
 	path = dnabyte/encoding/dna_aeon/DNA_Aeon
-	url = https://github.com/MW55/DNA-Aeon
+	url = git@github.com:MW55/DNA-Aeon.git
 	branch = main
+
 [submodule "dnabyte/encoding/gcplus/GCPlus"]
 	path = dnabyte/encoding/gcplus/GCPlus
-	url = https://github.com/sergekashanna/GCPlus
+	url = git@github.com:sergekashanna/GCPlus.git
 	branch = main
