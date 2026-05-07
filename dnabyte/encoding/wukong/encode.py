@@ -136,7 +136,7 @@ class Wukong(Encode):
             if self.logger:
                 self.logger.error(f"Error encoding data: {str(e)}")
                 self.logger.error(traceback.format_exc())
-            
+
             dna_codewords = None
             info = {}
 

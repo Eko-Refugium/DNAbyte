@@ -132,11 +132,26 @@ def _normalize_lengths(payloads, expected_length):
 def _estimate_num_originals(groups, total_count, logger=None):
     """
     Estimate the number of original unique sequences before errors.
+
+    If every group is a singleton (max group size == 1) it means either
+    - mean=1 was used (one copy per oligo, no synthesis redundancy), or
+    - sequencing errors are so severe that all copies look different.
+    In both cases we cannot collapse groups, so we treat every unique
+    sequence as its own original.
     """
     sizes = sorted([len(copies) for copies in groups.values()], reverse=True)
 
     if not sizes:
         return 0
+
+    # If all groups are singletons, keep them all — no basis for merging.
+    if sizes[0] == 1:
+        estimated = len(sizes)
+        if logger:
+            logger.info(f"Group sizes (top 10): {sizes[:10]}")
+            logger.info(f"All groups are singletons — treating each as a distinct original")
+            logger.info(f"Estimated {estimated} original sequences")
+        return estimated
 
     avg_if_3 = total_count / 3
     significant = [s for s in sizes if s >= max(2, avg_if_3 * 0.1)]

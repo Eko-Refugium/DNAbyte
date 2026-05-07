@@ -147,16 +147,30 @@ def _estimate_num_originals(groups, total_count, logger=None):
     Estimate the number of original unique sequences before errors.
     Uses the distribution of group sizes: large groups are likely originals,
     tiny groups are error variants.
+
+    If every group is a singleton (max group size == 1) it means either
+    - mean=1 was used (one copy per oligo, no synthesis redundancy), or
+    - sequencing errors are so severe that all copies look different.
+    In both cases we cannot collapse groups, so we treat every unique
+    sequence as its own original.
     """
     sizes = sorted([len(copies) for copies in groups.values()], reverse=True)
     
     if not sizes:
         return 0
+
+    # If all groups are singletons, keep them all — no basis for merging.
+    if sizes[0] == 1:
+        estimated = len(sizes)
+        if logger:
+            logger.info(f"Group sizes (top 10): {sizes[:10]}")
+            logger.info(f"All groups are singletons — treating each as a distinct original")
+            logger.info(f"Estimated {estimated} original sequences")
+        return estimated
     
     # The original sequences should each have roughly total_count/N copies.
     # Look for a natural gap in group sizes.
     # Heuristic: count groups that have at least 10% of the average expected copies.
-    # Start with a rough estimate.
     avg_if_3 = total_count / 3  # assume at least 3 originals as a start
     
     # Count groups with significant membership
