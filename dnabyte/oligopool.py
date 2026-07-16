@@ -93,7 +93,20 @@ class OligoPool:
             return "Oligo pool is empty."
 
 
-    def hybridise(self, n, library, info=False):
+    def hybridise(self, n, library, info=False, assembly_probability=1.0):
+        """
+        Hybridise oligos in the pool through random pairing and ligation.
+        
+        :param n: Number of hybridisation attempts
+        :param library: Library of motifs for complementarity checking
+        :param info: Whether to print information (currently unused)
+        :param assembly_probability: Probability (0.0-1.0) that a successful sticky end 
+                                     pairing results in actual ligation. Default 1.0 means
+                                     all successful pairings complete. Lower values simulate
+                                     assembly failures due to e.g. incomplete hybridization,
+                                     ligation failures, or other kinetic barriers.
+        :return: self (OligoPool instance)
+        """
 
         # set default value for n
         if n is None:
@@ -108,7 +121,8 @@ class OligoPool:
                 hybridised_oligo = self.pair(oligo_A, oligo_B,library)
 
                 # Check if the hybridisation was successful
-                if hybridised_oligo.motifs:
+                # Success requires: (1) sticky end match AND (2) assembly probability check
+                if hybridised_oligo.motifs and random.random() < assembly_probability:
                     # Remove the original oligos from the pool
                     self.pool.remove(oligo_A)
                     self.pool.remove(oligo_B)

@@ -22,6 +22,7 @@ from dnabyte.sequence import SimulateSequencing
 from dnabyte.misc_err import SimulateMiscErrors
 from dnabyte.params import Params
 from dnabyte.binarize import Binarize
+from dnabyte.process import Process
 
 class Simulation():
 
@@ -71,13 +72,15 @@ class Simulation():
                         bin = Binarize(params)
 
                         # Handle both file_paths (for compressed) and filename (for default binarization)
-                        if hasattr(params, 'file_paths'):
-                            data_obj = Data(file_paths=params.file_paths)
+                        # Prepend ./tests/testfiles/ like testbase does
+                        if hasattr(params, 'file_paths') and params.file_paths:
+                            file_paths = ['./tests/testfiles/' + fp for fp in params.file_paths]
                         elif hasattr(params, 'filename'):
-                            data_obj = Data(file_paths=[params.filename])
+                            file_paths = ['./tests/testfiles/' + params.filename]
                         else:
                             raise ValueError("params must have either 'file_paths' or 'filename' attribute")
                         
+                        data_obj = Data(file_paths=file_paths)
                         binary_code = bin.binarize(data_obj)
 
                     except Exception as e:
@@ -281,7 +284,15 @@ class Simulation():
                     self.simlogger.info('STEP07: PROCESS DATA')
                     start_time = time.time()
                     try:
-                        data_cor, info = coder.process(data_seq)
+                        # Use Process class if clustering and recovery methods are specified
+                        if hasattr(params, 'clustering_method') and hasattr(params, 'recovery_method') and \
+                           params.clustering_method and params.recovery_method:
+                            processor = Process(params, logger=self.simlogger)
+                            data_cor, info = processor.process(data_seq)
+                            self.simlogger.info('Processing method: %s + %s', params.clustering_method, params.recovery_method)
+                        else:
+                            # Fall back to encoding-specific process
+                            data_cor, info = coder.process(data_seq)
                     
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')

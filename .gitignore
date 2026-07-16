@@ -17,3 +17,5 @@ tests/testlogs/
 
 simulations/simlogs/
 simulations/simfiles/
+
+dnabyte/encoding/dna_aeon/DNA_Aeon/abseil-cpp/

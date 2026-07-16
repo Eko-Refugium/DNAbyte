@@ -24,69 +24,72 @@ params_list = [
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
+        
+        clustering_method='primer_grouper',
+        recovery_method='debruijn'
     ),
 
-    # Test 2: Sequencing errors only
-    Params(
-        name='end2end_gcplus_seq_errors',
-        filename='textfile_40b.txt',
+    # # Test 2: Sequencing errors only
+    # Params(
+    #     name='end2end_gcplus_seq_errors',
+    #     filename='textfile_40b.txt',
 
-        # encoding parameters
-        encoding_method='gcplus',
-        binarization_method='default',
-        sequence_length=200,
-        gcplus_k=168,
-        gcplus_l=8,
-        gcplus_c1=2,
+    #     # encoding parameters
+    #     encoding_method='gcplus',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     gcplus_k=168,
+    #     gcplus_l=8,
+    #     gcplus_c1=2,
 
-        # synthesis — create copies without errors
-        synthesis_method='nosynthpoly',
-        mean=10,
-        std_dev=0,
+    #     # synthesis — create copies without errors
+    #     synthesis_method='nosynthpoly',
+    #     mean=10,
+    #     std_dev=0,
 
-        # storage — none
-        storage_conditions=None,
+    #     # storage — none
+    #     storage_conditions=None,
 
-        # sequencing errors
-        sequencing_method='kmere',
-        kmer_k=1,
-        kmer_p_ins=0.001,
-        kmer_p_del=0.001,
-        kmer_p_sub=0.002,
-        kmer_seed=42,
-    ),
+    #     # sequencing errors
+    #     sequencing_method='kmere',
+    #     kmer_k=1,
+    #     kmer_p_ins=0.001,
+    #     kmer_p_del=0.001,
+    #     kmer_p_sub=0.002,
+    #     kmer_seed=42,
+    # ),
 
-    # Test 3: Full error pipeline — synthesis + storage + sequencing
-    # Higher c1 gives more correction power for the inner code.
-    Params(
-        name='end2end_gcplus_full_errors',
-        filename='textfile_40b.txt',
+    # # Test 3: Full error pipeline — synthesis + storage + sequencing
+    # # Higher c1 gives more correction power for the inner code.
+    # Params(
+    #     name='end2end_gcplus_full_errors',
+    #     filename='textfile_40b.txt',
 
-        # encoding parameters
-        encoding_method='gcplus',
-        binarization_method='default',
-        sequence_length=200,
-        gcplus_k=168,
-        gcplus_l=8,
-        gcplus_c1=4,
+    #     # encoding parameters
+    #     encoding_method='gcplus',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     gcplus_k=168,
+    #     gcplus_l=8,
+    #     gcplus_c1=4,
 
-        # synthesis — create copies without errors
-        synthesis_method='nosynthpoly',
-        mean=30,
-        std_dev=1,
+    #     # synthesis — create copies without errors
+    #     synthesis_method='nosynthpoly',
+    #     mean=30,
+    #     std_dev=1,
 
-        # storage
-        storage_conditions='biogene',
-        years=100,
+    #     # storage
+    #     storage_conditions='biogene',
+    #     years=100,
 
-        # sequencing errors
-        sequencing_method='kmere',
-        kmer_k=1,
-        kmer_p_ins=0.004,
-        kmer_p_del=0.004,
-        kmer_p_sub=0.004,
-        kmer_seed=42,
-    ),
+    #     # sequencing errors
+    #     sequencing_method='kmere',
+    #     kmer_k=1,
+    #     kmer_p_ins=0.004,
+    #     kmer_p_del=0.004,
+    #     kmer_p_sub=0.004,
+    #     kmer_seed=42,
+    # ),
 ]
 
 

@@ -2,6 +2,7 @@ import os
 import importlib
 import inspect
 
+from dnabyte.consensus import Consensus
 from dnabyte.encode import Encode
 from dnabyte.store import SimulateStorage
 
@@ -11,9 +12,10 @@ from dnabyte.store import SimulateStorage
 from dnabyte.sequence import SimulateSequencing
 from dnabyte.synthesize import SimulateSynthesis
 from dnabyte.misc_err import SimulateMiscErrors
+from dnabyte.cluster import Cluster
 
 
-def load_plugins(binarization_method, encoding_method, storage_conditions, sequencing_method, error_methods):
+def load_plugins(binarization_method, encoding_method, storage_conditions, sequencing_method, error_methods, clustering_method=None, recovery_method=None):
     """
     Load plugins from the specified folder and return a dictionary of plugin classes.
     """
@@ -23,6 +25,8 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
     sequencing_plugins = {}  # Define the plugins dictionary
     error_plugins = {}  # Define the plugins dictionary
     binarization_plugins = {}  # Define the plugins dictionary
+    clustering_plugins = {}  # Define the plugins dictionary
+    recovery_plugins = {}  # Define the plugins dictionary
 
     # Normalize method names to lowercase
     binarization_method = binarization_method.lower() if binarization_method != None else None
@@ -62,7 +66,7 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         try:
             folders_encode = [name for name in os.listdir(plugin_folder + '/encoding') 
                 if os.path.isdir(os.path.join(plugin_folder + '/encoding', name))]
-            
+            print("folders_encode:", folders_encode, encoding_method.lower())
             for filename in folders_encode:
                 if encoding_method.lower() == filename.lower():
                     # Load the encode module
@@ -160,8 +164,50 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         except Exception as e:
             print(f"Error loading sequencing plugin '{filename}': {e}")
 
-    return binarization_plugins, encoding_plugins, storage_plugins, sequencing_plugins, error_plugins
+    # Load clustering plugins
+    print("clustering_method:", clustering_method)
+    if clustering_method != None:
+        try:
+            folders_clustering = [name for name in os.listdir(plugin_folder + '/clustering') 
+                if os.path.isdir(os.path.join(plugin_folder + '/clustering', name))]
+            print("folders_clustering:", folders_clustering, clustering_method.lower())
+            for filename in folders_clustering:
+                if clustering_method.lower() == filename.lower():
+                    # Load the clustering module
+                    clustering_module = importlib.import_module(f'dnabyte.clustering.{filename}.clustering')
 
+                    # Find the class definition in the module
+                    for name, obj in inspect.getmembers(clustering_module, inspect.isclass):
+                        if issubclass(obj, Cluster) and obj is not Cluster:
+                            # Add the class to the plugins dictionary
+                            clustering_plugins[filename] = obj
+                            break
+        except Exception as e:
+            print(f"Error loading clustering plugin '{filename}': {e}")
+
+    if recovery_method != None:
+        try:
+            folders_recovery = [name for name in os.listdir(plugin_folder + '/recovery') 
+                if os.path.isdir(os.path.join(plugin_folder + '/recovery', name))]
+            print("folders_recovery:", folders_recovery, recovery_method.lower())
+            for filename in folders_recovery:
+                if recovery_method.lower() == filename.lower():
+                    # Load the recovery module
+                    recovery_module = importlib.import_module(f'dnabyte.recovery.{filename}.recovery')
+
+                    # Find the class definition in the module
+                    for name, obj in inspect.getmembers(recovery_module, inspect.isclass):
+                        if issubclass(obj, Consensus) and obj is not Consensus:
+                            # Add the class to the plugins dictionary
+                            recovery_plugins[filename] = obj
+                            break
+        except Exception as e:
+            print(f"Error loading recovery plugin '{filename}': {e}")
+
+    return binarization_plugins, encoding_plugins, storage_plugins, sequencing_plugins, error_plugins, clustering_plugins, recovery_plugins
+
+
+#TODO: THis needs to be mergerd
 def load_synthesis_plugins(synthesis_method):
     """
     Load synthesis plugins from the specified folder and return a dictionary of plugin classes.

@@ -6,6 +6,8 @@ class NoSynthPoly(SimulateSynthesis):
         self.params = params
         self.mean = params.mean
         self.std_dev = params.std_dev
+        
+        print(params, 'AAAAAAAAAAAAAAAAAAAAAAAA')
 
     def simulate(self, data):
         """

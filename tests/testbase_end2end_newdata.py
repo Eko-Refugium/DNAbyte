@@ -15,6 +15,8 @@ from dnabyte.sequence import SimulateSequencing
 from dnabyte.binarize import Binarize
 from dnabyte.misc_err import SimulateMiscErrors
 from dnabyte.params import Params
+from dnabyte.cluster import Cluster
+from dnabyte.consensus import Consensus
 
 class TestBase(unittest.TestCase):
 
@@ -100,6 +102,7 @@ class TestBase(unittest.TestCase):
                 self.testlogger.info(data_enc.__str__())
                 # TODO: Add the info to the log
                 #self.testlogger.info(info)
+                print("ENC:", data_enc.data[0])
 
             except Exception as e:
                 self.testlogger.info('STATUS: ERROR')
@@ -126,16 +129,19 @@ class TestBase(unittest.TestCase):
 
                     # TODO: Add the info to the log
                     #self.testlogger.info(info)
-
                 except Exception as e:
                     self.testlogger.info('STATUS: ERROR')
                     self.testlogger.error('TYPE: %s', str(e))
                     self.testlogger.error(traceback.format_exc())
                     self.fail(f"Synthesis simulation failed: {str(e)}")
+
             else:
                 self.testlogger.info('STEP03: SIMULATE SYNTHESIS - SKIPPED (synthesis_method is None)')
                 data_temp = InSilicoDNA(data_enc.data)
                 data_syn = data_temp
+            
+            print("SYN:", data_syn.data[0])
+
 
 
 #######################################################################################################################
@@ -208,12 +214,14 @@ class TestBase(unittest.TestCase):
                     self.testlogger.error('Error during sequencing simulation: %s', str(e))
                     self.testlogger.error(traceback.format_exc())
                     self.fail(f"Sequencing simulation failed: {str(e)}")
+                    
             else:
                 self.testlogger.info('STEP06: SIMULATE SEQUENCING - SKIPPED (sequencing_method is None)')
                 data_seq = data_err
                 # Convert NucleobaseCode to InSilicoDNA when no sequencing is done
                 if not isinstance(data_seq, InSilicoDNA):
                     data_seq = InSilicoDNA(data_seq.data)
+            print("SEQ:", data_seq.data[0])
 
 #######################################################################################################################
 ##### STEP 7: PROCESSING ##############################################################################################
@@ -222,10 +230,25 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP07: PROCESS DATA')
             start_time = time.time()
             try:
-                data_cor, info = enc.process(data_seq)
+                # Use Process class if clustering and recovery methods are specified
+                if hasattr(self.params, 'clustering_method') and hasattr(self.params, 'recovery_method') and \
+                   self.params.clustering_method and self.params.recovery_method:
+                    processor = Cluster(self.params, logger=self.testlogger)
+                    data_cluster, info = processor.cluster(data_seq)
+                    consensus = Consensus(self.params, logger=self.testlogger)
+                    data_cor, info = consensus.call(data_cluster)
+
+                    self.testlogger.info('Processing method: %s + %s', self.params.clustering_method, self.params.recovery_method)
+                else:
+                    # Fall back to encoding-specific process
+                    data_cor, info = enc.process(data_seq)
+                
                 self.testlogger.info('STATUS: SUCCESS')
                 self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
                 self.testlogger.info(data_cor.__str__())
+                print("COR:", data_cor.data[0])
+                print(repr(data_cor.data[0]))
+                print(data_enc.data[0] == data_cor.data[0])
 
                 # TODO: Add the info to the log
                 #self.testlogger.info(info)
@@ -246,6 +269,7 @@ class TestBase(unittest.TestCase):
             try:
                 print("Decoding...")
                 print(data_cor.data)
+                print("aaaaaaaaaaaaaaa", self.params)
                 data_dec, valid, info = enc.decode(data_cor)
 
                 # TODO: Add the info to the log
@@ -274,7 +298,8 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
             print("Comparing...")
-            print(data_dec.data, binary_code.data)
+            print(data_dec.data[:100], binary_code.data[:100])
+            print("Decoded length:", len(data_dec.data), "Original length:", len(binary_code.data))
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 

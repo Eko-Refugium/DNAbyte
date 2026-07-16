@@ -32,6 +32,14 @@ class Assembly(SimulateSynthesis):
         return synthezised, info
 
 def attributes(params):
+    """
+    Extract and validate assembly parameters from params.
+    
+    NOTE: To use assembly_probability in encoding-specific assembly functions:
+    - Extract: assembly_prob = params.assembly_probability (or getattr(params, 'assembly_probability', 1.0))
+    - Pass to hybridise calls: pool.hybridise(n, library, assembly_probability=assembly_prob)
+    - Thread through recursive functions as needed
+    """
     if 'library' not in params.__dict__ or params.library is None:
         raise ValueError("Library must be specified for synthesis assembly.")
     else:
@@ -62,11 +70,17 @@ def attributes(params):
     else:
         std_dev = params.std_dev
     
+    if 'assembly_probability' not in params.__dict__ or params.assembly_probability is None:
+        assembly_probability = 1.0
+    else:
+        assembly_probability = params.assembly_probability
+    
     return {
         "library": library,
         "encoding_method": encoding_method,
         "assembly_structure": assembly_structure,
         "theory": theory,
         "mean": mean,
-        "std_dev": std_dev
+        "std_dev": std_dev,
+        "assembly_probability": assembly_probability
     }

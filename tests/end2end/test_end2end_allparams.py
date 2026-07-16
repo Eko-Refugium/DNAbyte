@@ -36,7 +36,7 @@ def random_subparams(encoding):
     if encoding in ['linear_binom', 'linear_chain', 'poly_binom', 'poly_chain']:
         # Assembly-specific parameters
         params['assembly_structure'] = random.choice(['linear_assembly', 'synthesis', 'mesa'])
-        params['codeword_length'] = random.choice([60, 80, 100, 120])
+        params['codeword_length'] = random.choice([60, 80, 100, 110])
         params['dna_barcode_length'] = random.choice([2, 4])
         params['codeword_maxlength_positions'] = random.choice([2, 4])
         params['sigma_amount'] = random.choice([1, 2, 3])
@@ -46,7 +46,7 @@ def random_subparams(encoding):
  
     # Choose safe parameters for sequence_length, primer_length, rs_num, redundancy
     params['mean']= 20
-    safe_lengths = [l for l in [60, 80, 100, 120, 140] if l > 2*10]  # min primer_length is 10
+    safe_lengths = [l for l in [60, 80, 100, 110, 140] if l > 2*10]  # min primer_length is 10
     params['sequence_length'] = random.choice(safe_lengths)
     params['max_homopolymer'] = random.choice([3, 4, 5])
     params['rs_num'] = random.choice([0, 1, 2])

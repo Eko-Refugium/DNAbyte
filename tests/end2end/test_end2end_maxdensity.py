@@ -52,7 +52,28 @@ params_list = [
         storage_conditions=None,
         synthesis_method=None,
         sequencing_method=None,
+    ),
+    Params(
+        name='end2end_clustering_recovery_with_maxdensity',
+        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
 
+        # binarization method
+        binarization_method='compressed',
+
+        # encoding parameters
+        encoding_method='max_density',
+
+        # error correction
+        inner_error_correction=None,
+        outer_error_correction=None,
+
+        # synthesis and error channels
+        synthesis_method='nosynthpoly',
+        sequencing_method=None,
+
+        # post-sequencing processing methods
+        clustering_method='primer_grouper',
+        recovery_method='debruijn',
     # ),
     # Params(
     #     name='end2end_maxdensity_allErrors',

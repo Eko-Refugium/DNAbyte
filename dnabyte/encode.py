@@ -18,6 +18,7 @@ class Encode:
     def __init__(self, params, logger=None):
         
         self.encoding_method = params.encoding_method
+        print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbEncoding method:", self.encoding_method)
         self.logger = logger
         self.params = params
         self.encoding_plugins = params.encoding_plugins
@@ -50,6 +51,7 @@ class Encode:
                 print(encoded_data)
                 obj = NucleobaseCode(encoded_data)
                 obj.file_paths = data.file_paths
+                print("encoded sequences:", len(encoded_data))
                 return obj, info
             except KeyError:
                 raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
@@ -78,6 +80,7 @@ class Encode:
         """
         if isinstance(data, NucleobaseCode):
             try:
+                print("decode input:", len(data.data))
                 encode_class = self.encoding_plugins[self.encoding_method]
                 plugin = encode_class(self.params, logger=self.logger)
                 #decoded_data, valid, info = plugin.decode(data=data, params=self.params, logger=self.logger)
@@ -111,15 +114,18 @@ class Encode:
         """
         if isinstance(data, InSilicoDNA):
             try:
+                print("process in :", len(data.data))
                 print(self.encoding_method, self.encoding_plugins)
                 encode_class = self.encoding_plugins[self.encoding_method]
                 plugin = encode_class(self.params, logger=self.logger)
                 processed, info = plugin.process(data)
                 obj = NucleobaseCode(processed)
                 obj.file_paths = data.file_paths
+                print("process out:", len(processed))
                 return obj, info
             except KeyError:
                 raise ValueError(f"Process Module for encoding method '{self.encoding_method}' not found in plugins.")
         else:
             raise TypeError("data must be an instance of InSilicoDNA")
+
 

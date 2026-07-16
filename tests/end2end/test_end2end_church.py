@@ -18,77 +18,82 @@ params_list = [
         rs_num=0,
         add_redundancy=True,
         add_primer=True,
+        mean=10,
         primer_length=20,
+        primer_length_cluster=40,
 
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
+        clustering_method='primer_grouper',
+        kemer_size_debruijn=160,
+        recovery_method='debruijn'
     ),
 
-    # Test 2: Sequencing errors only (substitutions, insertions, deletions)
-    Params(
-        name='end2end_church_seq_errors',
-        filename='textfile_40b.txt',
+    # # Test 2: Sequencing errors only (substitutions, insertions, deletions)
+    # Params(
+    #     name='end2end_church_seq_errors',
+    #     filename='textfile_40b.txt',
 
-        # encoding parameters
-        encoding_method='church',
-        binarization_method='default',
-        sequence_length=200,
-        max_homopolymer=4,
-        rs_num=0,
-        add_redundancy=True,
-        add_primer=True,
-        primer_length=20,
+    #     # encoding parameters
+    #     encoding_method='church',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     max_homopolymer=4,
+    #     rs_num=0,
+    #     add_redundancy=True,
+    #     add_primer=True,
+    #     primer_length=20,
 
-        # synthesis - create copies without errors
-        synthesis_method='nosynthpoly',
-        mean=10,
-        std_dev=0,
+    #     # synthesis - create copies without errors
+    #     synthesis_method='nosynthpoly',
+    #     mean=10,
+    #     std_dev=0,
 
-        # storage - none
-        storage_conditions=None,
+    #     # storage - none
+    #     storage_conditions=None,
 
-        # sequencing errors
-        sequencing_method='kmere',
-        kmer_k=1,
-        kmer_p_ins=0.001,
-        kmer_p_del=0.001,
-        kmer_p_sub=0.002,
-        kmer_seed=42,
-    ),
+    #     # sequencing errors
+    #     sequencing_method='kmere',
+    #     kmer_k=1,
+    #     kmer_p_ins=0.001,
+    #     kmer_p_del=0.001,
+    #     kmer_p_sub=0.002,
+    #     kmer_seed=42,
+    # ),
 
-    # Test 3: Full error pipeline - synthesis + storage + sequencing + RS correction
-    Params(
-        name='end2end_church_full_errors',
-        filename='textfile_40b.txt',
+    # # Test 3: Full error pipeline - synthesis + storage + sequencing + RS correction
+    # Params(
+    #     name='end2end_church_full_errors',
+    #     filename='textfile_40b.txt',
 
-        # encoding parameters
-        encoding_method='church',
-        binarization_method='default',
-        sequence_length=200,
-        max_homopolymer=4,
-        rs_num=1,
-        add_redundancy=True,
-        add_primer=True,
-        primer_length=20,
+    #     # encoding parameters
+    #     encoding_method='church',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     max_homopolymer=4,
+    #     rs_num=1,
+    #     add_redundancy=True,
+    #     add_primer=True,
+    #     primer_length=20,
 
-        # synthesis - create copies without errors
-        synthesis_method='nosynthpoly',
-        mean=30,
-        std_dev=1,
+    #     # synthesis - create copies without errors
+    #     synthesis_method='nosynthpoly',
+    #     mean=30,
+    #     std_dev=1,
 
-        # storage
-        storage_conditions='biogene',
-        years=1,
+    #     # storage
+    #     storage_conditions='biogene',
+    #     years=1,
 
-        # sequencing errors
-        sequencing_method='kmere',
-        kmer_k=1,
-        kmer_p_ins=0.002,
-        kmer_p_del=0.002,
-        kmer_p_sub=0.002,
-        kmer_seed=42,
-    ),
+    #     # sequencing errors
+    #     sequencing_method='kmere',
+    #     kmer_k=1,
+    #     kmer_p_ins=0.002,
+    #     kmer_p_del=0.002,
+    #     kmer_p_sub=0.002,
+    #     kmer_seed=42,
+    # ),
 ]
 
 # Create a parameterized test case

@@ -12,14 +12,15 @@ class Params:
         self.sequencing_method = None
         self.binarization_method = None
         self.error_methods = None
-        
+        self.clustering_method = None    
+        self.recovery_method = None
         # Set parameters from kwargs
         for key, value in kwargs.items():
             setattr(self, key, value)
         self.debug = debug
 
         # Load plugins
-        self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins, self.error_plugins  = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method, self.error_methods)
+        self.binarization_plugins, self.encoding_plugins, self.storage_plugins, self.sequencing_plugins, self.error_plugins, self.clustering_plugins, self.recovery_plugins = load_plugins(self.binarization_method, self.encoding_method, self.storage_conditions, self.sequencing_method, self.error_methods, self.clustering_method, self.recovery_method)
 
         # Check binarization parameters
         if self.binarization_method is None or not hasattr(self, 'binarization_method'):
@@ -135,6 +136,31 @@ class Params:
         else:
             raise ValueError(f"Invalid sequencing method: {self.sequencing_method}")
         
+        # Check post-sequencing clustering parameters
+        print(f"Checking clustering method: {self.clustering_plugins}")
+        if self.clustering_method is None or not hasattr(self, 'clustering_method'):
+            pass
+        elif self.clustering_method in self.clustering_plugins:
+            clustering = importlib.import_module(f"dnabyte.clustering.{self.clustering_method}.clustering")
+            attributes_cluster = clustering.attributes(self)
+            for keys, value in attributes_cluster.items():
+                setattr(self, keys, value)
+        else:
+            if self.clustering_method:
+                raise ValueError(f"Invalid clustering method: {self.clustering_method}")
+        
+        # Check post-sequencing recovery parameters
+        if self.recovery_method is None or not hasattr(self, 'recovery_method'):
+            pass
+        elif self.recovery_method in self.recovery_plugins:
+            recovery = importlib.import_module(f"dnabyte.recovery.{self.recovery_method}.recovery")
+            attributes_recovery = recovery.attributes(self)
+            for keys, value in attributes_recovery.items():
+                print(f"Setting recovery attribute: {keys} = {value}")
+                setattr(self, keys, value)
+        else:
+            if self.recovery_method:
+                raise ValueError(f"Invalid recovery method: {self.recovery_method}")
 
     def __str__(self):
         output = "Params:\n"

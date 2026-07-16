@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import inspect
+import inspect
 from math import ceil
 import json
 
@@ -106,6 +108,10 @@ class GoldmanEncode(AbstractEncode):
         # encode
         log.debug('encode')
         tm_encode = datetime.now()
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa")
+        print(goldmanEncode)
+        print(inspect.getsourcefile(goldmanEncode))
+        print(inspect.getmodule(goldmanEncode))
         nt_seq_list, self.index_length, self.add_len, ternary_seg_list, ternary_str = goldmanEncode(bin_str, self.codec_param.sequence_length)
         self.encode_time = str(datetime.now()-tm_encode)
         

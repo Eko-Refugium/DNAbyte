@@ -14,6 +14,8 @@ from dnabyte.store import SimulateStorage
 from dnabyte.sequence import SimulateSequencing
 from dnabyte.binarize import Binarize
 from dnabyte.misc_err import SimulateMiscErrors
+from dnabyte.cluster import Cluster
+from dnabyte.consensus import Consensus
 from dnabyte.params import Params
 
 class TestBase(unittest.TestCase):
@@ -217,19 +219,24 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP07: PROCESS DATA')
             start_time = time.time()
             try:
-                data_cor, info = enc.process(data_seq)
-                self.testlogger.info('STATUS: SUCCESS')
-                self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
-                self.testlogger.info(data_cor.__str__())
+                # Use Process class if clustering and recovery methods are specified
+                if hasattr(self.params, 'clustering_method') and hasattr(self.params, 'recovery_method') and \
+                   self.params.clustering_method and self.params.recovery_method:
+                    processor = Cluster(self.params, logger=self.testlogger)
+                    data_cluster, info = processor.process(data_seq)
+                    consensus = Consensus(self.params, logger=self.testlogger)
+                    data_cor, info = consensus.simulate(data_cluster)
 
-                # TODO: Add the info to the log
-                #self.testlogger.info(info)
+                    self.testlogger.info('Processing method: %s + %s', self.params.clustering_method, self.params.recovery_method)
+                else:
+                    # Fall back to encoding-specific process
+                    data_cor, info = enc.process(data_seq)
 
             except Exception as e:
                 self.testlogger.info('STATUS: ERROR')
                 self.testlogger.error('TYPE: %s', str(e))
                 self.testlogger.error(traceback.format_exc())
-                self.fail(f"Data processing failed: %s")
+                self.fail(f"Data processing failed: {str(e)}")
 
 #######################################################################################################################
 ##### STEP 8: DECODING THE DATA #######################################################################################

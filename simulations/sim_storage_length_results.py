@@ -18,31 +18,16 @@ years = [y for y in [10, 100, 1000, 10000, 20000, 40000, 60000, 80000, 90000, 10
 
 # set other parameters
 params = Params.params_range(
-        name='synthesis_max_density',
-        file_paths=['./simulations/simfiles/textfile_40b.txt'],
-        assembly_structure='synthesis',
+        name='end2end_maxdensity_noEC_noErrors',
+        filename='textfile_40b.txt',
+
+        # encoding parameters
         encoding_method='max_density',
-        mean=200,
-        vol=1000000 / Avogadro,
-        std_dev=1,
-        hybridisation_steps=10000,
-        inner_error_correction=None,
-        outer_error_correction='reedsolomon',
-        dna_barcode_length=34,  
-        codeword_maxlength_positions=18,
-        binarization_method='compressed',
-        years=years,
+
+        binarization_method='default',
+
         storage_conditions='biogene',
-        codeword_length=501,
-        percent_of_symbols=2,
-        index_carry_length=34,
-        # synthesis_method='mesa',
-        # mesa_synthesis_id=68,
-        # sequencing_method='mesa',
-        # mesa_sequencing_id=41,
-        reed_solo_percentage=0.9,
-        seed=42,
-        theory='no'
+        years=years,
 )
 
 # run simulation

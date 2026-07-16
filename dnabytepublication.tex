@@ -1,0 +1,330 @@
+%Version 3.1 December 2024
+% See section 11 of the User Manual for version history
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%% Please do not use \input{...} to include other tex files.       %%
+%% Submit your LaTeX manuscript as one .tex document.              %%
+%%                                                                 %%
+%% All additional figures and files should be attached             %%
+%% separately and not embedded in the \TeX\ document itself.       %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%\documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
+
+%%=======================================================%%
+%% to print line numbers in the margin use lineno option %%
+%%=======================================================%%
+
+%%\documentclass[lineno,pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%=========================================================================================%%
+%% the documentclass is set to pdflatex as default. You can delete it if not appropriate.  %%
+%%=========================================================================================%%
+
+%%\documentclass[sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis. 
+%%The option is available for: sn-basic.bst, sn-chicago.bst%  
+ 
+%%\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
+%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+%%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
+%%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
+%%\documentclass[pdflatex,sn-vancouver-num]{sn-jnl}% Vancouver Numbered Reference Style
+%%\documentclass[pdflatex,sn-vancouver-ay]{sn-jnl}% Vancouver Author Year Reference Style
+%%\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style
+%%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+%%%%
+
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published 
+%%%%  by Springer Nature. The guidance has been prepared in partnership with 
+%%%%  production teams to conform to Springer Nature technical requirements. 
+%%%%  Editorial and presentation requirements differ among journal portfolios and 
+%%%%  research disciplines. You may find sections in this template are irrelevant 
+%%%%  to your work and are empowered to omit any such section if allowed by the 
+%%%%  journal you intend to submit to. The submission guidelines and policies 
+%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
+
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}% 
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+\raggedbottom
+%%\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title[Article Title]{DNAbyte: A modular framework for the simulation and analysis of DNA-based data storage}
+
+%%=============================================================%%
+%% GivenName	-> \fnm{Joergen W.}
+%% Particle	-> \spfx{van der} -> surname prefix
+%% FamilyName	-> \sur{Ploeg}
+%% Suffix	-> \sfx{IV}
+%% \author*[1,2]{\fnm{Joergen W.} \spfx{van der} \sur{Ploeg} 
+%%  \sfx{IV}}\email{iauthor@gmail.com}
+%%=============================================================%%
+
+\author*[1]{\fnm{Kaya Selina} \sur{Wernhart}}\email{kaya.wernhart@ekorefugium.com}
+
+\author[1]{\fnm{Fabian} \sur{Schroeder}}\email{fabian.schroeder@ekorefugium.com}
+
+\author[1]{\fnm{Adrian} \sur{Goll}}\email{adrian.goll@ekorefugium.com}
+
+\author[1,2]{\fnm{Ivan} \sur{Barišić}}\email{ivan.barisic@ait.ac.at}
+
+\affil*[1]{ \orgname{Eko Refugium}, \orgaddress{\street{Crno Vrelo 2}, \postcode{47240}, \state{Slunj}, \country{Croatia}}}
+\affil[2]{ \orgname{Austrian Institute of Technology}, \orgaddress{\street{Giefinggasse 4}, \postcode{1030}, \state{Vienna}, \country{Austria}}}
+
+
+%%==================================%%
+%% Sample for unstructured abstract %%
+%%==================================%%
+
+\abstract{DNA data storage is a promising technology for long-term archival of digital information. However, its performance depends on the entire prossees from encoding schemes, synthesis strategies, storage conditions, sequencing technologies and recovery algorithms. Because these components are frequently evaluated separately, direct comparison between proposed methods remain underanalysed. Here we present DNAbyte, a modular framework for the simulation and benchmarking of DNA-based data storage systems. DNAbyte models the complete storage workflow, from data encoding and DNA synthesis to storage, sequencing, reconstruction and decoding, while allowing individual pipeline components to be exchanged independently. By providing a standardized and extensible environment for end-to-end evaluation, DNAbyte enables systematic assessment of DNA storage methods under controlled conditions and facilitates reproducible comparison of existing and emerging approaches. The framework establishes a foundation for community-driven benchmarking and development of DNA data storage technologies.}
+
+%%================================%%
+%% Sample for structured abstract %%
+%%================================%%
+
+% \abstract{\textbf{Purpose:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Methods:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Results:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Conclusion:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.}
+
+\keywords{keyword1, Keyword2, Keyword3, Keyword4}
+
+%%\pacs[JEL Classification]{D8, H51}
+
+%%\pacs[MSC Classification]{35A01, 65L10, 65L12, 65L20, 65L70}
+
+\maketitle
+
+\section{Introduction}\label{sec1}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{pipeline.png}
+    \caption{Overview of the DNA data storage pipeline, which includes six basic stages: coding, synthesis, storage, retrieval, sequencing, and decoding. \copyright DNA Data Storage Aliance. }
+    \label{fig:pipeline}
+\end{figure}
+
+
+
+DNA is a very promising medium for cold data storage as it can remain stable for millennia under suitable conditions~\cite{Matange2021, Kistler, Grass}. Furthermore, it offers data densities that significantly exceed those of conventional storage \cite{Church, YanivErlich, Dong}. DNA data storage relies on a multi-stage workflow comprising data encoding, DNA synthesis, physical storage, sequencing and data reconstruction. Each stage introduces characteristic error processes that propagate through the workflow and influence subsequent processing steps. As a result, evaluating individual components in isolation often provides an incomplete picture of overall system performance. Despite rapid methodological development, it remains difficult to determine how improvements in individual workflow stages affect end-to-end system performance.
+
+Despite substantial methodological progress, benchmarking practices in DNA data storage remain highly heterogeneous. New approaches are commonly evaluated using study-specific datasets, error models and experimental assumptions, making direct comparison between published results challenging. This lack of standardization complicates reproducibility and limits our ability to assess how individual methodological advances affect overall system performance.
+
+Computational tools have become indispensable for exploring this increasingly complex design space. However, existing frameworks provide good solutions however often focus on individual workflow stages or specialized applications, whereas encoding schemes and decoding algorithms are frequently developed and evaluated independently of the underlying storage process. As a result, researchers often evaluate methods within study-specific workflows and assumptions, making direct comparison between alternative approaches difficult. A framework that integrates all within a common environment is therefore required for reproducible end-to-end benchmarking of DNA storage systems.
+
+To address this challenge, we developed DNAbyte, a modular framework for the simulation and benchmarking of DNA data storage systems. DNAbyte encompasses the complete storage workflow, encompassing data encoding, DNA synthesis, storage, sequencing, reconstruction and decoding within a unified computational environment. Individual workflow components can be exchanged independently, enabling controlled evaluation of competing methods while maintaining consistent assumptions across all remaining stages. This modular design allows the isolation the effects of individual methodological choices and systematically investigate interactions between components of the storage pipeline.
+
+Here we present DNAbyte as a platform for reproducible end-to-end evaluation of DNA storage systems. By providing standardized benchmarking procedures within an extensible framework, DNAbyte enables systematic comparison of existing approaches, facilitates integration of new methods and supports exploration of the rapidly expanding DNA storage design space.
+
+
+
+
+\section{Results}\label{sec2}
+
+\subsection{The modular architecture}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.97\linewidth]{overview_new.png}
+    \caption{Overview of the data pipeline and its features of the DNAbyte framework.}
+    \label{fig:dnabyte_core}
+\end{figure}
+
+DNAbyte represents DNA data storage as a sequence of modular processing stages that collectively model the complete storage workflow (Fig. \ref{fig:dnabyte_core}). Starting from digital input data, information is transformed through successive binarization, encoding, synthesis, storage, sequencing and recovery steps before final reconstruction and decoding. Throughout the workflow, information is represented using a set of data representations corresponding to different stages of the storage process. Modules act as transformations between these representations and can be exchanged independently, provided they operate with compatible input and output types. This enables alternative implementations of individual models at each stags to be integrated without modification of the surrounding pipeline.
+
+DNA storage workflows differ substantially between studies and applications. While some workflows rely exclusively on de novo synthesis and sequencing, others incorporate block assembly strategies, specialized recovery procedures or additional sources of experimental noise. DNAbyte accommodates these differences by allowing intermediate processing stages to be inserted between existing workflow components. As a result, workflows can be tailored to specific storage architectures without altering the overall simulation framework. Rather than prescribing a specific DNA storage architecture, DNAbyte provides a common environment in which alternative implementations of individual workflow stages can be evaluated under identical conditions.
+
+This flexibility forms the basis for the benchmarking capabilities of DNAbyte. Individual workflow components can be replaced while all remaining stages remain unchanged, allowing observed differences in performance to be attributed to the method under investigation rather than changes elsewhere in the pipeline. Effects of individual methodological choices can be isolated and interactions between different parts of the storage process systematically investigated while preserving realistic end-to-end dependencies. DNAbyte thus provides a foundation for reproducible benchmarking of complete DNA storage workflows.
+
+\subsection{Configuration-driven simulation of DNA storage workflows}
+DNAbyte defines simulations through a unified configuration class in which users specify both the modules to be included in the workflow and the parameters associated with each module. For example, users can select an encoding module and configure associated parameters such as sequence length, redundancy, synthesis conditions, and sequencing characteristics. Non-essential modules and parameters of the configuration classes are initialized with default values if needed and not specified, allowing simulations to be configured at varying levels of complexity.
+
+Complete DNA storage experiments can therefore be described through a single parameterized object, enabling Simulations to be reproducible, modifiable and shareable without altering the underlying implementation. Module specific parameters remain encapsulated within their respective workflow stages while being accessible through a common configuration interface.
+
+The same mechanism also forms the basis of large-scale simulation studies. Individual parameters may be assigned multiple values, generating families of related simulation configurations. DNAbyte automatically executes the resulting simulations and aggregates the generated metrics, enabling systematic exploration of parameter spaces and comparative evaluation of alternative workflow designs. Consequently, benchmarking emerges naturally from the simulation framework.
+
+\subsection{Standardized simulation definitions for DNA storage workflows}
+Each configuration encodes the selected modules for all stages of the storage pipeline together with their associated parameters. This representation defines a complete and executable specification of a DNA storage experiment. Because configurations are independent of the underlying implementation, identical simulation definitions can be executed across different computational environments without modification. This enables experimental setups to be shared, archived, and reproduced as self-contained objects rather than being implicitly defined through code execution or implementation-specific assumptions. As a result, simulation studies become explicitly defined entities that can be consistently re-run and compared across independent research contexts.
+
+To support systematic exploration of the experimental design space, configuration parameters may additionally be specified as discrete sets or ranges of values. A single configuration can therefore define a family of related experiments, which are instantiated and executed consistently within the same framework. This provides a structured way to describe variations of DNA storage workflows while preserving a shared experimental definition, enabling standardized specification of simulation studies across different research settings.
+
+\subsection{Comparative evaluation of encoding strategies}
+
+To demonstrate the benchmarking capabilities of DNAbyte, we compared representative DNA storage encoding strategies within a common simulation environment. All methods were evaluated using identical input datasets and shared synthesis, storage and sequencing models. Benchmark scenarios can be standardized according to different experimental objectives. For example, encoding schemes may be compared at equivalent synthesis cost by adjusting sequence length and redundancy. It can be analyzed at fixed sequence length by determining the sequencing depth required for successful reconstruction, or under different storage conditions to assess long-term recoverability (Fig. X). This flexibility allows benchmark scenarios to address application-specific questions while maintaining consistent experimental assumptions.
+
+Starting from a baseline configuration representative of current DNA storage experiments, we systematically varied synthesis, storage and sequencing parameters using parameter sweeps. Across these simulations, the relative performance of encoding strategies changed with the simulated conditions. Increasing sequencing error rates, introducing storage-induced degradation and modifying synthesis characteristics affects reconstruction success to different extents across differing encoding methods (Fig. Y). Furthermore, these effects depended on the selected recovery procedure.
+
+These experiments demonstrate that benchmarking outcomes are determined not only by the encoding strategy itself but also by the assumptions made for the surrounding pipeline. Choices regarding synthesis, storage, sequencing and recovery all influence end-to-end performance and may alter the relative behavior of competing methods. DNAbyte therefore enables reproducible comparison of DNA storage workflows under explicitly defined experimental conditions and provides a common foundation on which the community can develop and share standardized benchmark scenarios.
+
+\subsection{Modeling diverse DNA storage architectures}
+DNA storage workflows are becoming increasingly diverse. While many studies focus on de novo synthesis, alternative strategies such as block assembly introduce additional processing stages and fundamentally different reconstruction procedures. Simulation frameworks therefore need to accommodate pipelines that differ not only in their parameters but also in their overall structure.
+
+DNAbyte represents these by inserting additional processing modules into the simulation pipeline. Block assembly, for example, introduces assembly of fragment libraries and assembly-specific recovery without requiring modification of the remaining pipeline. Existing synthesis, storage and sequencing models remain fully compatible with these alternative architectures.
+
+Consequently, fundamentally different DNA storage strategies can be investigated within a common computational environment, allowing methodological differences to be attributed to the workflow itself rather than differences in simulation infrastructure.
+
+\subsection{Case study: Sequencing technology influences end-to-end workflow performance}
+
+To illustrate an application of DNAbyte to a research question, we investigated how sequencing error characteristics influence the performance of representative DNA storage encoding strategies. A common simulation workflow was defined in which all encoding methods were evaluated using identical input data, synthesis conditions, storage models and recovery procedures. Only the sequencing model was varied to represent different sequencing technologies and their associated error profiles. Using different error profiles of different sequencing technologies. This enabled reconstruction performance to be evaluated to find the optimal sequencing technologies for a given encoding scheme (Fig. X).
+
+The simulations demonstrated that the relative performance of encoding strategies depends strongly on the sequencing error profile. Different sequencing technologies affected reconstruction success differently across encoding methods, resulting in technology-dependent differences in decoding performance (Fig. X). Consequently, encoding strategies that performed similarly under one sequencing model could exhibit substantially different behaviour under another, illustrating that conclusions drawn from a single sequencing technology do not necessarily generalize across alternative experimental settings.
+
+This case study highlights the importance of evaluating DNA storage systems from an end-to-end perspective. Rather than identifying a universally optimal encoding strategy, DNAbyte enables encoding methods to be assessed within the context of their intended application by combining realistic sequencing models with standardized simulation workflows. Such analyses can guide the selection of encoding schemes for specific sequencing technologies and provide a reproducible framework for future comparative studies.
+
+\section{Methods}\label{sec11}
+
+\subsection{Implemented models}
+DNAbyte integrates a set of DNA data storage models covering the main stages of a typical end-to-end workflow. The framework includes multiple published encoding and decoding schemes. In addition, several synthesis, storage, sequencing and recovery models are implemented to represent experimentally relevant conditions (Table~\ref{}).
+
+Synthesis models include both error-free and stochastic processes that introduce controlled variations in sequence generation and amplification. Storage models simulate different environmental conditions affecting sequence integrity over time, while sequencing models reproduce error characteristics of different sequencing technologies through substitution, insertion and deletion processes. Recovery procedures include clustering-based and reconstruction-based approaches commonly used in DNA data retrieval pipelines.
+
+Each model is used as published or as specified in the original source, with parameters adopted directly from the corresponding literature.
+
+\subsection{Simulation protocol}
+
+
+\subsection{Evaluation metrics}
+Performance is primarily assessed using reconstruction success, defined as the proportion of simulations in which the original input data is fully recovered without error after decoding. In addition, error-based metrics are computed to quantify deviations between original and reconstructed data, including bit error rates where applicable.
+
+\section{Discussion}\label{sec12}
+
+Discussions should be brief and focused. In some disciplines use of Discussion or `Conclusion' is interchangeable. It is not mandatory to use both. Some journals prefer a section `Results and Discussion' followed by a section `Conclusion'. Please refer to Journal-level guidance for any specific requirements. 
+
+\section{Conclusion}\label{sec13}
+
+Conclusions may be used to restate your hypothesis or research question, restate your major findings, explain the relevance and the added value of your work, highlight any limitations of your study, describe future directions for research and recommendations. 
+
+In some disciplines use of Discussion or 'Conclusion' is interchangeable. It is not mandatory to use both. Please refer to Journal-level guidance for any specific requirements. 
+
+\backmatter
+
+\bmhead{Supplementary information}
+
+If your article has accompanying supplementary file/s please state so here. 
+
+Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
+
+Please refer to Journal-level guidance for any specific requirements.
+
+\bmhead{Acknowledgements}
+
+Acknowledgements are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
+
+Please refer to Journal-level guidance for any specific requirements.
+
+\section*{Declarations}
+
+Some journals require declarations to be submitted in a standardised format. Please check the Instructions for Authors of the journal to which you are submitting to see if you need to complete this section. If yes, your manuscript must contain the following sections under the heading `Declarations':
+
+\begin{itemize}
+\item Funding
+\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
+\item Ethics approval and consent to participate
+\item Consent for publication
+\item Data availability 
+\item Materials availability
+\item Code availability 
+\item Author contribution
+\end{itemize}
+
+\noindent
+If any of the sections are not relevant to your manuscript, please include the heading and write `Not applicable' for that section. 
+
+%%===================================================%%
+%% For presentation purpose, we have included        %%
+%% \bigskip command. Please ignore this.             %%
+%%===================================================%%
+\bigskip
+\begin{flushleft}%
+Editorial Policies for:
+
+\bigskip\noindent
+Springer journals and proceedings: \url{https://www.springer.com/gp/editorial-policies}
+
+\bigskip\noindent
+Nature Portfolio journals: \url{https://www.nature.com/nature-research/editorial-policies}
+
+\bigskip\noindent
+\textit{Scientific Reports}: \url{https://www.nature.com/srep/journal-policies/editorial-policies}
+
+\bigskip\noindent
+BMC journals: \url{https://www.biomedcentral.com/getpublished/editorial-policies}
+\end{flushleft}
+
+\begin{appendices}
+
+\section{Section title of first appendix}\label{secA1}
+
+An appendix contains supplementary information that is not an essential part of the text itself but which may be helpful in providing a more comprehensive understanding of the research problem or it is information that is too cumbersome to be included in the body of the paper.
+
+%%=============================================%%
+%% For submissions to Nature Portfolio Journals %%
+%% please use the heading ``Extended Data''.   %%
+%%=============================================%%
+
+%%=============================================================%%
+%% Sample for another appendix section			       %%
+%%=============================================================%%
+
+%% \section{Example of another appendix section}\label{secA2}%
+%% Appendices may be used for helpful, supporting or essential material that would otherwise 
+%% clutter, break up or be distracting to the text. Appendices can consist of sections, figures, 
+%% tables and equations etc.
+
+\end{appendices}
+
+%%===========================================================================================%%
+%% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%
+%% system, please include the references within the manuscript file itself. You may do this  %%
+%% by copying the reference list from your .bbl file, paste it into the main manuscript .tex %%
+%% file, and delete the associated \verb+\bibliography+ commands.                            %%
+%%===========================================================================================%%
+
+\bibliography{sn-article-template/sn-bibliography}% common bib file
+%% if required, the content of .bbl file can be included here once bbl is generated
+%%\input sn-article.bbl
+
+\end{document}

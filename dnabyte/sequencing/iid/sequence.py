@@ -11,25 +11,58 @@ class IID(SimulateSequencing):
     def simulate(self, data):
         """
         Simulate sequencing errors using an IID model.
+        Supports substitutions, insertions, and deletions.
         
         :param data: A list of DNA sequences.
         :return: A list of sequenced DNA sequences.
         """
-        sequenceserror = list(data)  # Create a copy of the data
+        # Get error parameters
+        error_rate = getattr(self.params, 'iid_error_rate', 0.01)
+        sub_rate = getattr(self.params, 'iid_substitution_rate', error_rate)
+        ins_rate = getattr(self.params, 'iid_insertion_rate', 0.0)
+        del_rate = getattr(self.params, 'iid_deletion_rate', 0.0)
+        
+        sequenceserror = []
         error_counter = 0
-        for i in range(len(sequenceserror)):
-            for k in range(len(sequenceserror[i])):
-                if random.random() < self.params.iid_error_rate:
+        
+        for sequence in data:
+            new_seq = list(sequence)
+            i = 0
+            
+            while i < len(new_seq):
+                rand_val = random.random()
+                
+                # Substitution error
+                if rand_val < sub_rate:
                     error_counter += 1
-                    # randomly select a new base
                     new_base = random.choice(['A', 'C', 'G', 'T'])
-                    # replace the base at the mutation position with the new base
-
-                    #sequenceserror[i] = (data[i][:k] + new_base + data[i][k + 1:])      
-                    sequenceserror[i] = (sequenceserror[i][:k] + new_base + sequenceserror[i][k + 1:])      
+                    new_seq[i] = new_base
+                    i += 1
+                    
+                # Insertion error
+                elif rand_val < sub_rate + ins_rate:
+                    error_counter += 1
+                    insert_base = random.choice(['A', 'C', 'G', 'T'])
+                    new_seq.insert(i, insert_base)
+                    i += 2  # Skip the inserted base
+                    
+                # Deletion error
+                elif rand_val < sub_rate + ins_rate + del_rate:
+                    error_counter += 1
+                    new_seq.pop(i)
+                    # Don't increment i, check next base at same position
+                    
+                else:
+                    i += 1
+            
+            sequenceserror.append(''.join(new_seq))
                
-        info = {}
-        info['error_counter'] = error_counter
+        info = {
+            'error_counter': error_counter,
+            'substitution_rate': sub_rate,
+            'insertion_rate': ins_rate,
+            'deletion_rate': del_rate,
+        }
 
         return sequenceserror, info
     
@@ -44,10 +77,44 @@ def check_parameter(parameter, default, min, max, inputparams):
     return parameter_value
     
 def attributes(params):
-    iid_error_rate = check_parameter(parameter="iid_error_rate",
-                                        default=0.01,
-                                        min=0.0,
-                                        max=1.0,
-                                        inputparams=params)
+    iid_error_rate = check_parameter(
+        parameter="iid_error_rate",
+        default=0.01,
+        min=0.0,
+        max=1.0,
+        inputparams=params
+    )
+    
+    # Substitution rate (default to total error rate if not specified)
+    iid_substitution_rate = check_parameter(
+        parameter="iid_substitution_rate",
+        default=iid_error_rate,
+        min=0.0,
+        max=1.0,
+        inputparams=params
+    )
+    
+    # Insertion rate (default 0 if not specified)
+    iid_insertion_rate = check_parameter(
+        parameter="iid_insertion_rate",
+        default=0.0,
+        min=0.0,
+        max=1.0,
+        inputparams=params
+    )
+    
+    # Deletion rate (default 0 if not specified)
+    iid_deletion_rate = check_parameter(
+        parameter="iid_deletion_rate",
+        default=0.0,
+        min=0.0,
+        max=1.0,
+        inputparams=params
+    )
         
-    return {"iid_error_rate": iid_error_rate}
+    return {
+        "iid_error_rate": iid_error_rate,
+        "iid_substitution_rate": iid_substitution_rate,
+        "iid_insertion_rate": iid_insertion_rate,
+        "iid_deletion_rate": iid_deletion_rate,
+    }

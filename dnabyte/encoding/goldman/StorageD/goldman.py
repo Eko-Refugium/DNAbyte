@@ -6,6 +6,7 @@ Created on Thu Aug  5 10:37:21 2021
 """
 
 import sys, os, argparse
+from matplotlib.pylab import rint
 from tqdm import tqdm
 
 
@@ -132,7 +133,10 @@ def encodeNt(ternary_str):
 
 
 def segment(ternary_str, ideal_len = 100):
+    print("Entered segment()")
     total_len = len(ternary_str)
+
+    print(f"Total ternary length = {total_len}")
 
     n = 0
     while True:
@@ -143,12 +147,21 @@ def segment(ternary_str, ideal_len = 100):
             seg_num = int(total_len//(seg_len/4)-2)
 
         idnex_len = len(transSystem(seg_num, 3))
+
+        
+        print(f"n={n}")
+        print(f"  seg_len   = {seg_len}")
+        print(f"  step      = {seg_len//4}")
+        print(f"  seg_num   = {seg_num}")
+
+
         if idnex_len > (ideal_len-seg_len):
             n += 1
         else:
             break
     
-
+    print(f"\nFinal seg_len = {seg_len}")
+    print(f"Final step    = {step}")
     ternary_seg_list = []
     step = int(seg_len/4)
     _index = 0
@@ -174,7 +187,9 @@ def segment(ternary_str, ideal_len = 100):
         ternary_seg_list.append(ternary_seg)
 
         _index += 1
+        print(f"\nActual number of segments = {len(ternary_seg_list)}")
         if tag == True:
+            breakpoint()
             return ternary_seg_list, idnex_len, add_len
 
 
@@ -186,8 +201,10 @@ def outputResult(output_path, nt_seq_list):
 
 
 def goldmanEncode(bin_str, ideal_len = 100):
+    print("Entered goldmanEncode()")
     ternary_str = transTernaryNum(bin_str)
     # print("ternary_str", len(ternary_str)) #bkp
+    print("About to call segment()")
     ternary_seg_list, idnex_len, add_len = segment(ternary_str, ideal_len=ideal_len)
     nt_seq_list = []
     for ternary_seg in tqdm(ternary_seg_list):
