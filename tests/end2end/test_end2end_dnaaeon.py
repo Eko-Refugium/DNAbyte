@@ -27,6 +27,9 @@ params_list = [
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
+        clustering_method='primer_grouper',
+        kemer_size_debruijn=30,
+        recovery_method='debruijn'
     ),
 
     # Test 2: Sequencing errors only
