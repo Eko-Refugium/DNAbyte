@@ -14,10 +14,15 @@ std::vector<std::string> dna_to_strings(
     {
         std::string strand;
 
+
         for(Int j = 0; j < dna.ncols(); j++)
         {
-            strand += bases[dna[i][j]];
+            if(dna[i][j] < 4)
+            {
+                strand += bases[dna[i][j]];
+            }
         }
+
 
         result.push_back(strand);
     }

@@ -108,25 +108,76 @@ std::vector<std::string> hedges_encode(
             << messbytesperpacket << std::endl;
 
 
-    VecUchar input(data.size());
+    std::vector<std::string> all_strands;
 
-    for(size_t i=0;i<data.size();i++)
-        input[i]=data[i];
+    size_t offset = 0;
+    uint32_t packet_id = 0;
+
+    while(offset < data.size())
+    {
+        size_t remaining = data.size() - offset;
+
+        size_t chunk_size = std::min(
+            remaining,
+            static_cast<size_t>(messbytesperpacket)
+        );
+
+        std::vector<uint8_t> chunk(
+            data.begin() + offset,
+            data.begin() + offset + chunk_size
+        );
+
+        // Add length only if decoder needs to know final size
+        // (usually yes)
+        std::vector<uint8_t> payload;
+
+        uint32_t len = static_cast<uint32_t>(chunk.size());
+
+        payload.push_back((len >> 24) & 0xff);
+        payload.push_back((len >> 16) & 0xff);
+        payload.push_back((len >> 8) & 0xff);
+        payload.push_back(len & 0xff);
+
+        payload.insert(
+            payload.end(),
+            chunk.begin(),
+            chunk.end()
+        );
 
 
-    MatUchar packet = build_packet(
-        input,
-        0
-    );
+        VecUchar input(payload.size());
+
+        for(size_t i=0;i<payload.size();i++)
+            input[i]=payload[i];
 
 
-    MatUchar protected_packet =
-        protectmesspacket(packet);
+        MatUchar packet = build_packet(
+            input,
+            packet_id
+        );
 
 
-    MatUchar dna =
-        messtodna(protected_packet);
+        MatUchar protected_packet =
+            protectmesspacket(packet);
 
 
-    return dna_to_strings(dna);
+        MatUchar dna =
+            messtodna(protected_packet);
+
+
+        auto strands = dna_to_strings(dna);
+
+
+        all_strands.insert(
+            all_strands.end(),
+            strands.begin(),
+            strands.end()
+        );
+
+
+        offset += chunk_size;
+        packet_id++;
+    }
+
+    return all_strands;
 }
