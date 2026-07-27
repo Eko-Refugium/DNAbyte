@@ -37,6 +37,10 @@ class HEDGES(Encode):
         print(hedges_python.__file__)
         print(hedges_python.encode_hedges.__doc__)
         print(hedges_python.encode_hedges)
+        print("====================================================================")
+        print(data.data)
+        print(byte_data.hex())
+        print("====================================================================")
 
         dna_strands = encode_hedges(byte_data)
 

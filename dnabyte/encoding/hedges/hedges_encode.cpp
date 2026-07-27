@@ -131,12 +131,7 @@ std::vector<std::string> hedges_encode(
         // (usually yes)
         std::vector<uint8_t> payload;
 
-        uint32_t len = static_cast<uint32_t>(chunk.size());
-
-        payload.push_back((len >> 24) & 0xff);
-        payload.push_back((len >> 16) & 0xff);
-        payload.push_back((len >> 8) & 0xff);
-        payload.push_back(len & 0xff);
+        
 
         payload.insert(
             payload.end(),
@@ -156,6 +151,20 @@ std::vector<std::string> hedges_encode(
             packet_id
         );
 
+        std::cout << "packet rows: "
+                << packet.nrows()
+                << " cols: "
+                << packet.ncols()
+                << std::endl;
+
+        std::cout << "packet first row: ";
+
+        for(int i=0;i<10;i++)
+        {
+            std::cout << (int)packet[0][i] << " ";
+        }
+
+        std::cout << std::endl;
 
         MatUchar protected_packet =
             protectmesspacket(packet);
