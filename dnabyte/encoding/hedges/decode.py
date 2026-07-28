@@ -10,8 +10,9 @@ def decode(data, params, logger=None):
     """
 
     try:
+        hedges_cfg = params.hedges_cfg
         # data.data is expected to be a list of DNA strings
-        decoded_bytes = decode_hedges(data.data)
+        decoded_bytes = decode_hedges(data.data, hedges_cfg)
 
         # Convert bytes back to a binary string
         decoded_binary = ''.join(f'{b:08b}' for b in decoded_bytes)

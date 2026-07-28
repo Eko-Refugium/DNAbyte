@@ -8,18 +8,18 @@ params_list = [
     # Test 1: Basic - no errors, just synthesis copies
     Params(
         name='end2end_yyc_basic',
-        filename='textfile_40b.txt',
+        filename='Bohemian_Rhapsody_Lyrics.txt',
 
         # encoding parameters
         encoding_method='hedges',
         binarization_method='default',
-        sequence_length=200,
-        max_homopolymer=2,
         rs_num=0,
         mean=10,
         add_redundancy=True,
         add_primer=True,
         primer_length=50,
+        sequence_length=300,
+        max_homopolymer=8,
 
         # error channels
         storage_conditions=None,
@@ -27,6 +27,7 @@ params_list = [
         clustering_method='pass_through',
         kmer_size_cluster=250,
         recovery_method='pass_through'
+        
     ),
 ]
 

@@ -4,15 +4,48 @@
 #include "hedges_wrapper.h"
 #include "hedges_encode.h"
 #include "hedges_decode.h"
+#include "hedges_config.h"
 
 namespace py = pybind11;
 
 
 PYBIND11_MODULE(hedges_python, m)
 {
+    py::class_<HedgesConfig>(m, "HedgesConfig")
+        .def(py::init<>())
+
+        .def_readwrite("coderate",
+            &HedgesConfig::coderate)
+
+        .def_readwrite("total_strand_length",
+            &HedgesConfig::total_strand_length)
+
+        .def_readwrite("strand_id_bytes",
+            &HedgesConfig::strand_id_bytes)
+
+        .def_readwrite("strand_runout_bytes",
+            &HedgesConfig::strand_runout_bytes)
+
+        .def_readwrite("gc_window",
+            &HedgesConfig::gc_window)
+
+        .def_readwrite("gc_max",
+            &HedgesConfig::gc_max)
+
+        .def_readwrite("max_homopolymer",
+            &HedgesConfig::max_homopolymer)
+
+        .def_readwrite("heap_limit",
+            &HedgesConfig::heap_limit)
+
+        .def_readwrite("left_primer",
+            &HedgesConfig::left_primer)
+
+        .def_readwrite("right_primer",
+            &HedgesConfig::right_primer);
     m.def(
         "encode_hedges",
-        [](py::bytes input)
+        [](py::bytes input, const HedgesConfig& cfg)
         {
             std::string buffer = input;
 
@@ -21,15 +54,15 @@ PYBIND11_MODULE(hedges_python, m)
                 buffer.end()
             );
 
-            return hedges_encode(data);
+            return hedges_encode(data, cfg);
         }
     );
     
     m.def(
         "decode_hedges",
-        [](std::vector<std::string> strands)
+        [](std::vector<std::string> strands, const HedgesConfig& cfg)
         {
-            return hedges_decode(strands);
+            return hedges_decode(strands, cfg);
         }
     );
 }

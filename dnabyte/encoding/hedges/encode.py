@@ -19,6 +19,79 @@ class HEDGES(Encode):
     def __init__(self, params, logger=None):
         self.params = params
         self.logger = logger
+        self.hedges_cfg = self.create_config(params)
+        self.params.hedges_cfg = self.hedges_cfg
+
+
+    def create_config(self, params):
+
+        cfg = hedges_python.HedgesConfig()
+
+        # map framework parameters -> HEDGES config
+
+        cfg.coderate = getattr(
+            params,
+            "hedges_coderate",
+            3
+        )
+
+        cfg.total_strand_length = getattr(
+            params,
+            "sequence_length",
+            300
+        )
+
+        cfg.strand_id_bytes = getattr(
+            params,
+            "strand_id_bytes",
+            2
+        )
+
+        cfg.strand_runout_bytes = getattr(
+            params,
+            "strand_runout_bytes",
+            2
+        )
+
+        cfg.gc_window = getattr(
+            params,
+            "gc_window",
+            12
+        )
+
+        cfg.gc_max = getattr(
+            params,
+            "gc_max",
+            8
+        )
+
+        cfg.max_homopolymer = getattr(
+            params,
+            "max_homopolymer",
+            4
+        )
+
+        cfg.heap_limit = getattr(
+            params,
+            "heap_limit",
+            1000000
+        )
+
+        cfg.left_primer = getattr(
+            params,
+            "left_primer",
+            "TCGAAGTCAGCGTGTATTGTATG"
+        )
+
+        cfg.right_primer = getattr(
+            params,
+            "right_primer",
+            "TAGTGAGTGCGATTAAGCGTGTT"
+        )
+
+
+        return cfg
+
 
 
     def encode(self, data):
@@ -34,15 +107,8 @@ class HEDGES(Encode):
             byteorder="big"
         )
 
-        print(hedges_python.__file__)
-        print(hedges_python.encode_hedges.__doc__)
-        print(hedges_python.encode_hedges)
-        print("====================================================================")
-        print(data.data)
-        print(byte_data.hex())
-        print("====================================================================")
 
-        dna_strands = encode_hedges(byte_data)
+        dna_strands = encode_hedges(byte_data, self.hedges_cfg)
 
         info = {
             "number_of_strands": len(dna_strands),
@@ -86,17 +152,52 @@ def attributes(inputparams):
     """
     Validates and returns HEDGES encoding attributes based on input parameters.
     """
-    encoding_method = getattr(inputparams, 'encoding_method', 'hedges')
-    assembly_structure = 'synthesis'
-
-    # HEDGES specific parameters with defaults
-    sequence_length = getattr(inputparams, 'sequence_length', 200)
-
-    # Build return dictionary
     attributes_dict = {
-        "encoding_method": encoding_method,
-        "assembly_structure": assembly_structure,
-        "sequence_length": sequence_length,
+
+        "encoding_method":
+            getattr(
+                inputparams,
+                "encoding_method",
+                "hedges"
+            ),
+
+        "assembly_structure":
+            "synthesis",
+
+        "sequence_length":
+            getattr(
+                inputparams,
+                "sequence_length",
+                300
+            ),
+
+        "hedges_coderate":
+            getattr(
+                inputparams,
+                "hedges_coderate",
+                3
+            ),
+
+        "gc_window":
+            getattr(
+                inputparams,
+                "gc_window",
+                12
+            ),
+
+        "gc_max":
+            getattr(
+                inputparams,
+                "gc_max",
+                8
+            ),
+
+        "max_homopolymer":
+            getattr(
+                inputparams,
+                "max_homopolymer",
+                4
+            ),
     }
 
     return attributes_dict

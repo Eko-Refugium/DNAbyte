@@ -1,45 +1,36 @@
 #include "hedges_wrapper.h"
 
-
+extern Int bytesperstrand;
 extern Int messbytesperpacket;
 extern Int strandsperpacket;
 extern Int messbytesperstrand;
 extern Int strandIDbytes;
+extern Int strandrunoutbytes;
+extern Int strandsperpacketmessage;
 
-
-// Create a HEDGES message packet from arbitrary bytes
 MatUchar build_packet(
     const VecUchar& input,
     Int packet_number
 )
 {
-    MatUchar packet(strandsperpacket, messbytesperstrand);
+MatUchar packet(strandsperpacket, bytesperstrand, Uchar(0));
 
-    Int offset = packet_number * messbytesperpacket;
+for (Int strand = 0; strand < strandsperpacketmessage; strand++)
+{
+    packet[strand][0] = static_cast<Uchar>(packet_number);
+    packet[strand][1] = static_cast<Uchar>(strand);
 
-
-    for (Int strand = 0; strand < strandsperpacket; strand++)
+    for (Int b = 0; b < messbytesperstrand; b++)
     {
-        for (Int byte = 0; byte < messbytesperstrand; byte++)
-        {
-            Int index =
-                offset +
-                strand * messbytesperstrand +
-                byte;
+        Int index = strand * messbytesperstrand + b;
 
-
-            if (index < input.size())
-            {
-                packet[strand][byte] = input[index];
-            }
-            else
-            {
-                // padding
-                packet[strand][byte] = 0;
-            }
-        }
+        if (index < input.size())
+            packet[strand][strandIDbytes + b] = input[index];
     }
 
+    packet[strand][bytesperstrand - 2] = 0;
+    packet[strand][bytesperstrand - 1] = 0;
+}
 
     return packet;
 }

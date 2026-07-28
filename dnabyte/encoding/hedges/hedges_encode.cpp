@@ -8,6 +8,7 @@
 #include "HEDGES-main/DNAcode.h"
 #include "hedges_wrapper.h"
 #include "dna_export.h"
+#include "hedges_config.h"
 
 extern Int bytesperstrand;
 extern Int strandsperpacketmessage;
@@ -25,7 +26,8 @@ extern Int strandsperpacketcheck;
 
 
 std::vector<std::string> hedges_encode(
-    const std::vector<uint8_t>& data
+    const std::vector<uint8_t>& data,
+    const HedgesConfig& cfg
 )
 {
     // if (argc != 3)
@@ -59,18 +61,40 @@ std::vector<std::string> hedges_encode(
     VecDoub coderates(7, coderates_);
 
     // see the PNAS paper to understand the intended use of primers
-    char leftprimer_s[] = "TCGAAGTCAGCGTGTATTGTATG"; // _s means "as a string"
-    char rightprimer_s[] = "TAGTGAGTGCGATTAAGCGTGTT"; // for direct right appending (no reverse complement)
+    // primers
+    std::vector<char> leftprimer_s(
+        cfg.left_primer.begin(),
+        cfg.left_primer.end()
+    );
 
-    // user-settable parameters for this test
-    Int coderatecode = 3; // test this coderate in coderates table above
-    Int npackets = 20; // number of packets (of 255 strands each) to generate and test
-    Int hlimit = 1000000; // maximum size of decode heap, see paper
+    leftprimer_s.push_back('\0');
 
-    // these lines are setting global variables in DNAcode.cpp
-    totstrandlen = 300; // total length of DNA strand
-    strandIDbytes = 2; // ID bytes each strand for packet and sequence number (is global)
-    strandrunoutbytes = 2; // confirming bytes end of each strand (see paper)
+
+    std::vector<char> rightprimer_s(
+        cfg.right_primer.begin(),
+        cfg.right_primer.end()
+    );
+
+    rightprimer_s.push_back('\0');
+
+
+    // user parameters
+    Int coderatecode =
+        cfg.coderate;
+
+    Int hlimit =
+        cfg.heap_limit;
+
+
+    // strand parameters
+    totstrandlen =
+        cfg.total_strand_length;
+
+    strandIDbytes =
+        cfg.strand_id_bytes;
+
+    strandrunoutbytes =
+        cfg.strand_runout_bytes;
 
     // sub,del,ins rates to simulate in this test (as multiple of our experimentally observed values):
     Doub ratefac = 1.5;
@@ -79,9 +103,14 @@ std::vector<std::string> hedges_encode(
     Doub irate = ratefac * 0.0039;
 
     // set parameters for DNA constrants (normally not changed, except for no constraint)
-    Int max_hpoly_run = 4; // max homopolymer length allowed (0 for no constraint)
-    Int GC_window = 12; // window for GC count (0 for no constraint)
-    Int max_GC = 8; // max GC allowed in window (0 for no constraint)
+    Int max_hpoly_run =
+        cfg.max_homopolymer;
+
+    Int GC_window =
+        cfg.gc_window;
+
+    Int max_GC =
+        cfg.gc_max;
     Int min_GC = GC_window - max_GC;
 
     // get and reset parameters per above
@@ -91,17 +120,21 @@ std::vector<std::string> hedges_encode(
     Int NSTAK = params.NSTAK;
     Int HLIMIT = params.HLIMIT;
     setparams(8 * strandIDbytes, MAXSEQ, NSTAK, hlimit); // change NSALT and HLIMIT
-    setcoderate(coderatecode, leftprimer_s, rightprimer_s); // set code rate with left and right primers
+    setcoderate(
+    coderatecode,
+    leftprimer_s.data(),
+    rightprimer_s.data()
+    );
     setdnaconstraints(GC_window, max_GC, min_GC, max_hpoly_run); // set DNA constraints (see paper)
 
     // set values of global variables derived from above
-    leftlen = Int(strlen(leftprimer_s));
-    rightlen = Int(strlen(rightprimer_s));
+    leftlen = Int(strlen(leftprimer_s.data()));
+    rightlen = Int(strlen(rightprimer_s.data()));
     strandlen = totstrandlen - leftlen - rightlen;
     strandsperpacketmessage = strandsperpacket - strandsperpacketcheck;
     bytesperstrand = Int(strandlen * coderates[coderatecode] / 4.);
     messbytesperstrand = bytesperstrand - strandIDbytes - strandrunoutbytes; // payload bytes per strand
-    messbytesperpacket = strandsperpacket * messbytesperstrand; // payload bytes per packet of 255 strands
+    messbytesperpacket = strandsperpacketmessage * messbytesperstrand; // payload bytes per packet of 255 strands
 
     std::cout << "HEDGES initialized.\n";
     std::cout << "Message bytes per packet: "
@@ -113,14 +146,27 @@ std::vector<std::string> hedges_encode(
     size_t offset = 0;
     uint32_t packet_id = 0;
 
+    std::cout << "data.size() = "
+          << data.size()
+          << std::endl;
+
     while(offset < data.size())
     {
         size_t remaining = data.size() - offset;
 
+        size_t capacity = messbytesperpacket;
+
+        if(packet_id == 0)
+        {
+            capacity -= 4;
+        }
+
         size_t chunk_size = std::min(
             remaining,
-            static_cast<size_t>(messbytesperpacket)
+            capacity
         );
+        std::cout << "remaining = " << remaining << '\n';
+        std::cout << "chunk_size = " << chunk_size << '\n';
 
         std::vector<uint8_t> chunk(
             data.begin() + offset,
@@ -131,8 +177,20 @@ std::vector<std::string> hedges_encode(
         // (usually yes)
         std::vector<uint8_t> payload;
 
-        
 
+        // Add original size ONLY on first packet
+        if(packet_id == 0)
+        {
+            uint32_t size = data.size();
+
+            payload.push_back((size >> 24) & 0xff);
+            payload.push_back((size >> 16) & 0xff);
+            payload.push_back((size >> 8) & 0xff);
+            payload.push_back(size & 0xff);
+        }
+
+
+        // Add actual data
         payload.insert(
             payload.end(),
             chunk.begin(),
@@ -140,10 +198,20 @@ std::vector<std::string> hedges_encode(
         );
 
 
+        // pad packet to exact message size
+        while(payload.size() < messbytesperpacket)
+        {
+            payload.push_back(0);
+}
+
         VecUchar input(payload.size());
 
         for(size_t i=0;i<payload.size();i++)
             input[i]=payload[i];
+
+        std::cout << "input.size() = "
+          << input.size()
+          << std::endl;
 
 
         MatUchar packet = build_packet(
@@ -169,9 +237,22 @@ std::vector<std::string> hedges_encode(
         MatUchar protected_packet =
             protectmesspacket(packet);
 
+        std::cout << "Protected packet first 5 rows:\n";
+
+        for (int r = 0; r < 5; r++)
+        {
+            for (int c = 0; c < 10; c++)
+            {
+                std::cout << (int)protected_packet[r][c] << " ";
+            }
+            std::cout << "\n";
+        }
+
 
         MatUchar dna =
             messtodna(protected_packet);
+
+
 
 
         auto strands = dna_to_strings(dna);
