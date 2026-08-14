@@ -22,7 +22,8 @@ from dnabyte.sequence import SimulateSequencing
 from dnabyte.misc_err import SimulateMiscErrors
 from dnabyte.params import Params
 from dnabyte.binarize import Binarize
-from dnabyte.process import Process
+from dnabyte.cluster import Cluster
+from dnabyte.consensus import Consensus
 
 class Simulation():
 
@@ -162,15 +163,21 @@ class Simulation():
                         # generate the info
                         duration = time.time() - start_time
                         info['duration'] = duration
+                        
+                        # Calculate total DNA length in base pairs
+                        total_dna_length = sum(len(seq) for seq in data_syn.data)
+                        info['total_dna_length'] = total_dna_length
 
                         # logging
                         self.simlogger.info('STATUS: SUCCESS')
                         self.simlogger.info('DURATION: %.2f seconds', duration)
                         self.simlogger.info('NUMBER OF CODEWORDS: %d', len(data_syn.data))
+                        self.simlogger.info('TOTAL DNA LENGTH: %d bp', total_dna_length)
                         self.simlogger.info(data_syn.__str__())
 
                         # save to results
                         results[name]['step3'] = info
+                        results[name]['total_dna_length'] = total_dna_length
                     else:
                         self.simlogger.info('STEP03: SKIP SYNTHESIS SIMULATION')
                         data_syn = data_enc
@@ -284,11 +291,13 @@ class Simulation():
                     self.simlogger.info('STEP07: PROCESS DATA')
                     start_time = time.time()
                     try:
-                        # Use Process class if clustering and recovery methods are specified
+                        # Use Cluster and Consensus if clustering and recovery methods are specified
                         if hasattr(params, 'clustering_method') and hasattr(params, 'recovery_method') and \
                            params.clustering_method and params.recovery_method:
-                            processor = Process(params, logger=self.simlogger)
-                            data_cor, info = processor.process(data_seq)
+                            cluster_obj = Cluster(params, logger=self.simlogger)
+                            data_cluster, info = cluster_obj.cluster(data_seq)
+                            consensus_obj = Consensus(params, logger=self.simlogger)
+                            data_cor, info = consensus_obj.call(data_cluster)
                             self.simlogger.info('Processing method: %s + %s', params.clustering_method, params.recovery_method)
                         else:
                             # Fall back to encoding-specific process
@@ -379,13 +388,14 @@ class Simulation():
                     info = {}
                     info['duration'] = duration
                     info['comparison'] = res
+                    info['bitstreams_match'] = (comparison != 'ERROR')
 
                     # logging
                     self.simlogger.info('STATUS: SUCCESS')
                     self.simlogger.info('DURATION: %.2f seconds' + "\n", duration)
 
                     # save to results
-                    results[name]['step9'] = res
+                    results[name]['step9'] = info
 
     #######################################################################################################################
     ##### STEP 10: RECREATE ORIGINAL DATA ##################################################################################
@@ -416,8 +426,10 @@ class Simulation():
                     self.simlogger.info('STATUS: SUCCESS')
                     self.simlogger.info('DURATION: %.2f seconds' + "\n", duration)
 
-                    # save to results
-                    results[name]['step9'] = info
+                    # save to results - preserve step9 bitstreams_match and add step10 duration
+                    if 'step9' not in results[name]:
+                        results[name]['step9'] = {}
+                    results[name]['step9']['step10_duration'] = duration
 
                     results[name]['status'] = 'SUCCESS'
 

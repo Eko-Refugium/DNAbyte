@@ -18,8 +18,8 @@ params_list = [
         rs_num=0,
         mean=10,
         add_redundancy=True,
-        add_primer=True,
-        primer_length=50,
+        add_primer=False,
+        primer_length=20,
 
         # error channels
         storage_conditions=None,

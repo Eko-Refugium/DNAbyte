@@ -1,0 +1,280 @@
+2026-08-05 13:23:19,559 - INFO - Starting cost analysis
+2026-08-05 13:23:19,559 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:23:19,559 - INFO - Test data size: 440 bits
+2026-08-05 13:23:19,560 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:23:20,843 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,853 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,863 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,890 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,916 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,925 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,932 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,947 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,950 - INFO - Starting cost analysis
+2026-08-05 13:23:20,951 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:23:20,951 - INFO - Test data size: 440 bits
+2026-08-05 13:23:20,951 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:23:20,958 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,974 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,982 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,991 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:20,997 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:21,006 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:21,013 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+
+2026-08-05 13:23:21,020 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 30, in binarize
+    binarization_class = self.binarize_plugins[self.name]
+                         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'default'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 341, in _encode_and_measure
+    binary_code = binarizer.binarize(test_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarize.py", line 41, in binarize
+    raise ValueError(f"Binarization method '{self.name}' not recognized.")
+ValueError: Binarization method 'default' not recognized.
+

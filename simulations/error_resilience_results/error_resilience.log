@@ -1,0 +1,80 @@
+2026-08-05 17:12:32,992 - INFO - goldman            @   1.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:12:33,175 - INFO - goldman            @   5.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:12:33,410 - INFO - goldman            @  10.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:12:33,684 - INFO - goldman            @  15.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:12:34,006 - INFO - goldman            @  20.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:12:34,165 - INFO - church             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:12:34,355 - INFO - church             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:12:34,569 - INFO - church             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:12:34,827 - INFO - church             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:12:35,129 - INFO - church             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:12:36,246 - INFO - gcplus             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:12:37,383 - INFO - gcplus             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:12:38,535 - INFO - gcplus             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:12:39,755 - INFO - gcplus             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:12:41,015 - INFO - gcplus             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:12:41,554 - INFO - hedges             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:12:41,809 - INFO - hedges             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:12:42,193 - INFO - hedges             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:12:42,718 - INFO - hedges             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:12:43,388 - INFO - hedges             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:12:43,507 - INFO - max_density        @   1.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:12:43,544 - INFO - max_density        @   5.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:12:43,595 - INFO - max_density        @  10.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:12:43,658 - INFO - max_density        @  15.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:12:43,741 - INFO - max_density        @  20.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:12:43,776 - INFO - no_homopolymer     @   1.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:12:43,830 - INFO - no_homopolymer     @   5.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:12:43,906 - INFO - no_homopolymer     @  10.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:12:44,002 - INFO - no_homopolymer     @  15.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:12:44,121 - INFO - no_homopolymer     @  20.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:12:44,321 - INFO - wukong             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:12:44,532 - INFO - wukong             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:12:44,786 - INFO - wukong             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:12:45,056 - INFO - wukong             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:12:45,362 - INFO - wukong             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:12:45,908 - INFO - yinyang            @   1.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8320bp
+2026-08-05 17:12:46,408 - INFO - yinyang            @   5.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8320bp
+2026-08-05 17:12:46,924 - INFO - yinyang            @  10.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8320bp
+2026-08-05 17:12:47,540 - INFO - yinyang            @  15.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8576bp
+2026-08-05 17:12:48,077 - INFO - yinyang            @  20.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8576bp
+2026-08-05 17:14:13,702 - INFO - goldman            @   1.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:14:13,929 - INFO - goldman            @   5.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:14:14,200 - INFO - goldman            @  10.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:14:14,521 - INFO - goldman            @  15.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:14:14,889 - INFO - goldman            @  20.0% error: recovery=100.0%, resilience/1kbp=  0.03, cost= 39597bp
+2026-08-05 17:14:15,093 - INFO - church             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:14:15,311 - INFO - church             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:14:15,809 - INFO - church             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:14:16,094 - INFO - church             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:14:16,427 - INFO - church             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.04, cost= 28000bp
+2026-08-05 17:14:17,485 - INFO - gcplus             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:14:18,573 - INFO - gcplus             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:14:19,716 - INFO - gcplus             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:14:20,904 - INFO - gcplus             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:14:22,128 - INFO - gcplus             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.02, cost= 46800bp
+2026-08-05 17:14:22,351 - INFO - hedges             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:14:22,663 - INFO - hedges             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:14:23,109 - INFO - hedges             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:14:23,671 - INFO - hedges             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:14:24,368 - INFO - hedges             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.01, cost=102000bp
+2026-08-05 17:14:24,409 - INFO - max_density        @   1.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:14:24,452 - INFO - max_density        @   5.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:14:24,515 - INFO - max_density        @  10.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:14:24,579 - INFO - max_density        @  15.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:14:24,662 - INFO - max_density        @  20.0% error: recovery=100.0%, resilience/1kbp=  0.10, cost=  9800bp
+2026-08-05 17:14:24,706 - INFO - no_homopolymer     @   1.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:14:24,760 - INFO - no_homopolymer     @   5.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:14:24,838 - INFO - no_homopolymer     @  10.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:14:24,937 - INFO - no_homopolymer     @  15.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:14:25,070 - INFO - no_homopolymer     @  20.0% error: recovery=100.0%, resilience/1kbp=  0.06, cost= 17200bp
+2026-08-05 17:14:25,289 - INFO - wukong             @   1.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:14:25,527 - INFO - wukong             @   5.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:14:25,788 - INFO - wukong             @  10.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:14:26,083 - INFO - wukong             @  15.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:14:26,411 - INFO - wukong             @  20.0% error: recovery=100.0%, resilience/1kbp=  0.05, cost= 21400bp
+2026-08-05 17:14:26,929 - INFO - yinyang            @   1.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8320bp
+2026-08-05 17:14:27,425 - INFO - yinyang            @   5.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8320bp
+2026-08-05 17:14:27,924 - INFO - yinyang            @  10.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8320bp
+2026-08-05 17:14:28,502 - INFO - yinyang            @  15.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8576bp
+2026-08-05 17:14:29,038 - INFO - yinyang            @  20.0% error: recovery=100.0%, resilience/1kbp=  0.12, cost=  8576bp

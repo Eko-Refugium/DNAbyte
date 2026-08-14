@@ -1,0 +1,52 @@
+2026-08-05 15:14:37,744 - INFO - Starting cost analysis
+2026-08-05 15:14:37,744 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 15:14:37,744 - INFO - Test data size: 440 bits
+2026-08-05 15:14:37,744 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:14:38,928 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpsxnxswfx.bin
+2026-08-05 15:14:38,931 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp75hk6d73/tmpsxnxswfx_goldman.fasta
+2026-08-05 15:14:38,940 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpsxnxswfx.bin
+2026-08-05 15:14:38,941 - INFO - [OK] goldman: strands=3, avg_length=198.0, total_dna=594
+2026-08-05 15:14:38,947 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpijpiibwy.bin
+2026-08-05 15:14:38,952 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpari0b1jh/tmpijpiibwy_church.fasta
+2026-08-05 15:14:38,953 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpijpiibwy.bin
+2026-08-05 15:14:38,954 - INFO - [OK] church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:14:38,960 - ERROR - GC+ encode error: The length of the binary message must be divisible by the block length [0, 0, 1, 1, 0, 0, 0, 1, 0, 0].
+2026-08-05 15:14:38,961 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\encode.py", line 103, in encode
+    x, n, N, K, q, U, X, check_par = GCP_Encode_DNA_brute(
+                                     ~~~~~~~~~~~~~~~~~~~~^
+        chunk, l, c1, codebook
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\src\GCPdna\GCP_Encode_DNA.py", line 34, in GCP_Encode_DNA_brute
+    U = binary_to_decimal_blocks(u, l)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\src\GCPdna\GCP_Encode_DNA.py", line 12, in binary_to_decimal_blocks
+    raise ValueError(f"The length of the binary message must be divisible by the block length {binary_message}.")
+ValueError: The length of the binary message must be divisible by the block length [0, 0, 1, 1, 0, 0, 0, 1, 0, 0].
+
+2026-08-05 15:14:38,961 - ERROR - [SKIP] gcplus: Encoded data must be a list, got NoneType
+2026-08-05 15:14:38,963 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 279, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 369, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 52, in encode
+    obj = NucleobaseCode(encoded_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\data_classes\nucleobasecode.py", line 43, in __init__
+    self._validate_data(data)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\data_classes\nucleobasecode.py", line 60, in _validate_data
+    raise TypeError(
+        f"Encoded data must be a list, got {type(data).__name__}"
+    )
+TypeError: Encoded data must be a list, got NoneType
+
+2026-08-05 15:14:38,989 - INFO - [OK] hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:14:39,010 - INFO - [OK] max_density: strands=2, avg_length=200.0, total_dna=400
+2026-08-05 15:14:39,015 - INFO - [OK] no_homopolymer: strands=3, avg_length=200.0, total_dna=600
+2026-08-05 15:14:39,019 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpyj6botup.bin
+2026-08-05 15:14:39,027 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpj_o6_pn6/tmpyj6botup_wukong.fasta
+2026-08-05 15:14:39,030 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpyj6botup.bin
+2026-08-05 15:14:39,030 - INFO - [OK] wukong: strands=6, avg_length=200.0, total_dna=1200

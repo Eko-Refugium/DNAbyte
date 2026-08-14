@@ -1,0 +1,1 @@
+Test data for 100 bytes of DNA storage simulation. This file contains exactly 100 bytes of text to use as input for the error resilience analysis with normalized encoding parameters and fixed sequence length.

@@ -1,0 +1,92 @@
+2026-08-05 15:43:58,687 - INFO - Starting cost analysis
+2026-08-05 15:43:58,687 - INFO - Encodings: ['goldman', 'church', 'hedges', 'max_density', 'no_homopolymer', 'wukong']
+2026-08-05 15:43:58,688 - INFO - Test data size: 440 bits
+2026-08-05 15:43:58,688 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:43:59,946 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpi3q84_4u.bin
+2026-08-05 15:43:59,958 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpou4lik_p/tmpi3q84_4u_goldman.fasta
+2026-08-05 15:43:59,960 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpi3q84_4u.bin
+2026-08-05 15:43:59,961 - INFO - [OK] goldman: strands=3, avg_length=198.0, total_dna=594
+2026-08-05 15:43:59,968 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp9g0_cxso.bin
+2026-08-05 15:43:59,973 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpg5gs3q55/tmp9g0_cxso_church.fasta
+2026-08-05 15:43:59,975 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp9g0_cxso.bin
+2026-08-05 15:43:59,976 - INFO - [OK] church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:44:00,007 - INFO - [OK] hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:44:00,032 - INFO - [OK] max_density: strands=2, avg_length=200.0, total_dna=400
+2026-08-05 15:44:00,037 - INFO - [OK] no_homopolymer: strands=3, avg_length=200.0, total_dna=600
+2026-08-05 15:44:00,042 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpc5bkwcvp.bin
+2026-08-05 15:44:00,053 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpt4rnu054/tmpc5bkwcvp_wukong.fasta
+2026-08-05 15:44:00,055 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpc5bkwcvp.bin
+2026-08-05 15:44:00,055 - INFO - [OK] wukong: strands=6, avg_length=200.0, total_dna=1200
+2026-08-05 15:44:00,056 - INFO - --- Normalizing to goldman (cost=594) ---
+2026-08-05 15:44:00,056 - INFO - Tuning church to target 594 nt
+2026-08-05 15:44:00,056 - INFO -   Church: estimated 3 strands needed
+2026-08-05 15:44:00,058 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpyt3k0kzw.bin
+2026-08-05 15:44:00,063 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpg_wvjzpo/tmpyt3k0kzw_church.fasta
+2026-08-05 15:44:00,065 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpyt3k0kzw.bin
+2026-08-05 15:44:00,065 - INFO - [OK] church (tuned): church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:44:00,065 - INFO -   Cost ratio: 1.35x
+2026-08-05 15:44:00,065 - INFO - Tuning hedges to target 594 nt
+2026-08-05 15:44:00,065 - INFO -   Hedges: coderate=4, seq_len=200
+2026-08-05 15:44:00,080 - INFO - [OK] hedges (tuned): hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:44:00,080 - INFO -   Cost ratio: 85.86x
+2026-08-05 15:44:00,080 - INFO - Tuning max_density to target 594 nt
+2026-08-05 15:44:00,080 - INFO -   MaxDensity: codeword_length=200
+2026-08-05 15:44:00,082 - INFO - [OK] max_density (tuned): max_density: strands=2, avg_length=200.0, total_dna=400
+2026-08-05 15:44:00,082 - INFO -   Cost ratio: 0.67x
+2026-08-05 15:44:00,082 - INFO - Tuning no_homopolymer to target 594 nt
+2026-08-05 15:44:00,083 - INFO -   NoHomoPoly: codeword_length=200
+2026-08-05 15:44:00,084 - INFO - [OK] no_homopolymer (tuned): no_homopolymer: strands=3, avg_length=200.0, total_dna=600
+2026-08-05 15:44:00,084 - INFO -   Cost ratio: 1.01x
+2026-08-05 15:44:00,084 - INFO - Tuning wukong to target 594 nt
+2026-08-05 15:44:00,085 - INFO -   Wukong: seq_len=200, GC=[0.4, 0.6]
+2026-08-05 15:44:00,087 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmppt7tduim.bin
+2026-08-05 15:44:00,098 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmptknka20m/tmppt7tduim_wukong.fasta
+2026-08-05 15:44:00,100 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmppt7tduim.bin
+2026-08-05 15:44:00,100 - INFO - [OK] wukong (tuned): wukong: strands=6, avg_length=200.0, total_dna=1200
+2026-08-05 15:44:00,100 - INFO -   Cost ratio: 2.02x
+2026-08-05 15:44:00,109 - INFO - Starting cost analysis
+2026-08-05 15:44:00,109 - INFO - Encodings: ['goldman', 'church', 'hedges', 'max_density', 'no_homopolymer', 'wukong']
+2026-08-05 15:44:00,109 - INFO - Test data size: 440 bits
+2026-08-05 15:44:00,109 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:44:00,113 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp8l5qkdqb.bin
+2026-08-05 15:44:00,117 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmplyqn0zn1/tmp8l5qkdqb_goldman.fasta
+2026-08-05 15:44:00,119 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp8l5qkdqb.bin
+2026-08-05 15:44:00,120 - INFO - [OK] goldman: strands=3, avg_length=198.0, total_dna=594
+2026-08-05 15:44:00,122 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpbf6bz2un.bin
+2026-08-05 15:44:00,125 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp6eu2dym2/tmpbf6bz2un_church.fasta
+2026-08-05 15:44:00,127 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpbf6bz2un.bin
+2026-08-05 15:44:00,127 - INFO - [OK] church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:44:00,142 - INFO - [OK] hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:44:00,143 - INFO - [OK] max_density: strands=2, avg_length=200.0, total_dna=400
+2026-08-05 15:44:00,145 - INFO - [OK] no_homopolymer: strands=3, avg_length=200.0, total_dna=600
+2026-08-05 15:44:00,148 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpi269t2i6.bin
+2026-08-05 15:44:00,160 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmptljxlqd0/tmpi269t2i6_wukong.fasta
+2026-08-05 15:44:00,162 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpi269t2i6.bin
+2026-08-05 15:44:00,163 - INFO - [OK] wukong: strands=6, avg_length=200.0, total_dna=1200
+2026-08-05 15:44:00,163 - INFO - --- Normalizing to goldman (cost=594) ---
+2026-08-05 15:44:00,163 - INFO - Tuning church to target 594 nt
+2026-08-05 15:44:00,163 - INFO -   Church: estimated 3 strands needed
+2026-08-05 15:44:00,166 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp111it1zr.bin
+2026-08-05 15:44:00,170 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpfygplujv/tmp111it1zr_church.fasta
+2026-08-05 15:44:00,171 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp111it1zr.bin
+2026-08-05 15:44:00,172 - INFO - [OK] church (tuned): church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:44:00,172 - INFO -   Cost ratio: 1.35x
+2026-08-05 15:44:00,172 - INFO - Tuning hedges to target 594 nt
+2026-08-05 15:44:00,172 - INFO -   Hedges: coderate=4, seq_len=200
+2026-08-05 15:44:00,189 - INFO - [OK] hedges (tuned): hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:44:00,189 - INFO -   Cost ratio: 85.86x
+2026-08-05 15:44:00,189 - INFO - Tuning max_density to target 594 nt
+2026-08-05 15:44:00,189 - INFO -   MaxDensity: codeword_length=200
+2026-08-05 15:44:00,191 - INFO - [OK] max_density (tuned): max_density: strands=2, avg_length=200.0, total_dna=400
+2026-08-05 15:44:00,191 - INFO -   Cost ratio: 0.67x
+2026-08-05 15:44:00,191 - INFO - Tuning no_homopolymer to target 594 nt
+2026-08-05 15:44:00,191 - INFO -   NoHomoPoly: codeword_length=200
+2026-08-05 15:44:00,193 - INFO - [OK] no_homopolymer (tuned): no_homopolymer: strands=3, avg_length=200.0, total_dna=600
+2026-08-05 15:44:00,193 - INFO -   Cost ratio: 1.01x
+2026-08-05 15:44:00,193 - INFO - Tuning wukong to target 594 nt
+2026-08-05 15:44:00,193 - INFO -   Wukong: seq_len=200, GC=[0.4, 0.6]
+2026-08-05 15:44:00,196 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpruap3ava.bin
+2026-08-05 15:44:00,208 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpjqaatb3a/tmpruap3ava_wukong.fasta
+2026-08-05 15:44:00,211 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpruap3ava.bin
+2026-08-05 15:44:00,211 - INFO - [OK] wukong (tuned): wukong: strands=6, avg_length=200.0, total_dna=1200
+2026-08-05 15:44:00,211 - INFO -   Cost ratio: 2.02x

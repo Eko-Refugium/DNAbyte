@@ -1,0 +1,58 @@
+2026-08-05 15:47:12,939 - INFO - Starting cost analysis
+2026-08-05 15:47:12,939 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 15:47:12,940 - INFO - Test data size: 15600 bits
+2026-08-05 15:47:12,940 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:47:12,945 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp95ld4mlk.bin
+2026-08-05 15:47:12,966 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp6w9201tt/tmp95ld4mlk_goldman.fasta
+2026-08-05 15:47:12,987 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp95ld4mlk.bin
+2026-08-05 15:47:12,988 - INFO - [OK] goldman: strands=201, avg_length=197.0, total_dna=39597
+2026-08-05 15:47:12,993 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpcuahnwdf.bin
+2026-08-05 15:47:13,026 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpmrsffbbt/tmpcuahnwdf_church.fasta
+2026-08-05 15:47:13,043 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpcuahnwdf.bin
+2026-08-05 15:47:13,044 - INFO - [OK] church: strands=140, avg_length=200.0, total_dna=28000
+2026-08-05 15:47:13,477 - INFO - GC+ encoded 1950 oligos, k=8, l=8, c1=2, n=24 bases per oligo
+2026-08-05 15:47:13,481 - INFO - [OK] gcplus: strands=1950, avg_length=24.0, total_dna=46800
+2026-08-05 15:47:13,512 - INFO - [OK] hedges: strands=510, avg_length=200.0, total_dna=102000
+2026-08-05 15:47:13,519 - INFO - [OK] max_density: strands=49, avg_length=200.0, total_dna=9800
+2026-08-05 15:47:13,526 - INFO - [OK] no_homopolymer: strands=86, avg_length=200.0, total_dna=17200
+2026-08-05 15:47:13,531 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpy9hcj_1m.bin
+2026-08-05 15:47:13,564 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpztp5bmpg/tmpy9hcj_1m_wukong.fasta
+2026-08-05 15:47:13,584 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpy9hcj_1m.bin
+2026-08-05 15:47:13,585 - INFO - [OK] wukong: strands=107, avg_length=200.0, total_dna=21400
+2026-08-05 15:47:13,702 - INFO - [OK] yinyang: strands=65, avg_length=128.0, total_dna=8320
+2026-08-05 15:47:13,702 - INFO - --- Normalizing to goldman (cost=39597) ---
+2026-08-05 15:47:13,703 - INFO - Tuning church to target 39597 nt
+2026-08-05 15:47:13,703 - INFO -   Church: estimated 198 strands needed
+2026-08-05 15:47:13,715 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmph1hf_ak8.bin
+2026-08-05 15:47:13,742 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp_uiwu38j/tmph1hf_ak8_church.fasta
+2026-08-05 15:47:13,758 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmph1hf_ak8.bin
+2026-08-05 15:47:13,760 - INFO - [OK] church (tuned): church: strands=140, avg_length=200.0, total_dna=28000
+2026-08-05 15:47:13,760 - INFO -   Cost ratio: 0.71x
+2026-08-05 15:47:13,760 - INFO - Tuning gcplus to target 39597 nt
+2026-08-05 15:47:13,760 - INFO -   GCPlus: k=8, seq_len=200
+2026-08-05 15:47:14,232 - INFO - GC+ encoded 1950 oligos, k=8, l=8, c1=2, n=24 bases per oligo
+2026-08-05 15:47:14,235 - INFO - [OK] gcplus (tuned): gcplus: strands=1950, avg_length=24.0, total_dna=46800
+2026-08-05 15:47:14,235 - INFO -   Cost ratio: 1.18x
+2026-08-05 15:47:14,235 - INFO - Tuning hedges to target 39597 nt
+2026-08-05 15:47:14,235 - INFO -   Hedges: coderate=4, seq_len=200
+2026-08-05 15:47:14,267 - INFO - [OK] hedges (tuned): hedges: strands=510, avg_length=200.0, total_dna=102000
+2026-08-05 15:47:14,267 - INFO -   Cost ratio: 2.58x
+2026-08-05 15:47:14,268 - INFO - Tuning max_density to target 39597 nt
+2026-08-05 15:47:14,268 - INFO -   MaxDensity: codeword_length=200
+2026-08-05 15:47:14,274 - INFO - [OK] max_density (tuned): max_density: strands=49, avg_length=200.0, total_dna=9800
+2026-08-05 15:47:14,275 - INFO -   Cost ratio: 0.25x
+2026-08-05 15:47:14,275 - INFO - Tuning no_homopolymer to target 39597 nt
+2026-08-05 15:47:14,275 - INFO -   NoHomoPoly: codeword_length=200
+2026-08-05 15:47:14,282 - INFO - [OK] no_homopolymer (tuned): no_homopolymer: strands=86, avg_length=200.0, total_dna=17200
+2026-08-05 15:47:14,282 - INFO -   Cost ratio: 0.43x
+2026-08-05 15:47:14,282 - INFO - Tuning wukong to target 39597 nt
+2026-08-05 15:47:14,282 - INFO -   Wukong: seq_len=200, GC=[0.4, 0.6]
+2026-08-05 15:47:14,287 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp2fp7vkds.bin
+2026-08-05 15:47:14,320 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpvozqra1r/tmp2fp7vkds_wukong.fasta
+2026-08-05 15:47:14,339 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp2fp7vkds.bin
+2026-08-05 15:47:14,341 - INFO - [OK] wukong (tuned): wukong: strands=107, avg_length=200.0, total_dna=21400
+2026-08-05 15:47:14,341 - INFO -   Cost ratio: 0.54x
+2026-08-05 15:47:14,341 - INFO - Tuning yinyang to target 39597 nt
+2026-08-05 15:47:14,341 - INFO -   YinYang: seq_len=20, max_content=0.6
+2026-08-05 15:47:14,468 - INFO - [OK] yinyang (tuned): yinyang: strands=65, avg_length=128.0, total_dna=8320
+2026-08-05 15:47:14,468 - INFO -   Cost ratio: 0.21x

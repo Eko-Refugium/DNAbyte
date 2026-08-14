@@ -46,11 +46,15 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         try:
             folders_binarize = [name for name in os.listdir(plugin_folder + '/binarization') 
                 if os.path.isdir(os.path.join(plugin_folder + '/binarization', name))]
+        except Exception as e:
+            print(f"Error listing binarization plugins: {e}")
+            folders_binarize = []
 
-            for filename in folders_binarize:
+        for filename in folders_binarize:
+            try:
                 if binarization_method.lower() == filename.lower():
                     
-                    # Load the encode module
+                    # Load the binarization module
                     binarization_module = importlib.import_module(f'dnabyte.binarization.{filename}.binarize')
                     # Find the class definition in the module
                     for name, obj in inspect.getmembers(binarization_module, inspect.isclass):
@@ -58,8 +62,10 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
                         # Add the class to the plugins dictionary
                             binarization_plugins[filename] = obj
                             break
-        except Exception as e:
-            print(f"Error loading binarization plugin '{filename}': {e}")
+            except Exception as e:
+                print(f"Error loading binarization plugin '{filename}': {e}")
+    
+    print(f"DEBUG: binarization_plugins loaded: {list(binarization_plugins.keys())}")
 
     # Load encoding plugins
     if encoding_method != None:
@@ -67,7 +73,12 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
             folders_encode = [name for name in os.listdir(plugin_folder + '/encoding') 
                 if os.path.isdir(os.path.join(plugin_folder + '/encoding', name))]
             print("folders_encode:", folders_encode, encoding_method.lower())
-            for filename in folders_encode:
+        except Exception as e:
+            print(f"Error listing encoding plugins: {e}")
+            folders_encode = []
+        
+        for filename in folders_encode:
+            try:
                 if encoding_method.lower() == filename.lower():
                     # Load the encode module
                     encode_module = importlib.import_module(f'dnabyte.encoding.{filename}.encode')
@@ -77,8 +88,8 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
                             # Add the class to the plugins dictionary
                             encoding_plugins[filename] = obj
                             break
-        except Exception as e:
-            print(f"Error loading encoding plugin '{filename}': {e}")
+            except Exception as e:
+                print(f"Error loading encoding plugin '{filename}': {e}")
 
     # Load storage plugins
     if storage_conditions != None:

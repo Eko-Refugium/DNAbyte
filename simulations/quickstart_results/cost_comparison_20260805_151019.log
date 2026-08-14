@@ -1,0 +1,47 @@
+2026-08-05 15:10:19,602 - INFO - Starting cost analysis
+2026-08-05 15:10:19,603 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong']
+2026-08-05 15:10:19,603 - INFO - Test data size: 440 bits
+2026-08-05 15:10:19,603 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:10:19,607 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpufhblklh.bin
+2026-08-05 15:10:19,611 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpvhoy6jv9/tmpufhblklh_goldman.fasta
+2026-08-05 15:10:19,613 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpufhblklh.bin
+2026-08-05 15:10:19,614 - INFO - [OK] goldman: strands=3, avg_length=198.0, total_dna=594
+2026-08-05 15:10:19,617 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmplqhxwpwo.bin
+2026-08-05 15:10:19,623 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpagei176s/tmplqhxwpwo_church.fasta
+2026-08-05 15:10:19,625 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmplqhxwpwo.bin
+2026-08-05 15:10:19,625 - INFO - [OK] church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:10:19,629 - INFO - GC+ encoded 3 oligos, k=160, l=8, c1=2, n=100 bases per oligo
+2026-08-05 15:10:19,630 - INFO - [OK] gcplus: strands=3, avg_length=100.0, total_dna=300
+2026-08-05 15:10:19,650 - INFO - [OK] hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:10:19,654 - INFO - [OK] max_density: strands=1, avg_length=500.0, total_dna=500
+2026-08-05 15:10:19,657 - INFO - [OK] no_homopolymer: strands=1, avg_length=500.0, total_dna=500
+2026-08-05 15:10:19,665 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp3t4w6xzf.bin
+2026-08-05 15:10:19,677 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmphrzqr7om/tmp3t4w6xzf_wukong.fasta
+2026-08-05 15:10:19,679 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp3t4w6xzf.bin
+2026-08-05 15:10:19,680 - INFO - [OK] wukong: strands=6, avg_length=200.0, total_dna=1200
+2026-08-05 15:10:19,680 - INFO - --- Normalizing to goldman (cost=594) ---
+2026-08-05 15:10:19,681 - INFO - Tuning church to target 594 nt
+2026-08-05 15:10:19,681 - INFO -   Church: estimated 3 strands needed
+2026-08-05 15:10:19,685 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpqwofu9y8.bin
+2026-08-05 15:10:19,691 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp7jzb8fa6/tmpqwofu9y8_church.fasta
+2026-08-05 15:10:19,693 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpqwofu9y8.bin
+2026-08-05 15:10:19,696 - INFO -   Cost ratio: 1.35x
+2026-08-05 15:10:19,696 - INFO - Tuning gcplus to target 594 nt
+2026-08-05 15:10:19,697 - INFO -   GCPlus: k=160, seq_len=200
+2026-08-05 15:10:19,700 - INFO - GC+ encoded 3 oligos, k=160, l=8, c1=2, n=100 bases per oligo
+2026-08-05 15:10:19,703 - INFO -   Cost ratio: 0.51x
+2026-08-05 15:10:19,703 - INFO - Tuning hedges to target 594 nt
+2026-08-05 15:10:19,703 - INFO -   Hedges: coderate=4, seq_len=200
+2026-08-05 15:10:19,730 - INFO -   Cost ratio: 85.86x
+2026-08-05 15:10:19,730 - INFO - Tuning max_density to target 594 nt
+2026-08-05 15:10:19,730 - INFO -   MaxDensity: codeword_length=500
+2026-08-05 15:10:19,735 - INFO -   Cost ratio: 0.84x
+2026-08-05 15:10:19,735 - INFO - Tuning no_homopolymer to target 594 nt
+2026-08-05 15:10:19,735 - INFO -   NoHomoPoly: codeword_length=500
+2026-08-05 15:10:19,741 - INFO -   Cost ratio: 0.84x
+2026-08-05 15:10:19,741 - INFO - Tuning wukong to target 594 nt
+2026-08-05 15:10:19,742 - INFO -   Wukong: seq_len=200, GC=[0.4, 0.6]
+2026-08-05 15:10:19,752 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpbs_kzwdi.bin
+2026-08-05 15:10:19,763 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpz92n43yv/tmpbs_kzwdi_wukong.fasta
+2026-08-05 15:10:19,765 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpbs_kzwdi.bin
+2026-08-05 15:10:19,768 - INFO -   Cost ratio: 2.02x

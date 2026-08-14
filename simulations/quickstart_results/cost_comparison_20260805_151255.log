@@ -1,0 +1,33 @@
+2026-08-05 15:12:55,489 - INFO - Starting cost analysis
+2026-08-05 15:12:55,490 - INFO - Encodings: ['goldman', 'church', 'hedges', 'wukong']
+2026-08-05 15:12:55,490 - INFO - Test data size: 440 bits
+2026-08-05 15:12:55,490 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:12:55,500 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpxfjzbt3h.bin
+2026-08-05 15:12:55,504 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpwcsmp_2e/tmpxfjzbt3h_goldman.fasta
+2026-08-05 15:12:55,505 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpxfjzbt3h.bin
+2026-08-05 15:12:55,506 - INFO - [OK] goldman: strands=3, avg_length=198.0, total_dna=594
+2026-08-05 15:12:55,510 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp4c78w_7o.bin
+2026-08-05 15:12:55,516 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpcj67u1vl/tmp4c78w_7o_church.fasta
+2026-08-05 15:12:55,519 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp4c78w_7o.bin
+2026-08-05 15:12:55,521 - INFO - [OK] church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:12:55,540 - INFO - [OK] hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:12:55,544 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpejaelkzj.bin
+2026-08-05 15:12:55,556 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpj861pr7k/tmpejaelkzj_wukong.fasta
+2026-08-05 15:12:55,558 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpejaelkzj.bin
+2026-08-05 15:12:55,559 - INFO - [OK] wukong: strands=6, avg_length=200.0, total_dna=1200
+2026-08-05 15:12:55,559 - INFO - --- Normalizing to goldman (cost=594) ---
+2026-08-05 15:12:55,560 - INFO - Tuning church to target 594 nt
+2026-08-05 15:12:55,560 - INFO -   Church: estimated 3 strands needed
+2026-08-05 15:12:55,563 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpv9dvcmnt.bin
+2026-08-05 15:12:55,568 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpk3_x2j98/tmpv9dvcmnt_church.fasta
+2026-08-05 15:12:55,571 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpv9dvcmnt.bin
+2026-08-05 15:12:55,573 - INFO -   Cost ratio: 1.35x
+2026-08-05 15:12:55,573 - INFO - Tuning hedges to target 594 nt
+2026-08-05 15:12:55,573 - INFO -   Hedges: coderate=4, seq_len=200
+2026-08-05 15:12:55,593 - INFO -   Cost ratio: 85.86x
+2026-08-05 15:12:55,594 - INFO - Tuning wukong to target 594 nt
+2026-08-05 15:12:55,594 - INFO -   Wukong: seq_len=200, GC=[0.4, 0.6]
+2026-08-05 15:12:55,596 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpgl0w3yf0.bin
+2026-08-05 15:12:55,607 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpqik1dtte/tmpgl0w3yf0_wukong.fasta
+2026-08-05 15:12:55,609 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpgl0w3yf0.bin
+2026-08-05 15:12:55,611 - INFO -   Cost ratio: 2.02x

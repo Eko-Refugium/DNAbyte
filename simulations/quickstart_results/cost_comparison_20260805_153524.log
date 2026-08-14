@@ -1,0 +1,52 @@
+2026-08-05 15:35:24,026 - INFO - Starting cost analysis
+2026-08-05 15:35:24,027 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 15:35:24,027 - INFO - Test data size: 440 bits
+2026-08-05 15:35:24,027 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:35:25,274 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp5whr4m8l.bin
+2026-08-05 15:35:25,278 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp5qvi76zd/tmp5whr4m8l_goldman.fasta
+2026-08-05 15:35:25,280 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp5whr4m8l.bin
+2026-08-05 15:35:25,281 - INFO - [OK] goldman: strands=3, avg_length=198.0, total_dna=594
+2026-08-05 15:35:25,287 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpcm0jnt8y.bin
+2026-08-05 15:35:25,292 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpz5jjm7rl/tmpcm0jnt8y_church.fasta
+2026-08-05 15:35:25,294 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpcm0jnt8y.bin
+2026-08-05 15:35:25,294 - INFO - [OK] church: strands=4, avg_length=200.0, total_dna=800
+2026-08-05 15:35:25,300 - ERROR - GC+ encode error: The length of the binary message must be divisible by the block length [0, 0, 1, 1].
+2026-08-05 15:35:25,301 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\encode.py", line 103, in encode
+    x, n, N, K, q, U, X, check_par = GCP_Encode_DNA_brute(
+                                     ~~~~~~~~~~~~~~~~~~~~^
+        chunk, l, c1, codebook
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\src\GCPdna\GCP_Encode_DNA.py", line 34, in GCP_Encode_DNA_brute
+    U = binary_to_decimal_blocks(u, l)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\src\GCPdna\GCP_Encode_DNA.py", line 12, in binary_to_decimal_blocks
+    raise ValueError(f"The length of the binary message must be divisible by the block length {binary_message}.")
+ValueError: The length of the binary message must be divisible by the block length [0, 0, 1, 1].
+
+2026-08-05 15:35:25,301 - ERROR - [SKIP] gcplus: Encoded data must be a list, got NoneType
+2026-08-05 15:35:25,303 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 279, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 369, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 52, in encode
+    obj = NucleobaseCode(encoded_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\data_classes\nucleobasecode.py", line 43, in __init__
+    self._validate_data(data)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\data_classes\nucleobasecode.py", line 60, in _validate_data
+    raise TypeError(
+        f"Encoded data must be a list, got {type(data).__name__}"
+    )
+TypeError: Encoded data must be a list, got NoneType
+
+2026-08-05 15:35:25,327 - INFO - [OK] hedges: strands=255, avg_length=200.0, total_dna=51000
+2026-08-05 15:35:25,346 - INFO - [OK] max_density: strands=2, avg_length=200.0, total_dna=400
+2026-08-05 15:35:25,350 - INFO - [OK] no_homopolymer: strands=3, avg_length=200.0, total_dna=600
+2026-08-05 15:35:25,360 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp_we5g6it.bin
+2026-08-05 15:35:25,370 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpc1w7963y/tmp_we5g6it_wukong.fasta
+2026-08-05 15:35:25,373 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp_we5g6it.bin
+2026-08-05 15:35:25,373 - INFO - [OK] wukong: strands=6, avg_length=200.0, total_dna=1200

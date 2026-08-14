@@ -1,0 +1,132 @@
+2026-08-05 15:52:05,768 - INFO - Starting error resistance analysis
+2026-08-05 15:52:05,769 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 15:52:05,769 - INFO - Error rates: [0.01, 0.05, 0.1, 0.2]
+2026-08-05 15:52:05,769 - INFO - Test data: 15600 bits (1950 bytes)
+2026-08-05 15:52:07,269 - INFO - [OK] goldman run 1: error_rate=1.0%, errors=201, recovery=success
+2026-08-05 15:52:07,350 - INFO - [OK] goldman run 2: error_rate=1.0%, errors=201, recovery=success
+2026-08-05 15:52:07,407 - INFO - [OK] goldman run 3: error_rate=1.0%, errors=201, recovery=success
+2026-08-05 15:52:07,413 - INFO - goldman @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:07,486 - INFO - [OK] goldman run 1: error_rate=5.0%, errors=1809, recovery=success
+2026-08-05 15:52:07,555 - INFO - [OK] goldman run 2: error_rate=5.0%, errors=1809, recovery=success
+2026-08-05 15:52:07,628 - INFO - [OK] goldman run 3: error_rate=5.0%, errors=1809, recovery=success
+2026-08-05 15:52:07,628 - INFO - goldman @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:07,739 - INFO - [OK] goldman run 1: error_rate=10.0%, errors=3819, recovery=success
+2026-08-05 15:52:07,839 - INFO - [OK] goldman run 2: error_rate=10.0%, errors=3819, recovery=success
+2026-08-05 15:52:07,932 - INFO - [OK] goldman run 3: error_rate=10.0%, errors=3819, recovery=success
+2026-08-05 15:52:07,932 - INFO - goldman @ 10.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:08,057 - INFO - [OK] goldman run 1: error_rate=20.0%, errors=7839, recovery=failed
+2026-08-05 15:52:08,208 - INFO - [OK] goldman run 2: error_rate=20.0%, errors=7839, recovery=failed
+2026-08-05 15:52:08,340 - INFO - [OK] goldman run 3: error_rate=20.0%, errors=7839, recovery=failed
+2026-08-05 15:52:08,341 - INFO - goldman @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:08,412 - INFO - [OK] church run 1: error_rate=1.0%, errors=280, recovery=success
+2026-08-05 15:52:08,473 - INFO - [OK] church run 2: error_rate=1.0%, errors=280, recovery=success
+2026-08-05 15:52:08,530 - INFO - [OK] church run 3: error_rate=1.0%, errors=280, recovery=success
+2026-08-05 15:52:08,530 - INFO - church @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:08,608 - INFO - [OK] church run 1: error_rate=5.0%, errors=1400, recovery=success
+2026-08-05 15:52:08,684 - INFO - [OK] church run 2: error_rate=5.0%, errors=1400, recovery=success
+2026-08-05 15:52:08,771 - INFO - [OK] church run 3: error_rate=5.0%, errors=1400, recovery=success
+2026-08-05 15:52:08,772 - INFO - church @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:08,870 - INFO - [OK] church run 1: error_rate=10.0%, errors=2800, recovery=success
+2026-08-05 15:52:08,963 - INFO - [OK] church run 2: error_rate=10.0%, errors=2800, recovery=success
+2026-08-05 15:52:09,054 - INFO - [OK] church run 3: error_rate=10.0%, errors=2800, recovery=success
+2026-08-05 15:52:09,055 - INFO - church @ 10.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:09,166 - INFO - [OK] church run 1: error_rate=20.0%, errors=5600, recovery=failed
+2026-08-05 15:52:09,286 - INFO - [OK] church run 2: error_rate=20.0%, errors=5600, recovery=failed
+2026-08-05 15:52:09,414 - INFO - [OK] church run 3: error_rate=20.0%, errors=5600, recovery=failed
+2026-08-05 15:52:09,414 - INFO - church @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:09,878 - INFO - [OK] gcplus run 1: error_rate=1.0%, errors=0, recovery=success
+2026-08-05 15:52:10,334 - INFO - [OK] gcplus run 2: error_rate=1.0%, errors=0, recovery=success
+2026-08-05 15:52:10,784 - INFO - [OK] gcplus run 3: error_rate=1.0%, errors=0, recovery=success
+2026-08-05 15:52:10,784 - INFO - gcplus @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:11,258 - INFO - [OK] gcplus run 1: error_rate=5.0%, errors=1950, recovery=success
+2026-08-05 15:52:11,768 - INFO - [OK] gcplus run 2: error_rate=5.0%, errors=1950, recovery=success
+2026-08-05 15:52:12,298 - INFO - [OK] gcplus run 3: error_rate=5.0%, errors=1950, recovery=success
+2026-08-05 15:52:12,299 - INFO - gcplus @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:12,901 - INFO - [OK] gcplus run 1: error_rate=10.0%, errors=3900, recovery=failed
+2026-08-05 15:52:13,407 - INFO - [OK] gcplus run 2: error_rate=10.0%, errors=3900, recovery=failed
+2026-08-05 15:52:13,917 - INFO - [OK] gcplus run 3: error_rate=10.0%, errors=3900, recovery=failed
+2026-08-05 15:52:13,918 - INFO - gcplus @ 10.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:14,457 - INFO - [OK] gcplus run 1: error_rate=20.0%, errors=7800, recovery=failed
+2026-08-05 15:52:14,983 - INFO - [OK] gcplus run 2: error_rate=20.0%, errors=7800, recovery=failed
+2026-08-05 15:52:15,502 - INFO - [OK] gcplus run 3: error_rate=20.0%, errors=7800, recovery=failed
+2026-08-05 15:52:15,503 - INFO - gcplus @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:15,595 - INFO - [OK] hedges run 1: error_rate=1.0%, errors=1020, recovery=success
+2026-08-05 15:52:15,683 - INFO - [OK] hedges run 2: error_rate=1.0%, errors=1020, recovery=success
+2026-08-05 15:52:15,770 - INFO - [OK] hedges run 3: error_rate=1.0%, errors=1020, recovery=success
+2026-08-05 15:52:15,770 - INFO - hedges @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:15,908 - INFO - [OK] hedges run 1: error_rate=5.0%, errors=5100, recovery=success
+2026-08-05 15:52:16,028 - INFO - [OK] hedges run 2: error_rate=5.0%, errors=5100, recovery=success
+2026-08-05 15:52:16,150 - INFO - [OK] hedges run 3: error_rate=5.0%, errors=5100, recovery=success
+2026-08-05 15:52:16,151 - INFO - hedges @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:16,345 - INFO - [OK] hedges run 1: error_rate=10.0%, errors=10200, recovery=success
+2026-08-05 15:52:16,528 - INFO - [OK] hedges run 2: error_rate=10.0%, errors=10200, recovery=success
+2026-08-05 15:52:16,716 - INFO - [OK] hedges run 3: error_rate=10.0%, errors=10200, recovery=success
+2026-08-05 15:52:16,716 - INFO - hedges @ 10.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:16,992 - INFO - [OK] hedges run 1: error_rate=20.0%, errors=20400, recovery=failed
+2026-08-05 15:52:17,311 - INFO - [OK] hedges run 2: error_rate=20.0%, errors=20400, recovery=failed
+2026-08-05 15:52:17,613 - INFO - [OK] hedges run 3: error_rate=20.0%, errors=20400, recovery=failed
+2026-08-05 15:52:17,614 - INFO - hedges @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:17,644 - INFO - [OK] max_density run 1: error_rate=1.0%, errors=98, recovery=success
+2026-08-05 15:52:17,655 - INFO - [OK] max_density run 2: error_rate=1.0%, errors=98, recovery=success
+2026-08-05 15:52:17,666 - INFO - [OK] max_density run 3: error_rate=1.0%, errors=98, recovery=success
+2026-08-05 15:52:17,666 - INFO - max_density @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:17,682 - INFO - [OK] max_density run 1: error_rate=5.0%, errors=490, recovery=success
+2026-08-05 15:52:17,698 - INFO - [OK] max_density run 2: error_rate=5.0%, errors=490, recovery=success
+2026-08-05 15:52:17,713 - INFO - [OK] max_density run 3: error_rate=5.0%, errors=490, recovery=success
+2026-08-05 15:52:17,713 - INFO - max_density @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:17,731 - INFO - [OK] max_density run 1: error_rate=10.0%, errors=980, recovery=failed
+2026-08-05 15:52:17,755 - INFO - [OK] max_density run 2: error_rate=10.0%, errors=980, recovery=failed
+2026-08-05 15:52:17,776 - INFO - [OK] max_density run 3: error_rate=10.0%, errors=980, recovery=failed
+2026-08-05 15:52:17,776 - INFO - max_density @ 10.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:17,813 - INFO - [OK] max_density run 1: error_rate=20.0%, errors=1960, recovery=failed
+2026-08-05 15:52:17,845 - INFO - [OK] max_density run 2: error_rate=20.0%, errors=1960, recovery=failed
+2026-08-05 15:52:17,879 - INFO - [OK] max_density run 3: error_rate=20.0%, errors=1960, recovery=failed
+2026-08-05 15:52:17,879 - INFO - max_density @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:17,897 - INFO - [OK] no_homopolymer run 1: error_rate=1.0%, errors=172, recovery=success
+2026-08-05 15:52:17,911 - INFO - [OK] no_homopolymer run 2: error_rate=1.0%, errors=172, recovery=success
+2026-08-05 15:52:17,924 - INFO - [OK] no_homopolymer run 3: error_rate=1.0%, errors=172, recovery=success
+2026-08-05 15:52:17,925 - INFO - no_homopolymer @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:17,945 - INFO - [OK] no_homopolymer run 1: error_rate=5.0%, errors=860, recovery=success
+2026-08-05 15:52:17,969 - INFO - [OK] no_homopolymer run 2: error_rate=5.0%, errors=860, recovery=success
+2026-08-05 15:52:17,989 - INFO - [OK] no_homopolymer run 3: error_rate=5.0%, errors=860, recovery=success
+2026-08-05 15:52:17,990 - INFO - no_homopolymer @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:18,021 - INFO - [OK] no_homopolymer run 1: error_rate=10.0%, errors=1720, recovery=failed
+2026-08-05 15:52:18,053 - INFO - [OK] no_homopolymer run 2: error_rate=10.0%, errors=1720, recovery=failed
+2026-08-05 15:52:18,083 - INFO - [OK] no_homopolymer run 3: error_rate=10.0%, errors=1720, recovery=failed
+2026-08-05 15:52:18,084 - INFO - no_homopolymer @ 10.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:18,139 - INFO - [OK] no_homopolymer run 1: error_rate=20.0%, errors=3440, recovery=failed
+2026-08-05 15:52:18,190 - INFO - [OK] no_homopolymer run 2: error_rate=20.0%, errors=3440, recovery=failed
+2026-08-05 15:52:18,247 - INFO - [OK] no_homopolymer run 3: error_rate=20.0%, errors=3440, recovery=failed
+2026-08-05 15:52:18,252 - INFO - no_homopolymer @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:18,324 - INFO - [OK] wukong run 1: error_rate=1.0%, errors=214, recovery=success
+2026-08-05 15:52:18,413 - INFO - [OK] wukong run 2: error_rate=1.0%, errors=214, recovery=success
+2026-08-05 15:52:18,487 - INFO - [OK] wukong run 3: error_rate=1.0%, errors=214, recovery=success
+2026-08-05 15:52:18,488 - INFO - wukong @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:18,562 - INFO - [OK] wukong run 1: error_rate=5.0%, errors=1070, recovery=success
+2026-08-05 15:52:18,640 - INFO - [OK] wukong run 2: error_rate=5.0%, errors=1070, recovery=success
+2026-08-05 15:52:18,719 - INFO - [OK] wukong run 3: error_rate=5.0%, errors=1070, recovery=success
+2026-08-05 15:52:18,719 - INFO - wukong @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:18,808 - INFO - [OK] wukong run 1: error_rate=10.0%, errors=2140, recovery=success
+2026-08-05 15:52:18,912 - INFO - [OK] wukong run 2: error_rate=10.0%, errors=2140, recovery=success
+2026-08-05 15:52:19,002 - INFO - [OK] wukong run 3: error_rate=10.0%, errors=2140, recovery=success
+2026-08-05 15:52:19,002 - INFO - wukong @ 10.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:19,110 - INFO - [OK] wukong run 1: error_rate=20.0%, errors=4280, recovery=failed
+2026-08-05 15:52:19,214 - INFO - [OK] wukong run 2: error_rate=20.0%, errors=4280, recovery=failed
+2026-08-05 15:52:19,328 - INFO - [OK] wukong run 3: error_rate=20.0%, errors=4280, recovery=failed
+2026-08-05 15:52:19,329 - INFO - wukong @ 20.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:19,449 - INFO - [OK] yinyang run 1: error_rate=1.0%, errors=65, recovery=success
+2026-08-05 15:52:19,692 - INFO - [OK] yinyang run 2: error_rate=1.0%, errors=68, recovery=success
+2026-08-05 15:52:19,826 - INFO - [OK] yinyang run 3: error_rate=1.0%, errors=66, recovery=success
+2026-08-05 15:52:19,827 - INFO - yinyang @ 1.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:20,035 - INFO - [OK] yinyang run 1: error_rate=5.0%, errors=402, recovery=success
+2026-08-05 15:52:20,207 - INFO - [OK] yinyang run 2: error_rate=5.0%, errors=396, recovery=success
+2026-08-05 15:52:20,349 - INFO - [OK] yinyang run 3: error_rate=5.0%, errors=390, recovery=success
+2026-08-05 15:52:20,349 - INFO - yinyang @ 5.0% error: 100.0% recovery (3/3 runs)
+2026-08-05 15:52:20,513 - INFO - [OK] yinyang run 1: error_rate=10.0%, errors=792, recovery=failed
+2026-08-05 15:52:20,686 - INFO - [OK] yinyang run 2: error_rate=10.0%, errors=792, recovery=failed
+2026-08-05 15:52:20,850 - INFO - [OK] yinyang run 3: error_rate=10.0%, errors=792, recovery=failed
+2026-08-05 15:52:20,850 - INFO - yinyang @ 10.0% error: 0.0% recovery (0/3 runs)
+2026-08-05 15:52:21,064 - INFO - [OK] yinyang run 1: error_rate=20.0%, errors=1675, recovery=failed
+2026-08-05 15:52:21,225 - INFO - [OK] yinyang run 2: error_rate=20.0%, errors=1625, recovery=failed
+2026-08-05 15:52:21,353 - INFO - [OK] yinyang run 3: error_rate=20.0%, errors=1625, recovery=failed
+2026-08-05 15:52:21,353 - INFO - yinyang @ 20.0% error: 0.0% recovery (0/3 runs)

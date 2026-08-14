@@ -1,0 +1,276 @@
+2026-08-05 13:53:09,446 - INFO - Starting cost analysis
+2026-08-05 13:53:09,447 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:53:09,447 - INFO - Test data size: 440 bits
+2026-08-05 13:53:09,447 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:53:09,455 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,467 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,470 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,474 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,478 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,482 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,486 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,491 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,494 - INFO - Starting cost analysis
+2026-08-05 13:53:09,494 - INFO - Starting cost analysis
+2026-08-05 13:53:09,494 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:53:09,494 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:53:09,494 - INFO - Test data size: 440 bits
+2026-08-05 13:53:09,494 - INFO - Test data size: 440 bits
+2026-08-05 13:53:09,494 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:53:09,494 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:53:09,501 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,501 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,510 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,510 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,519 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,519 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,528 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,528 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,535 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,535 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,543 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,543 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,550 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,550 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,559 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+
+2026-08-05 13:53:09,559 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 342, in _encode_and_measure
+    params = Params(**full_params)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\params.py", line 30, in __init__
+    attributes_bin = binarization.attributes(self)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\binarization\default\binarize.py", line 8, in attributes
+    raise ValueError("filename parameter must be specified")
+ValueError: filename parameter must be specified
+

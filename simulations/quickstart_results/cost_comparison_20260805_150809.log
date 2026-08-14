@@ -1,0 +1,45 @@
+2026-08-05 15:08:09,844 - INFO - Starting cost analysis
+2026-08-05 15:08:09,845 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 15:08:09,845 - INFO - Test data size: 440 bits
+2026-08-05 15:08:09,845 - INFO - --- First pass: baseline costs ---
+2026-08-05 15:08:11,118 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmplhhihq8g.bin
+2026-08-05 15:08:11,124 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpqxv8ud38/tmplhhihq8g_goldman.fasta
+2026-08-05 15:08:11,134 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmplhhihq8g.bin
+2026-08-05 15:08:11,146 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmp37l8bniu.bin
+2026-08-05 15:08:11,153 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmpn3wowuy0/tmp37l8bniu_church.fasta
+2026-08-05 15:08:11,155 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmp37l8bniu.bin
+2026-08-05 15:08:11,168 - ERROR - GC+ encode error: The length of the binary message must be divisible by the block length [0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0].
+2026-08-05 15:08:11,170 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\encode.py", line 103, in encode
+    x, n, N, K, q, U, X, check_par = GCP_Encode_DNA_brute(
+                                     ~~~~~~~~~~~~~~~~~~~~^
+        chunk, l, c1, codebook
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\src\GCPdna\GCP_Encode_DNA.py", line 34, in GCP_Encode_DNA_brute
+    U = binary_to_decimal_blocks(u, l)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encoding\gcplus\src\GCPdna\GCP_Encode_DNA.py", line 12, in binary_to_decimal_blocks
+    raise ValueError(f"The length of the binary message must be divisible by the block length {binary_message}.")
+ValueError: The length of the binary message must be divisible by the block length [0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0].
+
+2026-08-05 15:08:11,175 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 279, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 369, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 52, in encode
+    obj = NucleobaseCode(encoded_data)
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\data_classes\nucleobasecode.py", line 43, in __init__
+    self._validate_data(data)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\data_classes\nucleobasecode.py", line 60, in _validate_data
+    raise TypeError(
+        f"Encoded data must be a list, got {type(data).__name__}"
+    )
+TypeError: Encoded data must be a list, got NoneType
+
+2026-08-05 15:08:11,260 - INFO - Binary data written to temporary file: C:\Users\kaya\AppData\Local\Temp\tmpkvm73x8e.bin
+2026-08-05 15:08:11,272 - INFO - Encoding completed. Result file: C:\Users\kaya\AppData\Local\Temp\tmp85pxfj16/tmpkvm73x8e_wukong.fasta
+2026-08-05 15:08:11,273 - INFO - Temporary file deleted: C:\Users\kaya\AppData\Local\Temp\tmpkvm73x8e.bin

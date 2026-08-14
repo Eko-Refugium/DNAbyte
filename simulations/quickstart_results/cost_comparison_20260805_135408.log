@@ -1,0 +1,444 @@
+2026-08-05 13:54:08,357 - INFO - Starting cost analysis
+2026-08-05 13:54:08,358 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:54:08,358 - INFO - Test data size: 440 bits
+2026-08-05 13:54:08,358 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:54:08,379 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,387 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,393 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,400 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,407 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,413 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,419 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,426 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,430 - INFO - Starting cost analysis
+2026-08-05 13:54:08,430 - INFO - Starting cost analysis
+2026-08-05 13:54:08,431 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:54:08,431 - INFO - Encodings: ['goldman', 'church', 'gcplus', 'hedges', 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
+2026-08-05 13:54:08,431 - INFO - Test data size: 440 bits
+2026-08-05 13:54:08,431 - INFO - Test data size: 440 bits
+2026-08-05 13:54:08,431 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:54:08,431 - INFO - --- First pass: baseline costs ---
+2026-08-05 13:54:08,441 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,441 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,450 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,450 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,458 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,458 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,468 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,468 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,478 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,478 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,487 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,487 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,497 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,497 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,507 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
+2026-08-05 13:54:08,507 - ERROR - Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 47, in encode
+    encode_class = self.encoding_plugins[self.encoding_method]
+                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 278, in run_cost_analysis
+    metrics = self._encode_and_measure(enc, test_data, params)
+  File "C:\git\DNABYteneu\DNAbyte\simulations\cost_comparison.py", line 354, in _encode_and_measure
+    dna_codewords, info = encoder.encode(binary_code)
+                          ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\git\DNABYteneu\DNAbyte\dnabyte\encode.py", line 57, in encode
+    raise ValueError(f"Encoding method '{self.encoding_method}' not found in plugins.")
+ValueError: Encoding method 'None' not found in plugins.
+
