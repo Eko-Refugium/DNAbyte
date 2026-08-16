@@ -25,10 +25,34 @@ class MESA(SimulateSequencing):
         
         # Call the sequencing simulation function
         modified_sequences, error_dicts = self.sequencing_simulation(data, method_id=self.params.mesa_sequencing_id)
-                
+        
+        # Aggregate error statistics from all sequences
+        total_insertions = 0
+        total_deletions = 0
+        total_substitutions = 0
+        total_errors = 0
+        
+        def aggregate_errors(error_dict_list):
+            """Recursively aggregate error counts from nested lists"""
+            nonlocal total_insertions, total_deletions, total_substitutions, total_errors
+            
+            if isinstance(error_dict_list, dict):
+                total_insertions += error_dict_list.get('insertions', 0)
+                total_deletions += error_dict_list.get('deletions', 0)
+                total_substitutions += error_dict_list.get('substitutions', 0)
+                total_errors += error_dict_list.get('total_errors', 0)
+            elif isinstance(error_dict_list, list):
+                for item in error_dict_list:
+                    aggregate_errors(item)
+        
+        aggregate_errors(error_dicts)
+        
         info = {
             "average_copy_number": 1.0,  # No coverage simulation in sequencing
-            "number_of_sequencing_errors": sum([len(d) for d in error_dicts]),
+            "number_of_sequencing_errors": total_errors,
+            "total_insertions": total_insertions,
+            "total_deletions": total_deletions,
+            "total_substitutions": total_substitutions,
             "error_dict": error_dicts
         }
         
@@ -69,13 +93,45 @@ class MESA(SimulateSequencing):
                 mod_seq = g.graph.nodes[0]['seq']
                 mod_seq = mod_seq.replace(' ', '')
 
-                # Create error dict (currently empty, could be populated from graph if needed)
-                error_dict = {}
+                # Extract error counts from the graph
+                error_dict = self._count_errors_from_graph(g)
 
                 return mod_seq, error_dict
 
         modified_sequences, error_dicts = process_element(sequences)
         return modified_sequences, error_dicts
+    
+    def _count_errors_from_graph(self, graph):
+        """
+        Count the number of insertions, deletions, and substitutions from the error graph.
+        
+        :param graph: The Graph object containing error nodes
+        :return: Dictionary with error counts
+        """
+        insertions = 0
+        deletions = 0
+        substitutions = 0
+        
+        # Iterate through all nodes (skip node 0 which is the root)
+        for node_id, node_data in graph.graph.nodes(data=True):
+            if node_id == 0:  # Skip root node
+                continue
+            
+            mode = node_data.get('mode', '')
+            
+            if mode == 'insertion':
+                insertions += 1
+            elif mode == 'deletion':
+                deletions += 1
+            elif mode in ['mismatch', 'pattern_mismatch']:
+                substitutions += 1
+        
+        return {
+            'insertions': insertions,
+            'deletions': deletions,
+            'substitutions': substitutions,
+            'total_errors': insertions + deletions + substitutions
+        }
 
 
     def sequencing_simulation(self, sequences, method_id):

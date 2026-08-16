@@ -6,8 +6,7 @@ Test recovery at 0% and higher error rates
 
 import os
 import sys
-import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Dict, List, Any
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -47,10 +46,9 @@ class RobustParameterAnalyzer:
             print(f"\n  Optimizing {encoding}...")
             
             working_configs = []  # Configs that achieve 100% recovery
-            failed_levels = []
             
-            # Test all levels 0-100 for thorough search
-            for redundancy_level in range(0, 101, 1):
+            # Incrementally increase redundancy level
+            for redundancy_level in range(0, 100, 5):
                 config = self._create_config_at_level(encoding, redundancy_level)
                 
                 test_params = base_params.copy()
@@ -62,6 +60,7 @@ class RobustParameterAnalyzer:
                 test_params['kmer_p_ins'] = 0.0
                 test_params['kmer_p_del'] = 0.0
                 test_params['name'] = f"{encoding}_opt_test"
+                
                 
                 try:
                     p = Params(**test_params)
@@ -81,16 +80,14 @@ class RobustParameterAnalyzer:
                             break
                     
                     if bitstreams_match and cost_bp > 0:
+                        cost_pct = (cost_bp / target_cost_scaled) * 100
+                        print(f"    Level {redundancy_level:2d}: Cost {cost_bp:,} bp ({cost_pct:.1f}%) - WORKS")
                         working_configs.append((config, cost_bp, redundancy_level))
                     else:
-                        failed_levels.append(redundancy_level)
+                        print(f"    Level {redundancy_level:2d}: FAILED")
                 
                 except Exception as e:
-                    failed_levels.append(redundancy_level)
-            
-            # Report findings
-            print(f"    Working levels: {[x[2] for x in working_configs]}")
-            print(f"    Failed levels: {failed_levels}")
+                    print(f"    Level {redundancy_level:2d}: ERROR - {str(e)[:100]}")
             
             # Among working configs, pick closest to target
             if working_configs:
@@ -103,7 +100,8 @@ class RobustParameterAnalyzer:
                 # Fallback to base config
                 optimized_params[encoding] = base_config.copy()
                 print(f"    [FALLBACK] Using base config (no working configs found)")
-        
+        print(optimized_params)
+        breakpoint()
         return optimized_params
     
     def _create_config_at_level(self, encoding: str, level: int) -> Dict[str, Any]:
@@ -180,108 +178,6 @@ class RobustParameterAnalyzer:
             }
         
         return {'add_primer': True, 'primer_length': 20}
-    
-    def run_single_encoding(self,
-                           encoding: str,
-                           target_cost_bp: int,
-                           error_rates: List[float],
-                           base_params: Dict[str, Any],
-                           encoding_params: Dict[str, Dict[str, Any]],
-                           num_runs: int = 20):
-        """Test a single encoding and save results"""
-        
-        print("\n" + "="*100)
-        print(f"TESTING ENCODING: {encoding.upper()}")
-        print("="*100)
-        
-        encodings = [encoding]
-        
-        # Step 0: Optimize parameters for this encoding
-        print("\nStep 0: Searching for optimal parameters within budget...\n")
-        optimized_params = self.vary_parameters(base_params, {encoding: encoding_params[encoding]})
-        encoding_params_opt = optimized_params
-        
-        # Step 1: Test at 0% error (baseline)
-        print("\nStep 1: Baseline test at 0% error rate (no errors)...\n")
-        
-        successful = 0
-        for run in range(num_runs):
-            try:
-                params_dict = base_params.copy()
-                params_dict.update(encoding_params_opt[encoding])
-                params_dict['encoding_method'] = encoding
-                params_dict['sequence_length'] = 100
-                params_dict['mean'] = 10
-                params_dict['kmer_p_sub'] = 0.0
-                params_dict['kmer_p_ins'] = 0.0
-                params_dict['kmer_p_del'] = 0.0
-                params_dict['name'] = f"{encoding}_baseline_{run}"
-                
-                p = Params(**params_dict)
-                p.name = params_dict['name']
-                
-                sim = Simulation([p])
-                results = sim.run()
-                
-                if results:
-                    for sim_name, sim_result in results.items():
-                        if sim_result.get('status') == 'SUCCESS':
-                            successful += 1
-                        break
-            except Exception as e:
-                pass
-        
-        recovery = successful / num_runs
-        result = RecoveryResult(encoding, 0.0, recovery, successful, num_runs)
-        self.results.append(result)
-        print(f"  {encoding:18s}: {recovery*100:5.1f}% ({successful}/{num_runs})")
-        
-        # Step 2: Test at error rates
-        print("\n" + "="*100)
-        print("Step 2: Testing at various error rates...\n")
-        
-        for error_rate in sorted(error_rates):
-            print(f"Error rate: {error_rate*100:.2f}%")
-            
-            successful = 0
-            
-            for run in range(num_runs):
-                try:
-                    params_dict = base_params.copy()
-                    params_dict.update(encoding_params_opt[encoding])
-                    params_dict['encoding_method'] = encoding
-                    params_dict['sequence_length'] = 100
-                    params_dict['mean'] = 10
-                    params_dict['kmer_p_sub'] = error_rate
-                    params_dict['kmer_p_ins'] = error_rate * 0.5
-                    params_dict['kmer_p_del'] = error_rate * 0.5
-                    params_dict['name'] = f"{encoding}_err{error_rate:.3f}_{run}"
-                    
-                    p = Params(**params_dict)
-                    p.name = params_dict['name']
-                    
-                    sim = Simulation([p])
-                    results = sim.run()
-                    
-                    if results:
-                        for sim_name, sim_result in results.items():
-                            if sim_result.get('status') == 'SUCCESS':
-                                successful += 1
-                            break
-                
-                except Exception as e:
-                    pass
-            
-            recovery = successful / num_runs
-            result = RecoveryResult(encoding, error_rate, recovery, successful, num_runs)
-            self.results.append(result)
-            print(f"  {encoding:18s}: {recovery*100:5.1f}%")
-        
-        # Save this encoding's results
-        self.save_results(encoding)
-        print(f"\n[OK] Completed {encoding}")
-        
-        return self.results
     
     def run_analysis(self,
                     encodings: List[str],
@@ -387,10 +283,6 @@ class RobustParameterAnalyzer:
                 self.results.append(result)
                 print(f"  {encoding:18s}: {recovery*100:5.1f}%")
         
-        # Save results to JSON
-        self.save_results()
-        
-        # Visualize and summarize
         self._visualize()
         self._print_summary()
     
@@ -437,99 +329,12 @@ class RobustParameterAnalyzer:
                          key=lambda x: x.recovery_rate, reverse=True)
             for r in data:
                 print(f"  {r.encoding:18s}: {r.recovery_rate*100:5.1f}% ({r.successful_runs}/{r.total_runs})")
-    
-    def save_results(self, encoding: str = None):
-        """Save results to JSON for later analysis"""
-        if encoding:
-            # Save single encoding results
-            data = {
-                'results': [asdict(r) for r in self.results if r.encoding == encoding],
-                'metadata': {
-                    'encoding': encoding,
-                    'num_results': len([r for r in self.results if r.encoding == encoding]),
-                    'error_rates': sorted(set(r.error_rate for r in self.results if r.encoding == encoding)),
-                }
-            }
-            results_file = os.path.join(self.output_dir, f'results_{encoding}.json')
-        else:
-            # Save all results
-            data = {
-                'results': [asdict(r) for r in self.results],
-                'metadata': {
-                    'num_results': len(self.results),
-                    'encodings': sorted(set(r.encoding for r in self.results)),
-                    'error_rates': sorted(set(r.error_rate for r in self.results)),
-                }
-            }
-            results_file = os.path.join(self.output_dir, 'results_all.json')
-        
-        with open(results_file, 'w') as f:
-            json.dump(data, f, indent=2)
-        print(f"[OK] Saved: {results_file}")
-    
-    @staticmethod
-    def load_and_plot(results_dir: str = './simulations/error_resilience_robust', 
-                      pattern: str = 'results_*.json'):
-        """Load results from JSON files and generate combined plot"""
-        import glob
-        
-        all_results = []
-        
-        # Load all matching files
-        files = glob.glob(os.path.join(results_dir, pattern))
-        for results_file in sorted(files):
-            print(f"Loading: {results_file}")
-            with open(results_file, 'r') as f:
-                data = json.load(f)
-                all_results.extend([RecoveryResult(**r) for r in data['results']])
-        
-        if not all_results:
-            print(f"No results found in {results_dir}")
-            return
-        
-        # Generate plot
-        encodings = sorted(set(r.encoding for r in all_results))
-        
-        fig, ax = plt.subplots(figsize=(14, 7))
-        
-        for encoding in encodings:
-            enc_data = sorted([r for r in all_results if r.encoding == encoding],
-                            key=lambda x: x.error_rate)
-            if enc_data:
-                rates = [r.error_rate * 100 for r in enc_data]
-                recoveries = [r.recovery_rate * 100 for r in enc_data]
-                ax.plot(rates, recoveries, marker='o', label=encoding, linewidth=2.5, markersize=8)
-        
-        ax.set_xlabel('Error Rate (%)', fontsize=12, fontweight='bold')
-        ax.set_ylabel('Recovery Rate (%)', fontsize=12, fontweight='bold')
-        ax.set_title('Robust Parameters: Recovery vs Error Rate (20,000 bp budget)', fontsize=14, fontweight='bold')
-        ax.legend(fontsize=10, loc='best')
-        ax.grid(True, alpha=0.3)
-        ax.set_ylim([-5, 105])
-        
-        plt.tight_layout()
-        plot_file = os.path.join(results_dir, 'robust_recovery_combined.png')
-        plt.savefig(plot_file, dpi=150, bbox_inches='tight')
-        print(f"[OK] Saved combined plot: {plot_file}")
-        
-        # Print summary
-        print("\n" + "="*100)
-        print("SUMMARY - RECOVERY WITH ROBUST PARAMETERS")
-        print("="*100)
-        
-        error_rates = sorted(set(r.error_rate for r in all_results))
-        for error_rate in error_rates:
-            print(f"\n{error_rate*100:.2f}% Error Rate:")
-            data = sorted([r for r in all_results if r.error_rate == error_rate],
-                         key=lambda x: x.recovery_rate, reverse=True)
-            for r in data:
-                print(f"  {r.encoding:18s}: {r.recovery_rate*100:5.1f}% ({r.successful_runs}/{r.total_runs})")
 
 
 if __name__ == '__main__':
     
     encodings = ['goldman', 'church', 'gcplus',
-                 'max_density', 'no_homopolymer', 'wukong', 'yinyang', 'hedges']
+                 'max_density', 'no_homopolymer', 'wukong', 'yinyang']
     
     # Robust parameters for each encoding
     encoding_params = {
@@ -581,12 +386,6 @@ if __name__ == '__main__':
             'clustering_method': 'primer_grouper',
             'recovery_method': 'debruijn'
         },
-        'hedges': {
-            'add_primer': True,
-            'primer_length': 20,
-            'clustering_method': 'primer_grouper',
-            'recovery_method': 'debruijn'
-        },
     }
     
     base_params = {
@@ -598,38 +397,24 @@ if __name__ == '__main__':
         'recovery_method': 'debruijn',
         'clustering_method': 'kmere_cluster',
         'storage_conditions': None,
+        'synthesis_method': 'nosynthpoly',
         'kmer_seed': 42,
+        'storage_conditions': None,
     }
     
-    target_cost_bp = 1000
-    error_rates = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.08, 0.12, 0.16, 0.20]
+    target_cost_bp = 20000
+    error_rates = [0.0, 0.01, 0.05, 0.10]
     
-    # Set single_encoding to test one encoding, or None to test all
-    single_encoding = 'church'  # Change to 'goldman', 'church', 'gcplus', 'max_density', 'no_homopolymer', 'wukong', 'yinyang', or 'hedges'
-    
-    if single_encoding:
-        analyzer = RobustParameterAnalyzer()
-        analyzer.run_single_encoding(
-            encoding=single_encoding,
-            target_cost_bp=target_cost_bp,
-            error_rates=error_rates,
-            base_params=base_params,
-            encoding_params=encoding_params,
-            num_runs=20
-        )
-    else:
-        # OPTION 2: Test all encodings
-        analyzer = RobustParameterAnalyzer()
-        analyzer.run_analysis(
-            encodings=encodings,
-            target_cost_bp=target_cost_bp,
-            error_rates=error_rates,
-            base_params=base_params,
-            encoding_params=encoding_params,
-            num_runs=20
-        )
+    analyzer = RobustParameterAnalyzer()
+    analyzer.run_analysis(
+        encodings=encodings,
+        target_cost_bp=target_cost_bp,
+        error_rates=error_rates,
+        base_params=base_params,
+        encoding_params=encoding_params,
+        num_runs=3
+    )
     
     print("\n[OK] Complete!")
-    print("\n[TO RE-PLOT] Use:")
-    print("  analyzer = RobustParameterAnalyzer()")
-    print("  analyzer.load_and_plot('./simulations/error_resilience_robust')")
+
+
