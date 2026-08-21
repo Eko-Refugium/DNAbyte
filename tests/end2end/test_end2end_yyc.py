@@ -14,18 +14,19 @@ params_list = [
         encoding_method='yinyang',
         binarization_method='default',
         sequence_length=200,
-        max_homopolymer=2,
+        max_homopolymer=3,
+        max_content=0.6,
         rs_num=0,
-        mean=10,
-        add_redundancy=True,
+        mean=1,
+        add_redundancy=False,
         add_primer=False,
         primer_length=20,
 
         # error channels
         storage_conditions=None,
         synthesis_method=None,
-        clustering_method='primer_grouper',
-        recovery_method='debruijn'
+        clustering_method='pass_through',
+        recovery_method='pass_through'
     ),
 ]
 

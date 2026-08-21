@@ -73,7 +73,7 @@ class DeBruijnGraph(Consensus):
 def attributes(params):
 
     return {
-        "kemer_size_debruijn": getattr(params, "kemer_size_debruijn", 85),
+        "kemer_size_debruijn": getattr(params, "kemer_size_debruijn", 60),
         "min_coverage": getattr(params, "min_coverage", 1),
         "branch_ratio": getattr(params, "branch_ratio", 0.2),
     }

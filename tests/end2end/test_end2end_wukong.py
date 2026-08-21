@@ -20,7 +20,7 @@ params_list = [
         max_gc=0.6,
         rule_num=1,
         rs_num=0,
-        add_redundancy=True,
+        add_redundancy=False,
         add_primer=True,
         primer_length=20,
 

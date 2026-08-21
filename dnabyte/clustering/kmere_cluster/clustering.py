@@ -8,7 +8,7 @@ class KmerClusterer(Cluster):
 
     def __init__(self, params, logger=None):
         print("LOADED KMERE CLUSTER MODULE")
-        self.k = getattr(params, "kmer_size_cluster", 15)
+        self.k = getattr(params, "kmer_size_cluster",15)
         self.threshold = getattr(params, "kmer_threshold", 0.7)
         self.logger = logger
 

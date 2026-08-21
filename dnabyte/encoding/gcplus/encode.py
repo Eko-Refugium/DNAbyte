@@ -182,6 +182,9 @@ def attributes(inputparams):
     encoding_method = getattr(inputparams, 'encoding_method', 'gcplus')
     assembly_structure = 'synthesis'
 
+    barcode_length = int(getattr(inputparams, 'barcode_length', 0))
+    left_primer = getattr(inputparams, 'left_primer', '')
+    right_primer = getattr(inputparams, 'right_primer', '')
     gcplus_k = int(getattr(inputparams, 'gcplus_k', 168))
     gcplus_l = int(getattr(inputparams, 'gcplus_l', 8))
     gcplus_c1 = int(getattr(inputparams, 'gcplus_c1', 2))
@@ -194,4 +197,7 @@ def attributes(inputparams):
         'gcplus_k': gcplus_k,
         'gcplus_l': gcplus_l,
         'gcplus_c1': gcplus_c1,
+        'barcode_length': barcode_length,
+        'left_primer': left_primer,
+        'right_primer': right_primer,
     }

@@ -14,19 +14,19 @@ params_list = [
         encoding_method='hedges',
         binarization_method='default',
         rs_num=0,
-        mean=10,
-        add_redundancy=True,
-        add_primer=True,
+        mean=1,
+        add_redundancy=False,
+        add_primer=False,
         primer_length=50,
         sequence_length=300,
-        max_homopolymer=8,
+        max_homopolymer=3,
 
         # error channels
         storage_conditions=None,
         synthesis_method=None,
-        clustering_method='pass_through',
+        clustering_method='kmere_cluster',
         kmer_size_cluster=250,
-        recovery_method='pass_through'
+        recovery_method='debruijn'
         
     ),
 ]
