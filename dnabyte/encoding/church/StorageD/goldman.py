@@ -200,7 +200,7 @@ def goldmanEncode(bin_str, ideal_len = 100):
 def goldmanMain(read_file_path, output_path, ideal_len=100):
     bin_str = readAsBin(read_file_path)
     nt_seq_list, idnex_len, add_len, ternary_seg_list, ternary_str = goldmanEncode(bin_str, ideal_len=ideal_len)
-    print(idnex_len, add_len)
+    # print(idnex_len, add_len)
     outputResult(output_path, nt_seq_list)
 
     return nt_seq_list, idnex_len, add_len

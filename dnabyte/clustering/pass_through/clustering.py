@@ -2,12 +2,9 @@ from collections import defaultdict
 from typing import Dict, List, Set, Tuple
 
 from dnabyte.cluster import Cluster
-print("LOADED PASS THROUGH CLUSTER MODULE")
-
 class PassThrough(Cluster):
 
     def __init__(self, params, logger=None):
-        print("LOADED PASS THROUGH CLUSTER MODULE")
         self.logger = logger
 
 

@@ -247,7 +247,7 @@ class TestBase(unittest.TestCase):
                 self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
                 self.testlogger.info(data_cor.__str__())
                 print("COR:", data_cor.data[0])
-                print(repr(data_cor.data[0]))
+                # print(repr(data_cor.data[0]))
                 print(data_enc.data[0] == data_cor.data[0])
 
                 # TODO: Add the info to the log
@@ -268,8 +268,8 @@ class TestBase(unittest.TestCase):
 
             try:
                 print("Decoding...")
-                print(data_cor.data)
-                print("aaaaaaaaaaaaaaa", self.params)
+                # print(data_cor.data)
+                # print("aaaaaaaaaaaaaaa", self.params)
                 data_dec, valid, info = enc.decode(data_cor)
 
                 # TODO: Add the info to the log
@@ -298,7 +298,7 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
             print("Comparing...")
-            print(data_dec.data, binary_code.data)
+            # print(data_dec.data, binary_code.data)
             print("Decoded length:", len(data_dec.data), "Original length:", len(binary_code.data))
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)

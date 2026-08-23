@@ -641,7 +641,7 @@ def split_string_into_chunks_poly_chain(string, ngeneric, npossition, nmessage):
 
 
 def check_library(inputparams, default, assembly_structure):
-    print('current dir:', os.getcwd())
+    # print('current dir:', os.getcwd())
     if not hasattr(inputparams, 'library_name') or inputparams.library_name is not None:
         # set default library
         library_name = default

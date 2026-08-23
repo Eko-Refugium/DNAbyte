@@ -137,7 +137,6 @@ class Params:
             raise ValueError(f"Invalid sequencing method: {self.sequencing_method}")
         
         # Check post-sequencing clustering parameters
-        print(f"Checking clustering method: {self.clustering_plugins}")
         if self.clustering_method is None or not hasattr(self, 'clustering_method'):
             pass
         elif self.clustering_method in self.clustering_plugins:
@@ -156,7 +155,6 @@ class Params:
             recovery = importlib.import_module(f"dnabyte.recovery.{self.recovery_method}.recovery")
             attributes_recovery = recovery.attributes(self)
             for keys, value in attributes_recovery.items():
-                print(f"Setting recovery attribute: {keys} = {value}")
                 setattr(self, keys, value)
         else:
             if self.recovery_method:

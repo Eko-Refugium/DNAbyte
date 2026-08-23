@@ -3,8 +3,6 @@ import traceback
 from dnabyte.encoding.hedges.hedges_python import encode_hedges
 import dnabyte.encoding.hedges.hedges_python as hedges_python
 
-print(hedges_python.__file__)
-print(hedges_python.encode_hedges)
 
 def bitstring_to_bytes(s):
     v = int(s, 2)
@@ -100,7 +98,6 @@ class HEDGES(Encode):
         data.data = binary string
         """
 
-        print(f"Encoding data with HEDGES: {data.data[:50]}... (length: {len(data.data)})")
 
         byte_data = int(data.data, 2).to_bytes(
             (len(data.data)+7)//8,

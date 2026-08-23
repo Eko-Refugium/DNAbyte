@@ -86,7 +86,7 @@ class TestBase(unittest.TestCase):
 
             self.testlogger.info('STEP02: ENCODE DATA')
             start_time = time.time()
-            print(binary_code)
+            # print(binary_code)
 
             try:
                 enc = Encode(self.params, logger=self.testlogger)
@@ -247,7 +247,7 @@ class TestBase(unittest.TestCase):
 
             try:
                 print("Decoding...")
-                print(data_cor.data)
+                # print(data_cor.data)
                 data_dec, valid, info = enc.decode(data_cor)
 
                 # TODO: Add the info to the log
@@ -276,7 +276,7 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
             print("Comparing...")
-            print(data_dec.data, binary_code.data)
+            # print(data_dec.data, binary_code.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
 

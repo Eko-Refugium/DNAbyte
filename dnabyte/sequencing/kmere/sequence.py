@@ -531,12 +531,7 @@ def string_to_sequence(s: str) -> List[str]:
 # ============================================================================
 
 if __name__ == "__main__":
-    print("=" * 80)
-    print("KMER CHANNEL MODEL IMPLEMENTATION")
-    print("=" * 80)
-    
-    # Example 1: Simple KMER_k channel
-    print("\n### Example 1: KMER_1 Channel (i.i.d. errors) ###\n")
+ 
     
     params = ChannelParameters.create_default(
         k=1, 
@@ -549,19 +544,13 @@ if __name__ == "__main__":
     
     # Test sequence
     x = string_to_sequence("ACGTACGTACGT")
-    print(f"Input:  {''.join(x)}")
     
     y, events = channel.transmit(x)
-    print(f"Output: {''.join(y)}")
-    print(f"Events: {' '.join(events)}")
     
     stats = compute_error_statistics(x, y)
-    print(f"\nError Statistics:")
-    for key, val in stats.items():
-        print(f"  {key}: {val:.4f}")
+
     
     # Example 2: Sampling KMER Channel
-    print("\n\n### Example 2: Sampling KMER Channel ###\n")
     
     M = 10  # Number of strands
     L = 20  # Length of each strand
@@ -573,10 +562,6 @@ if __name__ == "__main__":
         strand = [np.random.choice(SIGMA_DNA) for _ in range(L)]
         X.append(strand)
     
-    print(f"System parameters: M={M}, L={L}, c={c}, N={int(c*M)}")
-    print(f"\nInput strands:")
-    for i, x in enumerate(X):
-        print(f"  Strand {i}: {''.join(x)}")
     
     # Create sampling channel
     sampling_channel = SamplingKMERChannel(
@@ -587,20 +572,12 @@ if __name__ == "__main__":
     
     Y, indices, is_forward = sampling_channel.transmit(X)
     
-    print(f"\nOutput reads (N={len(Y)}):")
     for i, (y, idx, fwd) in enumerate(zip(Y, indices, is_forward)):
         direction = "FWD" if fwd else "BWD"
-        print(f"  Read {i} [{direction}, from strand {idx}]: {''.join(y)}")
     
     # Coverage statistics
-    print(f"\nCoverage statistics:")
     unique, counts = np.unique(indices, return_counts=True)
-    print(f"  Strands drawn: {len(unique)}/{M}")
-    print(f"  Average copies per drawn strand: {counts.mean():.2f}")
-    print(f"  Min/Max copies: {counts.min()}/{counts.max()}")
     
-    print("\n" + "=" * 80)
-
 
 # Additional utility for channel parameter estimation
 class ChannelEstimator:

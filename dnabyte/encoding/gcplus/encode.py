@@ -136,7 +136,7 @@ class GCPlus(Encode):
                 'gcplus_c1': c1,
                 'gcplus_n': n_val,
             }
-            print(dna_codewords)
+            # print(dna_codewords)
 
             return dna_codewords, info
 

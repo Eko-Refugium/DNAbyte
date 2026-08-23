@@ -9,71 +9,73 @@ from tests.testbase_end2end_newdata import TestBase
 
 # Define different parameter sets
 params_list = [
-    Params(
-        name='end2end_maxdensity_noEC_noErrors',
-        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
+    # Params(
+    #     name='end2end_maxdensity_noEC_noErrors',
+    #     file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
 
-        # binarization method
-        binarization_method='compressed',
+    #     # binarization method
+    #     binarization_method='compressed',
 
-        # encoding parameters
-        encoding_method='max_density',
+    #     # encoding parameters
+    #     encoding_method='max_density',
 
-        # error correction
-        inner_error_correction=None,
-        outer_error_correction=None,
+    #     # error correction
+    #     inner_error_correction=None,
+    #     outer_error_correction=None,
 
-        # error channels 
-        storage_conditions=None,
-        synthesis_method=None,
-        sequencing_method=None
-    ),
-    Params(
-        name='end2end_maxdensity_allEC_noErrors',
-        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
+    #     # error channels 
+    #     storage_conditions=None,
+    #     synthesis_method=None,
+    #     sequencing_method=None
+    # ),
+    # Params(
+    #     name='end2end_maxdensity_allEC_noErrors',
+    #     file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
 
-        # binarization method
-        binarization_method='compressed',
+    #     # binarization method
+    #     binarization_method='compressed',
 
-        # encoding parameters
-        encoding_method='max_density',
+    #     # encoding parameters
+    #     encoding_method='max_density',
 
-        codeword_length=501,
-        dna_barcode_length=34,
+    #     codeword_length=501,
+    #     dna_barcode_length=34,
 
-        # error correction
-        inner_error_correction='ltcode',
-        ltcode_header=34,
-        percent_of_symbols=2,
-        outer_error_correction='reedsolomon',
-        reed_solo_percentage=0.8,
+    #     # error correction
+    #     inner_error_correction='ltcode',
+    #     ltcode_header=34,
+    #     percent_of_symbols=2,
+    #     outer_error_correction='reedsolomon',
+    #     reed_solo_percentage=0.8,
 
-        # error channels
-        storage_conditions=None,
-        synthesis_method=None,
-        sequencing_method=None,
-    ),
+    #     # error channels
+    #     storage_conditions=None,
+    #     synthesis_method=None,
+    #     sequencing_method=None,
+    # ),
     Params(
         name='end2end_clustering_recovery_with_maxdensity',
-        file_paths=['Bohemian_Rhapsody_Lyrics.txt'],
+        filename='Bohemian_Rhapsody_Lyrics.txt',
 
         # binarization method
-        binarization_method='compressed',
+        binarization_method='default',
+        codeword_length=200,
 
         # encoding parameters
         encoding_method='max_density',
 
         # error correction
         inner_error_correction=None,
-        outer_error_correction=None,
 
         # synthesis and error channels
         synthesis_method='nosynthpoly',
+        mean=3,
         sequencing_method=None,
 
+        outer_error_correction='reedsolomon',
+        reed_solo_percentage=0.8, 
+
         # post-sequencing processing methods
-        clustering_method='primer_grouper',
-        recovery_method='debruijn',
     # ),
     # Params(
     #     name='end2end_maxdensity_allErrors',

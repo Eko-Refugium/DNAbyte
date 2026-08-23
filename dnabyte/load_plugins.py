@@ -65,14 +65,12 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
             except Exception as e:
                 print(f"Error loading binarization plugin '{filename}': {e}")
     
-    print(f"DEBUG: binarization_plugins loaded: {list(binarization_plugins.keys())}")
 
     # Load encoding plugins
     if encoding_method != None:
         try:
             folders_encode = [name for name in os.listdir(plugin_folder + '/encoding') 
                 if os.path.isdir(os.path.join(plugin_folder + '/encoding', name))]
-            print("folders_encode:", folders_encode, encoding_method.lower())
         except Exception as e:
             print(f"Error listing encoding plugins: {e}")
             folders_encode = []
@@ -176,12 +174,10 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
             print(f"Error loading sequencing plugin '{filename}': {e}")
 
     # Load clustering plugins
-    print("clustering_method:", clustering_method)
     if clustering_method != None:
         try:
             folders_clustering = [name for name in os.listdir(plugin_folder + '/clustering') 
                 if os.path.isdir(os.path.join(plugin_folder + '/clustering', name))]
-            print("folders_clustering:", folders_clustering, clustering_method.lower())
             for filename in folders_clustering:
                 if clustering_method.lower() == filename.lower():
                     # Load the clustering module
@@ -200,7 +196,6 @@ def load_plugins(binarization_method, encoding_method, storage_conditions, seque
         try:
             folders_recovery = [name for name in os.listdir(plugin_folder + '/recovery') 
                 if os.path.isdir(os.path.join(plugin_folder + '/recovery', name))]
-            print("folders_recovery:", folders_recovery, recovery_method.lower())
             for filename in folders_recovery:
                 if recovery_method.lower() == filename.lower():
                     # Load the recovery module
@@ -223,7 +218,6 @@ def load_synthesis_plugins(synthesis_method):
     """
     Load synthesis plugins from the specified folder and return a dictionary of plugin classes.
     """
-    print("synthesis_method:", synthesis_method)
     plugin_folder = os.path.dirname(__file__)
     synthesis_plugins = {}  # Define the plugins dictionary
     if isinstance(synthesis_method, str):
@@ -250,6 +244,5 @@ def load_synthesis_plugins(synthesis_method):
                             break
         except Exception as e:
             print(f"Error loading synthesis plugin '{filename}': {e}")
-        print("synthesis_plugins:", synthesis_plugins)
 
     return synthesis_plugins

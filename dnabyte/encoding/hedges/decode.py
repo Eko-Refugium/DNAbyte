@@ -17,11 +17,6 @@ def decode(data, params, logger=None):
         # Convert bytes back to a binary string
         decoded_binary = ''.join(f'{b:08b}' for b in decoded_bytes)
 
-        print("====================================================================")
-        print(decoded_bytes)
-        print(decoded_binary)
-        print("====================================================================")
-
         info = {
             "number_of_strands": len(data.data),
             "strand_length": len(data.data[0]) if len(data.data) else 0,

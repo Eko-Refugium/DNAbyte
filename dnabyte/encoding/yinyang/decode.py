@@ -25,17 +25,10 @@ def decode(data, params, logger):
 
         temp_dna.close()
 
-        print("len(data.data):", len(data.data))
 
         with open(temp_dna.name) as f:
             lines = [l.rstrip("\n") for l in f]
-        print("len(lines):", len(lines))
-
-        print("Line count:", len(lines))
-        print("First:", repr(lines[0]))
-        print("Second:", repr(lines[1]))
-        print("Last:", repr(lines[-1]))
-        print("Empty lines:", sum(1 for l in lines if l == ""))
+        
 
         # Temporary decoded binary output
         temp_output = tempfile.NamedTemporaryFile(
@@ -53,14 +46,11 @@ def decode(data, params, logger):
             need_log=False,
         )
 
-        print("Decoded file size (bytes):", os.path.getsize(temp_output.name))
 
         # Read decoded binary
         with open(temp_output.name, "rb") as f:
             binary = f.read()
 
-        print("Bytes read:", len(binary))
-        print("Bits recovered:", len(binary) * 8)
 
         # Convert bytes back to bitstream
         bits = "".join(

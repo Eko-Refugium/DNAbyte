@@ -92,8 +92,6 @@ class YinYang(Encode):
                 for i in range(0, len(bits), 8)
             )
 
-            print("Original bytes:", len(binary))
-            print("Original bits:", len(data.data))
 
             temp_input.write(binary)
             temp_input.close()
@@ -124,22 +122,13 @@ class YinYang(Encode):
 
                     if line and not line.startswith(">"):
                         dna_sequences.append(line)
-            print("DNA sequences:", len(dna_sequences))
-            print("First sequence:", dna_sequences[0])
-            print("Last sequence:", dna_sequences[-1])
 
             # keep model for decoding
             self.params.yinyang_model = temp_model
             self.params.yinyang_total_bits = len(data.data)
             self.params.yingyang_method = self.method
-            print("Model path:", temp_model)
-            print("Model exists:", os.path.exists(temp_model))
-            print("Model size:", os.path.getsize(temp_model)) 
 
             model = model_saver.load_model(temp_model)
-
-            print(model.keys())
-            print(model)
 
 
             info = {

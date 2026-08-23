@@ -15,8 +15,6 @@ class DeBruijnGraph(Consensus):
 
         self.logger = logger
 
-        print(params)
-        
         
         self.min_coverage = getattr(params, "min_coverage")
         self.branch_ratio = getattr(params, "branch_ratio")
@@ -39,8 +37,7 @@ class DeBruijnGraph(Consensus):
 
         total_reads = 0
 
-        print(f"Recovering consensus sequences from {len(clustered_data)} clusters.")
-        print(clustered_data)
+
 
         for reads in clustered_data.values():
 
@@ -66,7 +63,6 @@ class DeBruijnGraph(Consensus):
             "total_reads": total_reads,
         }
 
-        print(graph.stats())
 
         return consensus, stats
     

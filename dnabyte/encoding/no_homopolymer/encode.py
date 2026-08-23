@@ -101,7 +101,6 @@ class NoHomoPoly(Encode):
 
             dna_codewords = None
             info = {}
-        print(dna_codewords)
         return dna_codewords, info
 
     def decode(self, data):

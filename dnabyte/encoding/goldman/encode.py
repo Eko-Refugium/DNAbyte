@@ -32,7 +32,6 @@ class Goldman(Encode):
         """
         temp_file_path = None
         output_dir = None
-        print("Entered Goldman.encode()")
         try:
             # Create temporary directory for output
             output_dir = tempfile.mkdtemp()
