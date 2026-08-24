@@ -7,16 +7,32 @@
 #include "HEDGES-main/nr3b.h"
 #include "HEDGES-main/RSecc.h"
 #include "HEDGES-main/DNAcode.h"
-#include "hedges_wrapper.h"
-#include "dna_export.h"
+
+#include "hedges_decode.h"
 #include "hedges_config.h"
+#include "dna_export.h"
+
+
+extern Int bytesperstrand;
+extern Int strandsperpacketmessage;
+extern Int messbytesperstrand;
+extern Int messbytesperpacket;
+
+extern Int strandIDbytes;
+extern Int strandrunoutbytes;
+
+extern Int totstrandlen;
+extern Int leftlen;
+extern Int rightlen;
+extern Int strandlen;
 
 extern Int strandsperpacket;
+extern Int strandsperpacketcheck;
 
 
 static unsigned char dna_value(char c)
 {
-    switch(c)
+    switch (c)
     {
         case 'A': return 0;
         case 'C': return 1;
@@ -28,49 +44,111 @@ static unsigned char dna_value(char c)
 }
 
 
-static int decode_base(char c)
+static void initialize_hedges(const HedgesConfig& cfg)
 {
-    switch(c)
+    Doub coderates_[] =
     {
-        case 'A': return 0;
-        case 'C': return 1;
-        case 'G': return 2;
-        case 'T': return 3;
-    }
+        0.,
+        0.75,
+        0.6,
+        0.5,
+        1. / 3.,
+        0.25,
+        1. / 6.
+    };
 
-    return 0;
+    VecDoub coderates(7, coderates_);
+
+
+    std::vector<char> leftprimer(
+        cfg.left_primer.begin(),
+        cfg.left_primer.end()
+    );
+
+    leftprimer.push_back('\0');
+
+
+    std::vector<char> rightprimer(
+        cfg.right_primer.begin(),
+        cfg.right_primer.end()
+    );
+
+    rightprimer.push_back('\0');
+
+
+    totstrandlen = cfg.total_strand_length;
+
+    strandIDbytes = cfg.strand_id_bytes;
+
+    strandrunoutbytes = cfg.strand_runout_bytes;
+
+
+    Getparams_out params = getparams();
+
+
+    setparams(
+        8 * strandIDbytes,
+        params.MAXSEQ,
+        params.NSTAK,
+        cfg.heap_limit
+    );
+
+
+    setcoderate(
+        cfg.coderate,
+        leftprimer.data(),
+        rightprimer.data()
+    );
+
+
+    Int min_GC =
+        cfg.gc_window - cfg.gc_max;
+
+
+    setdnaconstraints(
+        cfg.gc_window,
+        cfg.gc_max,
+        min_GC,
+        cfg.max_homopolymer
+    );
+
+
+    leftlen =
+        Int(cfg.left_primer.size());
+
+    rightlen =
+        Int(cfg.right_primer.size());
+
+
+    strandlen =
+        totstrandlen
+        - leftlen
+        - rightlen;
+
+
+    strandsperpacketmessage =
+        strandsperpacket
+        - strandsperpacketcheck;
+
+
+    bytesperstrand =
+        Int(
+            strandlen
+            * coderates[cfg.coderate]
+            / 4.
+        );
+
+
+    messbytesperstrand =
+        bytesperstrand
+        - strandIDbytes
+        - strandrunoutbytes;
+
+
+    messbytesperpacket =
+        strandsperpacketmessage
+        * messbytesperstrand;
 }
-
-
-// first 4 DNA bases = packet id byte
-static uint32_t get_packet_id(const std::string& s)
-{
-    uint32_t id = 0;
-
-    for(int i=0;i<4;i++)
-    {
-        id <<= 2;
-        id |= decode_base(s[i]);
-    }
-
-    return id;
-}
-
-
-// next 4 DNA bases = strand number
-static uint32_t get_strand_id(const std::string& s)
-{
-    uint32_t id = 0;
-
-    for(int i=4;i<8;i++)
-    {
-        id <<= 2;
-        id |= decode_base(s[i]);
-    }
-
-    return id;
-}
-
 
 
 std::vector<uint8_t> hedges_decode(
@@ -78,121 +156,93 @@ std::vector<uint8_t> hedges_decode(
     const HedgesConfig& cfg
 )
 {
-
-    std::vector<std::string> strands = input;
-
-
-    // sort by packet, then strand number
-    std::sort(
-        strands.begin(),
-        strands.end(),
-        [](const std::string& a,
-           const std::string& b)
-        {
-
-            uint32_t pa = get_packet_id(a);
-            uint32_t pb = get_packet_id(b);
-
-            if(pa != pb)
-                return pa < pb;
-
-
-            return get_strand_id(a)
-                 < get_strand_id(b);
-        }
-    );
-
+    initialize_hedges(cfg);
 
 
     std::vector<uint8_t> result;
 
 
+    //
+    // Input consists of complete DNA strands.
+    // Every 255 strands belong to one HEDGES packet.
+    //
+    size_t offset = 0;
 
-    size_t pos = 0;
 
-
-    while(pos < strands.size())
+    while (offset < input.size())
     {
-
-        std::vector<std::string> packet;
-
-
-        uint32_t packet_id =
-            get_packet_id(strands[pos]);
+        size_t remaining =
+            input.size() - offset;
 
 
-        while(pos < strands.size() &&
-            packet.size() < strandsperpacket)
-        {
-
-            if(get_packet_id(strands[pos]) != packet_id)
-                break;
-
-
-            packet.push_back(
-                strands[pos]
+        size_t count =
+            std::min(
+                static_cast<size_t>(strandsperpacket),
+                remaining
             );
 
-            pos++;
-        }
 
-
-    std::cout
-        << "Decoding packet "
-        << packet_id
-        << " strands="
-        << packet.size()
-        << std::endl;
-
-
-        std::cout
-            << "Decoding packet "
-            << packet_id
-            << " strands="
-            << packet.size()
-            << std::endl;
-
-
-
-        if(packet.size() != strandsperpacket)
+        if (count != strandsperpacket)
         {
             std::cerr
-                << "WARNING: incomplete packet "
-                << packet_id
+                << "Incomplete HEDGES packet: "
+                << count
+                << " / "
+                << strandsperpacket
+                << " strands"
                 << std::endl;
+
+            break;
         }
 
 
-
+        //
+        // Build ONE DNA packet
+        //
         MatUchar dna(
-            packet.size(),
-            packet[0].size()
+            strandsperpacket,
+            input[offset].size()
         );
 
 
-        for(size_t r=0;r<packet.size();r++)
+        for (size_t r = 0; r < count; ++r)
         {
-            for(size_t c=0;c<packet[r].size();c++)
+            const std::string& strand =
+                input[offset + r];
+
+
+            for (size_t c = 0; c < strand.size(); ++c)
             {
                 dna[r][c] =
-                    dna_value(packet[r][c]);
+                    dna_value(strand[c]);
             }
         }
 
 
-
+        //
+        // HEDGES decoding.
+        //
+        // This calls the ORIGINAL DNAcode.cpp implementation.
+        //
         Dnatomess_out decoded =
             dnatomess(dna);
 
-        for (int r = 0; r < 10; r++)
-        {
-            std::cout
-                << "row " << r
-                << " packet=" << (int)decoded.mpacket[r][0]
-                << " strand=" << (int)decoded.mpacket[r][1]
-                << '\n';
-        }
 
+        std::cout
+            << "HEDGES bad decodes: "
+            << decoded.baddecodes
+            << std::endl;
+
+
+        std::cout
+            << "HEDGES erasures: "
+            << decoded.erasures
+            << std::endl;
+
+
+        //
+        // Reed-Solomon correction
+        //
         Correctmesspacket_out corrected =
             correctmesspacket(
                 decoded.mpacket,
@@ -200,174 +250,72 @@ std::vector<uint8_t> hedges_decode(
             );
 
 
-
+        //
+        // Extract the actual message bytes
+        //
         VecUchar plain =
             extractplaintext(
                 corrected.packet
             );
 
 
-
-        for(int i=0;i<plain.size();i++)
+        //
+        // Append this packet to the FINAL result.
+        //
+        for (Int i = 0; i < plain.size(); ++i)
         {
             result.push_back(
                 plain[i]
             );
         }
 
+
+        //
+        // Move to next packet.
+        //
+        offset += count;
     }
 
 
-
-    std::cout
-        << "Before trim: "
-        << result.size()
-        << std::endl;
-
-
-
-    if(result.size() >= 4)
+    //
+    // Remove 4-byte original-size header.
+    //
+    if (result.size() < 4)
     {
-
-        uint32_t original_size =
-            (uint32_t(result[0]) << 24) |
-            (uint32_t(result[1]) << 16) |
-            (uint32_t(result[2]) << 8) |
-             uint32_t(result[3]);
-
-
-        std::cout
-            << "Original size="
-            << original_size
-            << std::endl;
-
-
-
-        result.erase(
-            result.begin(),
-            result.begin()+4
+        throw std::runtime_error(
+            "Decoded data is too short"
         );
-
-
-
-        if(original_size <= result.size())
-        {
-            result.resize(
-                original_size
-            );
-        }
     }
 
 
+    uint32_t original_size =
+        (uint32_t(result[0]) << 24) |
+        (uint32_t(result[1]) << 16) |
+        (uint32_t(result[2]) << 8) |
+        uint32_t(result[3]);
 
-    std::cout
-        << "Final decoded size="
-        << result.size()
-        << std::endl;
+
+    result.erase(
+        result.begin(),
+        result.begin() + 4
+    );
+
+
+    //
+    // Remove packet padding.
+    //
+    if (original_size > result.size())
+    {
+        throw std::runtime_error(
+            "Decoded data is shorter than original size"
+        );
+    }
+
+
+    result.resize(
+        original_size
+    );
 
 
     return result;
 }
-// std::vector<uint8_t> hedges_decode(
-//     const std::vector<std::string>& strands
-// )
-// {
-// std::cout << "Before init" << std::endl;
-
-// std::cout << "totstrandlen: " << totstrandlen << std::endl;
-// std::cout << "strandIDbytes: " << strandIDbytes << std::endl;
-// std::cout << "strandrunoutbytes: " << strandrunoutbytes << std::endl;
-
-//     MatUchar dna(
-//         strands.size(),
-//         strands[0].size()
-//     );
-
-//     for(size_t i = 0; i < strands.size(); i++)
-//     {
-//         for(size_t j = 0; j < strands[i].size(); j++)
-//         {
-//             dna[i][j] = dna_value(strands[i][j]);
-//         }
-//     }
-
-//     std::cout << "Calling dnatomess..." << std::endl;
-
-//     Dnatomess_out decoded = dnatomess(dna);
-
-//     std::cout << "dnatomess finished" << std::endl;
-
-//     std::cout << "mpacket rows: "
-//             << decoded.mpacket.nrows()
-//             << " cols: "
-//             << decoded.mpacket.ncols()
-//             << std::endl;
-
-//     std::cout << "epacket rows: "
-//             << decoded.epacket.nrows()
-//             << " cols: "
-//             << decoded.epacket.ncols()
-//             << std::endl;
-
-
-//     // Error correction
-//     std::cout << "Calling correctmesspacket..." << std::endl;
-
-//     Correctmesspacket_out corrected =
-//         correctmesspacket(
-//             decoded.mpacket,
-//             decoded.epacket
-//         );
-
-//     std::cout << "Decoded mpacket first 5 rows:\n";
-
-//     for (int r = 0; r < 5; r++)
-//     {
-//         for (int c = 0; c < 10; c++)
-//         {
-//             std::cout << (int)decoded.mpacket[r][c] << " ";
-//         }
-//         std::cout << "\n";
-//     }
-
-//     // Extract payload
-//     VecUchar plaintext =
-//         extractplaintext(corrected.packet);
-
-//     std::cout << "corrected.packet rows: "
-//           << corrected.packet.nrows()
-//           << " cols: "
-//           << corrected.packet.ncols()
-//           << std::endl;
-
-//     std::cout << "Plaintext first 20:\n";
-
-//     for(int i=0;i<20;i++)
-//     {
-//         std::cout << (int)plaintext[i] << " ";
-//     }
-
-//     std::cout << "\n";
-
-//     std::cout << std::endl;
-
-//     std::cout << "plaintext size: "
-//           << plaintext.size()
-//           << std::endl;
-
-//     std::cout << "First bytes: ";
-
-//     for(int i = 0; i < 10 && i < plaintext.size(); i++)
-//     {
-//         std::cout << (int)plaintext[i] << " ";
-//     }
-
-//     std::vector<uint8_t> result;
-
-//     for(size_t i = 0; i < plaintext.size(); i++)
-//     {
-//         result.push_back(plaintext[i]);
-//     }
-
-//     return result;
-// }

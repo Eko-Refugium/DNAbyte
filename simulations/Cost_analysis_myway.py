@@ -185,7 +185,7 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
             success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
             if success is None:
                 raise RuntimeError(f"Encoding gcplus_c1 failed for {encoding}")
-            while defultparams[encoding].gcplus_c1 < 10:
+            while defultparams[encoding].gcplus_c1 < 20:
                 if success < target_bp+300:
                     defultparams[encoding].gcplus_c1 += 1
                 elif success > target_bp+300:
@@ -264,8 +264,8 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
         for encoding in encodings:
             defultparams[encoding].iid_error_rate = error_rate
             defultparams[encoding].iid_substitution_rate = error_rate
-            defultparams[encoding].iid_insertion_rate = error_rate
-            defultparams[encoding].iid_deletion_rate = error_rate
+            defultparams[encoding].iid_insertion_rate = 0.0
+            defultparams[encoding].iid_deletion_rate = 0.0
             for i in range(3):  # Run each simulation 20 times for averaging
                 print(f"Run {i+1} for encoding {encoding} at error rate {error_rate}")
                 sim = Simulation([defultparams[encoding]])
@@ -398,8 +398,7 @@ if __name__ == '__main__':
         'binarization_method': 'default',
         'synthesis_method': 'nosynthpoly',
         'sequencing_method': 'iid',
-        'kmer_k': 1,
-        'recovery_method': 'debruijn',
+        'recovery_method': 'simple',
         'min_coverage': 1,
         'clustering_method': 'kmere_cluster',
         'storage_conditions': None,
@@ -415,7 +414,7 @@ if __name__ == '__main__':
         "iid_deletion_rate": 0.0,
     }
     
-    error_rates = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.08, 0.12, 0.16, 0.20]
+    error_rates = [0.0, 0.01, 0.03, 0.05]
 
     defoultparams = {}      
     for encoding in encodings:
@@ -428,7 +427,11 @@ if __name__ == '__main__':
 
     noECencodinglengths = encode_and_count(encodings, defoultparams)
 
+    print(noECencodinglengths)
+
     final_params = encode_and_count_with_error_correction(encodings, defoultparams, noECencodinglengths)
+
+    encodings = ['goldman', 'church', 'gcplus', 'max_density', 'no_homopolymer', 'wukong', 'yinyang', 'hedges']
 
     sim_resoults = simulate_cost_analysis(encodings, final_params, error_rates)
 

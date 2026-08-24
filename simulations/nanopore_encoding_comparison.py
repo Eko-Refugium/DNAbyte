@@ -399,8 +399,9 @@ class NanoporeEncodingComparison:
             'goldman': {
                 'add_primer': True,
                 'primer_length': 20,
-                'clustering_method': 'primer_grouper',
-                'recovery_method': 'debruijn'
+                'clustering_method': 'kmere_cluster',
+                'recovery_method': 'debruijn',
+                'mean': 5
             },
             'church': {
                 'rs_num': 10,
@@ -408,55 +409,54 @@ class NanoporeEncodingComparison:
                 'add_redundancy': True,
                 'add_primer': True,
                 'primer_length': 20,
-                'clustering_method': 'primer_grouper',
-                'recovery_method': 'debruijn'
+                'clustering_method': 'kmere_cluster',
+                'recovery_method': 'debruijn',
+                'mean': 5
             },
             'gcplus': {
                 'gcplus_k': 100,
                 'gcplus_l': 10,
-                'gcplus_c1': 3,
+                'gcplus_c1': 4,
                 'add_primer': True,
                 'primer_length': 20,
-                'clustering_method': 'primer_grouper',
-                'recovery_method': 'debruijn'
+                'clustering_method': 'kmere_cluster',
+                'recovery_method': 'debruijn',
+                'mean': 5
             },
             'max_density': {
                 'dna_barcode_length': 20,
                 'codeword_maxlength_positions': 20,
-                'codeword_length': 100,
-                'add_primer': True,
-                'primer_length': 20,
-                'clustering_method': 'primer_grouper',
+                'codeword_length': 200,
+                'mean': 5,
+                'clustering_method': 'kmere_cluster',
                 'recovery_method': 'debruijn'
             },
             'no_homopolymer': {
-                'max_homopolymer': 3,
                 'dna_barcode_length': 20,
                 'codeword_maxlength_positions': 20,
-                'codeword_length': 100,
-                'add_primer': True,
-                'primer_length': 20,
-                'clustering_method': 'primer_grouper',
+                'codeword_length': 200,
+                'mean': 5,
+                'clustering_method': 'kmere_cluster',
                 'recovery_method': 'debruijn'
             },
             'wukong': {
-                'rs_num': 15,
+                'rs_num': 3,
                 'max_homopolymer': 3,
                 'min_gc': 0.45,
                 'max_gc': 0.55,
-                'rule_num': 2,
+                'rule_num': 1,
                 'add_redundancy': True,
                 'add_primer': True,
                 'primer_length': 20,
-                'clustering_method': 'primer_grouper',
-                'recovery_method': 'debruijn'
+                'clustering_method': 'kmere_cluster',
+                'recovery_method': 'debruijn',
+                'mean': 5
             },
             'yinyang': {
                 'max_homopolymer': 4,
-                'yinyang_search_count': 100,
-                'add_primer': True,
-                'primer_length': 20,
-                'clustering_method': 'primer_grouper',
+                'yinyang_search_count': 1000,
+                'mean': 5,                
+                'clustering_method': 'kmere_cluster',
                 'recovery_method': 'debruijn'
             },
         }

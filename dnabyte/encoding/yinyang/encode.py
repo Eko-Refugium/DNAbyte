@@ -37,7 +37,7 @@ class YinYang(Encode):
             search_count=getattr(
                 params,
                 "yinyang_search_count",
-                100
+                1000
             ),
             max_homopolymer=getattr(
                 params,
@@ -209,7 +209,7 @@ def attributes(inputparams):
         getattr(
             inputparams,
             "yinyang_search_count",
-            100
+            1000
         )
     )
 

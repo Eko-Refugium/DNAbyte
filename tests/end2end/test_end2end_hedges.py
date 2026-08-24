@@ -20,13 +20,15 @@ params_list = [
         primer_length=50,
         sequence_length=300,
         max_homopolymer=3,
+        hedges_coderate=4,
 
         # error channels
         storage_conditions=None,
-        synthesis_method=None,
-        clustering_method='kmere_cluster',
+        sequencing_method='iid',
+        iid_error_rate=0.01,
+        clustering_method='pass_through',
         kmer_size_cluster=250,
-        recovery_method='debruijn'
+        recovery_method='pass_through'
         
     ),
 ]
