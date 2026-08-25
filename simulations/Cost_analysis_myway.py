@@ -134,13 +134,21 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
             if encoding == 'yinyang':
                 defultparams[encoding].mean = 5
             success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
+
+            previous_success = success
+            previous_encodedbpnomean = encodedbpnomean
+            
             if success is None:
                 raise RuntimeError(f"Encoding failed for {encoding}")
             while True:
                 if success < target_bp+300:
+                    previous_success = success
+                    previous_encodedbpnomean = encodedbpnomean
                     defultparams[encoding].mean += 1
                 elif success > target_bp+300:
-                    defultparams[encoding].mean -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].mean -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
@@ -158,11 +166,14 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
                     raise RuntimeError(f"Encoding add_redundancy failed for {encoding}")
-            while defultparams[encoding].rs_num < 10:
+            while defultparams[encoding].rs_num < 12:
                 if success < target_bp:
+                    previous_success = success
                     defultparams[encoding].rs_num += 1
                 elif success > target_bp:
-                    defultparams[encoding].rs_num -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].rs_num -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
@@ -170,9 +181,12 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
 
             while True:
                 if success < target_bp+300:
+                    previous_success = success
                     defultparams[encoding].mean += 1
                 elif success > target_bp+300:
-                    defultparams[encoding].mean -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].mean -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
@@ -187,18 +201,24 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
                 raise RuntimeError(f"Encoding gcplus_c1 failed for {encoding}")
             while defultparams[encoding].gcplus_c1 < 20:
                 if success < target_bp+300:
+                    previous_success = success
                     defultparams[encoding].gcplus_c1 += 1
                 elif success > target_bp+300:
-                    defultparams[encoding].gcplus_c1 -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].gcplus_c1 -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
                     raise RuntimeError(f"Encoding gcplus_c1 failed for {encoding}")
             while True:
                 if success < target_bp+300:
+                    previous_success = success
                     defultparams[encoding].mean += 1
                 elif success > target_bp+300:
-                    defultparams[encoding].mean -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].mean -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
@@ -216,18 +236,24 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
                 raise RuntimeError(f"Encoding max_density failed for {encoding}")
             while (defultparams[encoding].reed_solo_percentage > 0.5):
                 if success < target_bp+300:
+                    previous_success = success
                     defultparams[encoding].reed_solo_percentage = max(defultparams[encoding].reed_solo_percentage - 0.01, 0.0)
                 elif success > target_bp+300:
-                    defultparams[encoding].reed_solo_percentage = min(defultparams[encoding].reed_solo_percentage + 0.01, 1.0)
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].reed_solo_percentage = min(defultparams[encoding].reed_solo_percentage + 0.01, 1.0)
+                        success = previous_success  
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
                     raise RuntimeError(f"Encoding failed for {encoding}")
             while True:
                 if success < target_bp+300:
+                    previous_success = success
                     defultparams[encoding].mean += 1
                 elif success > target_bp+300:
-                    defultparams[encoding].mean -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].mean -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
@@ -241,10 +267,13 @@ def encode_and_count_with_error_correction(encodings, defultparams, noECencoding
             if success is None:
                 raise RuntimeError(f"Encoding hedges failed for {encoding}")
             while defultparams[encoding].hedges_coderate < 10:
+                previous_success = success
                 if success < target_bp+300:
                     defultparams[encoding].hedges_coderate += 1
                 elif success > target_bp+300:
-                    defultparams[encoding].hedges_coderate -= 1
+                    if abs(previous_success - target_bp) < abs(success - target_bp):
+                        defultparams[encoding].hedges_coderate -= 1
+                        success = previous_success
                     break
                 success, encodedbpnomean = encode_and_count_single_encoding(encoding, defultparams)
                 if success is None:
@@ -266,7 +295,7 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
             defultparams[encoding].iid_substitution_rate = error_rate
             defultparams[encoding].iid_insertion_rate = 0.0
             defultparams[encoding].iid_deletion_rate = 0.0
-            for i in range(3):  # Run each simulation 20 times for averaging
+            for i in range(20):  # Run each simulation 20 times for averaging
                 print(f"Run {i+1} for encoding {encoding} at error rate {error_rate}")
                 sim = Simulation([defultparams[encoding]])
                 results = sim.run()
@@ -414,7 +443,7 @@ if __name__ == '__main__':
         "iid_deletion_rate": 0.0,
     }
     
-    error_rates = [0.0, 0.01, 0.03, 0.05]
+    error_rates = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15, 0.2]  # Example error rates to test
 
     defoultparams = {}      
     for encoding in encodings:
@@ -441,6 +470,32 @@ if __name__ == '__main__':
         for error_rate, runs in error_data.items():
             success_count = sum(run['success'] for run in runs)
             print(f"  Error Rate: {error_rate}, Successful Runs: {success_count}/{len(runs)}")
+
+    # Save the results to a file for further analysis
+    output_file = "simulation_results.txt"
+    with open(output_file, "w") as f:
+        for encoding, error_data in sim_resoults.items():
+            f.write(f"Encoding: {encoding}\n")
+            for error_rate, runs in error_data.items():
+                success_count = sum(run['success'] for run in runs)
+                f.write(f"  Error Rate: {error_rate}, Successful Runs: {success_count}/{len(runs)}\n")
+
+    print(f"Simulation results saved to {output_file}")
+
+    #make plot with the results
+    import matplotlib.pyplot as plt
+
+    for encoding, error_data in sim_resoults.items():
+        error_rates = sorted(error_data.keys())
+        success_rates = [sum(run['success'] for run in error_data[er]) / len(error_data[er]) for er in error_rates]
+        plt.plot(error_rates, success_rates, label=encoding)
+
+    plt.xlabel('Error Rate')
+    plt.ylabel('Success Rate')
+    plt.title('Simulation Results for Different Error Rates with nearly equal bp count for all encodings')
+    plt.legend()
+    plt.savefig('simulation_results_plot.png')
+    plt.show()
 
 
     
