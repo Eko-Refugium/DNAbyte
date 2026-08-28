@@ -6,8 +6,6 @@ import math
 from dnabyte.encode import Encode
 from dnabyte.encoding.yinyang.yyc import pipeline
 from dnabyte.encoding.yinyang.yyc import scheme
-
-from dnabyte.encoding.yinyang.yyc.utils import index_operator
 from dnabyte.encoding.yinyang.yyc.utils import model_saver
 
 
@@ -18,12 +16,17 @@ class YinYang(Encode):
         self.params = params
         self.logger = logger
 
-        _original_pow = math.pow
-        
-        def _int_pow(x, y):
-            return int(_original_pow(x, y))
+        # YYC expects math.pow() to return an integer
+        # in some places, e.g. random.randint().
+        if not getattr(math, "_yinyang_pow_patched", False):
 
-        math.pow = _int_pow
+            _original_pow = math.pow
+
+            def _int_pow(x, y):
+                return int(_original_pow(x, y))
+
+            math.pow = _int_pow
+            math._yinyang_pow_patched = True
 
         self.method = scheme.YYC(
             support_bases=["A"],
@@ -60,7 +63,14 @@ class YinYang(Encode):
 
         try:
 
-            # temporary files
+            # Use the YYC method created in __init__
+            method = self.method
+
+
+            # --------------------------------------------------
+            # Temporary files
+            # --------------------------------------------------
+
             temp_input = tempfile.NamedTemporaryFile(
                 delete=False,
                 suffix=".bin"
@@ -77,19 +87,28 @@ class YinYang(Encode):
                 temp_model_dir,
                 "yyc_model.pkl"
             )
-            
 
 
-            # convert bit string to bytes
-            bits = data.data
-            bitstream = bits
+            # --------------------------------------------------
+            # Convert binary string to bytes
+            # --------------------------------------------------
+
+            original_bits = data.data
+
+            bits = original_bits
 
             if len(bits) % 8 != 0:
-                bits += "0" * (8 - len(bits) % 8)
+                bits += "0" * (
+                    8 - len(bits) % 8
+                )
 
             binary = bytes(
-                int(bits[i:i+8], 2)
-                for i in range(0, len(bits), 8)
+                int(bits[i:i + 8], 2)
+                for i in range(
+                    0,
+                    len(bits),
+                    8
+                )
             )
 
 
@@ -99,8 +118,12 @@ class YinYang(Encode):
             temp_output.close()
 
 
+            # --------------------------------------------------
+            # YYC encode
+            # --------------------------------------------------
+
             pipeline.encode(
-                method=self.method,
+                method=method,
                 input_path=temp_input.name,
                 output_path=temp_output.name,
                 model_path=temp_model,
@@ -108,6 +131,10 @@ class YinYang(Encode):
                 need_log=False
             )
 
+
+            # --------------------------------------------------
+            # Read DNA sequences
+            # --------------------------------------------------
 
             dna_sequences = []
 
@@ -118,23 +145,48 @@ class YinYang(Encode):
 
                 for line in f:
 
-                    line=line.strip()
+                    line = line.strip()
 
-                    if line and not line.startswith(">"):
+                    if (
+                        line
+                        and not line.startswith(">")
+                    ):
                         dna_sequences.append(line)
 
-            # keep model for decoding
+
+            # --------------------------------------------------
+            # Store everything needed by decoder
+            # --------------------------------------------------
+
             self.params.yinyang_model = temp_model
-            self.params.yinyang_total_bits = len(data.data)
-            self.params.yingyang_method = self.method
 
-            model = model_saver.load_model(temp_model)
+            self.params.yinyang_total_bits = len(
+                original_bits
+            )
 
+            self.params.yinyang_method = method
+
+
+            # Make sure model was actually written
+            model_saver.load_model(
+                temp_model
+            )
+
+
+            # --------------------------------------------------
+            # Information returned to framework
+            # --------------------------------------------------
 
             info = {
-                "number_of_codewords": len(dna_sequences),
-                "data_length": len(bitstream),
-                "total_bits": len(bitstream),
+                "number_of_codewords": len(
+                    dna_sequences
+                ),
+                "data_length": len(
+                    original_bits
+                ),
+                "total_bits": len(
+                    original_bits
+                ),
                 "barcode_length": 0,
                 "metadata": "",
             }
@@ -146,9 +198,11 @@ class YinYang(Encode):
         except Exception as e:
 
             if self.logger:
+
                 self.logger.error(
                     f"YYC encode error: {e}"
                 )
+
                 self.logger.error(
                     traceback.format_exc()
                 )
@@ -156,38 +210,86 @@ class YinYang(Encode):
             return None, {}
 
 
+        finally:
 
-        
+            # The model must NOT be deleted because
+            # the decoder needs it.
+
+            if temp_input is not None:
+
+                try:
+                    os.unlink(
+                        temp_input.name
+                    )
+                except Exception:
+                    pass
+
+
+            if temp_output is not None:
+
+                try:
+                    os.unlink(
+                        temp_output.name
+                    )
+                except Exception:
+                    pass
+
+
     def decode(self, data):
+
         try:
+
             from dnabyte.encoding.yinyang.decode import decode
-            return decode(data, self.params, self.logger)
+
+            return decode(
+                data,
+                self.params,
+                self.logger
+            )
+
         except Exception as e:
+
             if self.logger:
+
                 self.logger.error(
                     f"YYC decode error: {e}"
                 )
+
                 self.logger.error(
                     traceback.format_exc()
                 )
 
-            raise e
-        
+            raise
+
+
     def process(self, data):
+
         try:
+
             from dnabyte.encoding.yinyang.process import process
-            return process(data, self.params, self.logger)
+
+            return process(
+                data,
+                self.params,
+                self.logger
+            )
+
         except Exception as e:
+
             if self.logger:
-                self.logger.error(f"YYC process error: {e}")
-                self.logger.error(traceback.format_exc())
+
+                self.logger.error(
+                    f"YYC process error: {e}"
+                )
+
+                self.logger.error(
+                    traceback.format_exc()
+                )
+
             return None, {}
-        
+
+
 def attributes(inputparams):
-    """
-    Return Yin-Yang encoding parameters.
-    Called by Params.__init__ through the plugin system.
-    """
 
     encoding_method = getattr(
         inputparams,
@@ -197,6 +299,7 @@ def attributes(inputparams):
 
     assembly_structure = "synthesis"
 
+
     sequence_length = int(
         getattr(
             inputparams,
@@ -204,6 +307,7 @@ def attributes(inputparams):
             120
         )
     )
+
 
     yinyang_search_count = int(
         getattr(
@@ -213,6 +317,7 @@ def attributes(inputparams):
         )
     )
 
+
     max_homopolymer = int(
         getattr(
             inputparams,
@@ -221,6 +326,7 @@ def attributes(inputparams):
         )
     )
 
+
     max_content = float(
         getattr(
             inputparams,
@@ -228,6 +334,7 @@ def attributes(inputparams):
             0.6
         )
     )
+
 
     return {
         "encoding_method": encoding_method,

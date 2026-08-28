@@ -1,0 +1,6 @@
+Encoding: yinyang
+  Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 49/50
+  Error Rate: 0.04, Successful Runs: 43/50
+  Error Rate: 0.07, Successful Runs: 39/50
+  Error Rate: 0.1, Successful Runs: 38/50
