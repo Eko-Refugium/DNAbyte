@@ -1,6 +1,77 @@
 Encoding: yinyang
   Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 50/50
+  Error Rate: 0.02, Successful Runs: 8/50
+  Error Rate: 0.03, Successful Runs: 14/50
+  Error Rate: 0.04, Successful Runs: 15/50
+  Error Rate: 0.05, Successful Runs: 17/50
+  Error Rate: 0.07, Successful Runs: 17/50
+  Error Rate: 0.1, Successful Runs: 24/50
+  Error Rate: 0.15, Successful Runs: 29/50
+  Error Rate: 0.2, Successful Runs: 29/50
+Encoding: hedges
+  Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 50/50
+  Error Rate: 0.02, Successful Runs: 50/50
+  Error Rate: 0.03, Successful Runs: 50/50
+  Error Rate: 0.04, Successful Runs: 50/50
+  Error Rate: 0.05, Successful Runs: 50/50
+  Error Rate: 0.07, Successful Runs: 50/50
+  Error Rate: 0.1, Successful Runs: 49/50
+  Error Rate: 0.15, Successful Runs: 44/50
+  Error Rate: 0.2, Successful Runs: 19/50
+Encoding: wukong
+  Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 50/50
+  Error Rate: 0.02, Successful Runs: 50/50
+  Error Rate: 0.03, Successful Runs: 50/50
+  Error Rate: 0.04, Successful Runs: 50/50
+  Error Rate: 0.05, Successful Runs: 50/50
+  Error Rate: 0.07, Successful Runs: 50/50
+  Error Rate: 0.1, Successful Runs: 50/50
+  Error Rate: 0.15, Successful Runs: 0/50
+  Error Rate: 0.2, Successful Runs: 0/50
+Encoding: no_homopolymer
+  Error Rate: 0.0, Successful Runs: 50/50
   Error Rate: 0.01, Successful Runs: 49/50
-  Error Rate: 0.04, Successful Runs: 43/50
-  Error Rate: 0.07, Successful Runs: 39/50
-  Error Rate: 0.1, Successful Runs: 38/50
+  Error Rate: 0.02, Successful Runs: 14/50
+  Error Rate: 0.03, Successful Runs: 0/50
+  Error Rate: 0.04, Successful Runs: 0/50
+  Error Rate: 0.05, Successful Runs: 0/50
+  Error Rate: 0.07, Successful Runs: 0/50
+  Error Rate: 0.1, Successful Runs: 0/50
+  Error Rate: 0.15, Successful Runs: 0/50
+  Error Rate: 0.2, Successful Runs: 0/50
+Encoding: church
+  Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 50/50
+  Error Rate: 0.02, Successful Runs: 50/50
+  Error Rate: 0.03, Successful Runs: 50/50
+  Error Rate: 0.04, Successful Runs: 50/50
+  Error Rate: 0.05, Successful Runs: 50/50
+  Error Rate: 0.07, Successful Runs: 50/50
+  Error Rate: 0.1, Successful Runs: 50/50
+  Error Rate: 0.15, Successful Runs: 48/50
+  Error Rate: 0.2, Successful Runs: 5/50
+Encoding: max_density
+  Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 50/50
+  Error Rate: 0.02, Successful Runs: 50/50
+  Error Rate: 0.03, Successful Runs: 48/50
+  Error Rate: 0.04, Successful Runs: 20/50
+  Error Rate: 0.05, Successful Runs: 0/50
+  Error Rate: 0.07, Successful Runs: 0/50
+  Error Rate: 0.1, Successful Runs: 0/50
+  Error Rate: 0.15, Successful Runs: 0/50
+  Error Rate: 0.2, Successful Runs: 0/50
+Encoding: goldman
+  Error Rate: 0.0, Successful Runs: 50/50
+  Error Rate: 0.01, Successful Runs: 50/50
+  Error Rate: 0.02, Successful Runs: 50/50
+  Error Rate: 0.03, Successful Runs: 50/50
+  Error Rate: 0.04, Successful Runs: 50/50
+  Error Rate: 0.05, Successful Runs: 49/50
+  Error Rate: 0.07, Successful Runs: 30/50
+  Error Rate: 0.1, Successful Runs: 4/50
+  Error Rate: 0.15, Successful Runs: 0/50
+  Error Rate: 0.2, Successful Runs: 0/50

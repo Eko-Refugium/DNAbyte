@@ -1,5 +1,6 @@
 import random
 from dnabyte.sequence import SimulateSequencing
+from random import randrange
 
 class IID(SimulateSequencing):
     """
@@ -31,7 +32,6 @@ class IID(SimulateSequencing):
             
             while i < len(new_seq):
                 rand_val = random.random()
-                
                 # Substitution error
                 if rand_val < sub_rate:
                     error_counter += 1
@@ -39,18 +39,18 @@ class IID(SimulateSequencing):
                     new_seq[i] = new_base
                     i += 1
                     
-                # Insertion error
-                elif rand_val < sub_rate + ins_rate:
-                    error_counter += 1
-                    insert_base = random.choice(['A', 'C', 'G', 'T'])
-                    new_seq.insert(i, insert_base)
-                    i += 2  # Skip the inserted base
+                # # Insertion error
+                # elif rand_val < sub_rate + ins_rate:
+                #     error_counter += 1
+                #     insert_base = random.choice(['A', 'C', 'G', 'T'])
+                #     new_seq.insert(i, insert_base)
+                #     i += 2  # Skip the inserted base
                     
-                # Deletion error
-                elif rand_val < sub_rate + ins_rate + del_rate:
-                    error_counter += 1
-                    new_seq.pop(i)
-                    # Don't increment i, check next base at same position
+                # # Deletion error
+                # elif rand_val < sub_rate + ins_rate + del_rate:
+                #     error_counter += 1
+                #     new_seq.pop(i)
+                #     # Don't increment i, check next base at same position
                     
                 else:
                     i += 1

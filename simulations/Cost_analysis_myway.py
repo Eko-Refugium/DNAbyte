@@ -420,7 +420,7 @@ def default_values_of_encoding(encoding):
 
 
 if __name__ == '__main__':
-    encodings = ['yinyang']
+    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman']
 
     base_params = {
         'filename': 'Bohemian_Rhapsody_Lyrics.txt',
@@ -443,7 +443,7 @@ if __name__ == '__main__':
         "iid_deletion_rate": 0.0,
     }
     
-    error_rates = [0.0, 0.01, 0.04, 0.07, 0.1,]  # Example error rates to test
+    error_rates = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.07, 0.1, 0.15, 0.2]  # Example error rates to test
 
     defoultparams = {}      
     for encoding in encodings:
@@ -460,7 +460,7 @@ if __name__ == '__main__':
 
     final_params = encode_and_count_with_error_correction(encodings, defoultparams, noECencodinglengths)
 
-    encodings = ['yinyang']
+    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman']
 
     sim_resoults = simulate_cost_analysis(encodings, final_params, error_rates)
 
