@@ -1,11 +1,17 @@
 
 import os
 
-from dnabyte.params import Params
-from dnabyte.binarize import Binarize
-from simulations.simulation import Simulation
-from dnabyte.data_classes.base import Data
+from dnabyte.data_classes.insilicodna import InSilicoDNA
 from dnabyte.encode import Encode
+from dnabyte.params import Params
+from dnabyte.sequence import SimulateSequencing
+from dnabyte.store import SimulateStorage
+from dnabyte.synthesize import SimulateSynthesis
+from simulations.simulation import Simulation
+from dnabyte.binarize import Binarize
+from dnabyte.data_classes import Data
+from dnabyte.cluster import Cluster
+from dnabyte.consensus import Consensus
 
 def encode_and_count_single_encoding(encoding, defultparams):
     # Sanity check for encoding method
@@ -295,34 +301,97 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
             defultparams[encoding].iid_substitution_rate = error_rate
             defultparams[encoding].iid_insertion_rate = 0.0
             defultparams[encoding].iid_deletion_rate = 0.0
-            for i in range(50):  # Run each simulation 20 times for averaging
-                print(f"Run {i+1} for encoding {encoding} at error rate {error_rate}")
-                sim = Simulation([defultparams[encoding]])
-                results = sim.run()
-                
-                # Check if any simulation succeeded
-                encsuccess = any(
-                    sim_result.get('status') == 'SUCCESS' 
-                    for sim_result in results.values()
-                )
-                
-                if encoding not in error_simulation_results:
-                    error_simulation_results[encoding] = {}
-                
-                if error_rate not in error_simulation_results[encoding]:
-                    error_simulation_results[encoding][error_rate] = []
-                
+
+            binarizer = Binarize(defultparams[encoding])
+
+            if hasattr(defultparams[encoding], 'file_paths') and defultparams[encoding].file_paths:
+                file_paths = ['./tests/testfiles/' + fp for fp in defultparams[encoding].file_paths]
+            elif hasattr(defultparams[encoding], 'filename'):
+                file_paths = ['./tests/testfiles/' + defultparams[encoding].filename]
+            else:
+                raise ValueError("params must have either 'file_paths' or 'filename' attribute")
+
+            if encoding not in error_simulation_results:
+                error_simulation_results[encoding] = {}
+            if error_rate not in error_simulation_results[encoding]:
+                error_simulation_results[encoding][error_rate] = []
+
+            data_obj = Data(file_paths=file_paths)
+            binary_code = binarizer.binarize(data_obj)
+            coder = Encode(defultparams[encoding])
+            data_enc, info = coder.encode(binary_code)
+
+            for i in range(50):
+                success = False
+                res = None
+
+                try:
+                    syn = SimulateSynthesis(defultparams[encoding])
+                    data_syn, info = syn.simulate(data_enc)
+
+                    sto = SimulateStorage(defultparams[encoding])
+                    data_sto, info = sto.simulate(data_syn)
+
+                    seq = SimulateSequencing(defultparams[encoding])
+                    data_seq, info = seq.simulate(data_sto)
+
+                    if defultparams[encoding].clustering_method is not None and defultparams[encoding].recovery_method is not None:
+                        cluster_obj = Cluster(defultparams[encoding])
+                        data_cluster, info = cluster_obj.cluster(data_seq)
+                        consensus_obj = Consensus(defultparams[encoding])
+                        data_cor, info = consensus_obj.call(data_cluster)
+                    else:
+                        # Fall back to encoding-specific process
+                        data_cor, info = coder.process(data_seq)
+
+                    data_dec, valid, info = coder.decode(data_cor)
+                    if not valid:
+                        raise ValueError("decoded data invalid")
+
+                    comparison, res = data_dec.compare(data_dec, binary_code)
+                    success = comparison != 'ERROR'
+
+                except Exception as e:
+                    print(f"Run {i+1} failed for {encoding} at error rate {error_rate}: {e}")
+                    success = False
+                    res = None
+
                 error_simulation_results[encoding][error_rate].append({
                     "run": i + 1,
-                    "success": encsuccess,
-                    "results": results
+                    "success": success,
+                    "results": res
                 })
+                
+
+
+            # for i in range(50):  # Run each simulation 20 times for averaging
+            #     print(f"Run {i+1} for encoding {encoding} at error rate {error_rate}")
+            #     sim = Simulation([defultparams[encoding]])
+            #     results = sim.run()
+                
+            #     # Check if any simulation succeeded
+            #     encsuccess = any(
+            #         sim_result.get('status') == 'SUCCESS' 
+            #         for sim_result in results.values()
+            #     )
+                
+            #     if encoding not in error_simulation_results:
+            #         error_simulation_results[encoding] = {}
+                
+            #     if error_rate not in error_simulation_results[encoding]:
+            #         error_simulation_results[encoding][error_rate] = []
+                
+            #     error_simulation_results[encoding][error_rate].append({
+            #         "run": i + 1,
+            #         "success": encsuccess,
+            #         "results": results
+            #     })
             
-            # Check if any simulation succeeded
-            encsuccess = any(
-                sim_result.get('status') == 'SUCCESS' 
-                for sim_result in results.values()
-            )
+            # # Check if any simulation succeeded
+            # encsuccess = any(
+            #     sim_result.get('status') == 'SUCCESS' 
+            #     for sim_result in results.values()
+            # )
 
     return error_simulation_results
 
@@ -418,9 +487,9 @@ def default_values_of_encoding(encoding):
             'kmer_size_cluster': 180,
         }
 
-
+#, 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman'
 if __name__ == '__main__':
-    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman']
+    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman', 'gcplus']
 
     base_params = {
         'filename': 'Bohemian_Rhapsody_Lyrics.txt',
@@ -460,7 +529,7 @@ if __name__ == '__main__':
 
     final_params = encode_and_count_with_error_correction(encodings, defoultparams, noECencodinglengths)
 
-    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman']
+    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman', 'gcplus']
 
     sim_resoults = simulate_cost_analysis(encodings, final_params, error_rates)
 
