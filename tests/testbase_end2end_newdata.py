@@ -302,6 +302,8 @@ class TestBase(unittest.TestCase):
             print("Decoded length:", len(data_dec.data), "Original length:", len(binary_code.data))
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
+                print(data_dec.data)
+                print(binary_code.data)
 
                 if comparison == 'SUCCESS':
                     self.testlogger.info('STATUS: SUCCESS')

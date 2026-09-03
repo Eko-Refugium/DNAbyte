@@ -55,7 +55,7 @@ params_list = [
     # ),
     Params(
         name='end2end_clustering_recovery_with_maxdensity',
-        filename='Bohemian_Rhapsody_Lyrics.txt',
+        filename='textfile_40b.txt',
 
         # binarization method
         binarization_method='default',
@@ -69,10 +69,13 @@ params_list = [
 
         # synthesis and error channels
         synthesis_method='nosynthpoly',
-        mean=3,
-        sequencing_method=None,
+        mean=1,
+        sequencing_method='iid',
+        iid_error_rate=0.00,
 
-        outer_error_correction='reedsolomon',
+
+
+        outer_error_correction=None,
         reed_solo_percentage=0.8, 
 
         # post-sequencing processing methods

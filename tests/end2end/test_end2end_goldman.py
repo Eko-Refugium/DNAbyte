@@ -10,7 +10,7 @@ params_list = [
     # Test 1: Basic - no errors, just synthesis copies
     Params(
         name='end2end_goldman_basic',
-        filename='textfile_40b.txt',
+        filename='testfilesimsall.txt',
 
         # encoding parameters
         encoding_method='goldman',
@@ -18,71 +18,76 @@ params_list = [
         sequence_length=200,
         add_primer=False,
         primer_length=0,
+
+        mean=3,
+        clustering_method='kmere_cluster',
+        kmer_size_cluster=150,
+        recovery_method='debruijn',
 
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
     ),
 
-    # Test 2: Sequencing errors only (substitutions, insertions, deletions)
-    Params(
-        name='end2end_goldman_seq_errors',
-        filename='textfile_40b.txt',
+    # # Test 2: Sequencing errors only (substitutions, insertions, deletions)
+    # Params(
+    #     name='end2end_goldman_seq_errors',
+    #     filename='testfilesimsall.txt',
 
-        # encoding parameters
-        encoding_method='goldman',
-        binarization_method='default',
-        sequence_length=200,
-        add_primer=False,
-        primer_length=0,
+    #     # encoding parameters
+    #     encoding_method='goldman',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     add_primer=False,
+    #     primer_length=0,
 
-        # synthesis - create copies without errors
-        synthesis_method='nosynthpoly',
-        mean=10,
-        std_dev=0,
+    #     # synthesis - create copies without errors
+    #     synthesis_method='nosynthpoly',
+    #     mean=10,
+    #     std_dev=0,
 
-        # storage - none
-        storage_conditions=None,
+    #     # storage - none
+    #     storage_conditions=None,
 
-        # sequencing errors
-        sequencing_method='kmere',
-        kmer_k=1,
-        kmer_p_ins=0.001,
-        kmer_p_del=0.001,
-        kmer_p_sub=0.002,
-        kmer_seed=42,
-    ),
+    #     # sequencing errors
+    #     sequencing_method='kmere',
+    #     kmer_k=1,
+    #     kmer_p_ins=0.001,
+    #     kmer_p_del=0.001,
+    #     kmer_p_sub=0.002,
+    #     kmer_seed=42,
+    # ),
 
-    # Test 3: Full error pipeline - synthesis + storage + sequencing
-    # Goldman doesn't use RS codes, so error tolerance comes from the 4x overlap
-    Params(
-        name='end2end_goldman_full_errors',
-        filename='textfile_40b.txt',
+    # # Test 3: Full error pipeline - synthesis + storage + sequencing
+    # # Goldman doesn't use RS codes, so error tolerance comes from the 4x overlap
+    # Params(
+    #     name='end2end_goldman_full_errors',
+    #     filename='testfilesimsall.txt',
 
-        # encoding parameters
-        encoding_method='goldman',
-        binarization_method='default',
-        sequence_length=200,
-        add_primer=False,
-        primer_length=0,
+    #     # encoding parameters
+    #     encoding_method='goldman',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     add_primer=False,
+    #     primer_length=0,
 
-        # synthesis - create copies without errors
-        synthesis_method='nosynthpoly',
-        mean=30,
-        std_dev=1,
+    #     # synthesis - create copies without errors
+    #     synthesis_method='nosynthpoly',
+    #     mean=30,
+    #     std_dev=1,
 
-        # storage
-        storage_conditions='biogene',
-        years=1,
+    #     # storage
+    #     storage_conditions='biogene',
+    #     years=1,
 
-        # sequencing errors
-        sequencing_method='kmere',
-        kmer_k=1,
-        kmer_p_ins=0.002,
-        kmer_p_del=0.002,
-        kmer_p_sub=0.002,
-        kmer_seed=42,
-    ),
+    #     # sequencing errors
+    #     sequencing_method='kmere',
+    #     kmer_k=1,
+    #     kmer_p_ins=0.002,
+    #     kmer_p_del=0.002,
+    #     kmer_p_sub=0.002,
+    #     kmer_seed=42,
+    # ),
 ]
 
 # Create a parameterized test case

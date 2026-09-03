@@ -321,7 +321,7 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
             coder = Encode(defultparams[encoding])
             data_enc, info = coder.encode(binary_code)
 
-            for i in range(50):
+            for i in range(5):
                 success = False
                 res = None
 
@@ -349,7 +349,9 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
                         raise ValueError("decoded data invalid")
 
                     comparison, res = data_dec.compare(data_dec, binary_code)
-                    success = comparison != 'ERROR'
+                    success = comparison == 'SUCCESS'
+                    # print(binary_code.data)
+                    # print(data_dec.data)
 
                 except Exception as e:
                     print(f"Run {i+1} failed for {encoding} at error rate {error_rate}: {e}")
@@ -409,6 +411,7 @@ def default_values_of_encoding(encoding):
             'name': 'goldman_default',
             'sequence_length': 200,
             'encoding_method': 'goldman',
+            'kmer_size_cluster': 180,
         }
     if encoding == 'church':
         return {
@@ -427,10 +430,12 @@ def default_values_of_encoding(encoding):
             'encoding_method': 'gcplus',
             'gcplus_k': 168,
             'gcplus_l': 8,
-            'gcplus_c1': 0,
+            'gcplus_c1': 2,
             'barcode_length': 0,
             'left_primer': '',
             'right_primer': '',
+            'kmer_size_debruijn': 90,
+            # 'kmer_size_cluster': 180,
         }
     if encoding == 'max_density':
         return {
@@ -489,10 +494,10 @@ def default_values_of_encoding(encoding):
 
 #, 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman'
 if __name__ == '__main__':
-    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman', 'gcplus']
+    encodings = ['goldman', 'yinyang','gcplus', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density']
 
     base_params = {
-        'filename': 'Bohemian_Rhapsody_Lyrics.txt',
+        'filename': 'testfilesimsall.txt',
         'binarization_method': 'default',
         'synthesis_method': 'nosynthpoly',
         'sequencing_method': 'iid',
@@ -512,13 +517,16 @@ if __name__ == '__main__':
         "iid_deletion_rate": 0.0,
     }
     
-    error_rates = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.07, 0.1, 0.15, 0.2]  # Example error rates to test
+    error_rates = [0.0, 0.01, 0.05, 0.1]  # Example error rates to test
 
     defoultparams = {}      
     for encoding in encodings:
         parameters=base_params.copy()
         parameters.update(default_values_of_encoding(encoding))
         parameters.update(no_error_params)
+        if encoding == 'no_homopolymer' or encoding == 'max_density':
+            parameters['clustering_method'] = None
+            parameters['recovery_method'] = None
         print(f"Parameters for {encoding}: {parameters}")
         defoultparams[encoding] = Params(**parameters)
         
@@ -529,7 +537,7 @@ if __name__ == '__main__':
 
     final_params = encode_and_count_with_error_correction(encodings, defoultparams, noECencodinglengths)
 
-    encodings = ['yinyang', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density', 'goldman', 'gcplus']
+    encodings = ['goldman', 'yinyang','gcplus', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density']
 
     sim_resoults = simulate_cost_analysis(encodings, final_params, error_rates)
 

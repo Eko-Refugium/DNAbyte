@@ -11,7 +11,7 @@ params_list = [
     # Test 1: Basic — no errors, just synthesis copies
     Params(
         name='end2end_gcplus_basic',
-        filename='textfile_40b.txt',
+        filename='testfilesimsall.txt',
 
         # encoding parameters
         encoding_method='gcplus',
@@ -19,14 +19,19 @@ params_list = [
         sequence_length=200,
         gcplus_k=168,
         gcplus_l=8,
-        gcplus_c1=2,
+        gcplus_c1=4,
 
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
+        sequencing_method='iid',
+        iid_error_rate=0.0,
+
+        mean=1,
         
-        clustering_method='primer_grouper',
-        recovery_method='debruijn'
+        clustering_method='kmere_cluster',
+        recovery_method='debruijn',
+        kemer_size_debruijn=90,
     ),
 
     # # Test 2: Sequencing errors only

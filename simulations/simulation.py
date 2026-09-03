@@ -83,6 +83,7 @@ class Simulation():
                         
                         data_obj = Data(file_paths=file_paths)
                         binary_code = bin.binarize(data_obj)
+                        
 
                     except Exception as e:
                         self.simlogger.info('STATUS: ERROR')
