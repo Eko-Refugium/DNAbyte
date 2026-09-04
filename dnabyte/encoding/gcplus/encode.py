@@ -109,19 +109,7 @@ class GCPlus(Encode):
                 K_val = K
                 q_val = q
 
-            # Store metadata on params for decode
-            self.params.gcplus_total_bits = total_bits
-            self.params.gcplus_n = n_val
-            self.params.gcplus_N = N_val
-            self.params.gcplus_K = K_val
-            self.params.gcplus_q = q_val
-
-            if self.logger:
-                self.logger.info(
-                    f"GC+ encoded {len(chunks)} oligos, k={k}, l={l}, c1={c1}, "
-                    f"n={n_val} bases per oligo"
-                )
-
+            # Initialize info dict early so we can add to it
             info = {
                 'number_of_codewords': len(dna_codewords),
                 'data_length': total_bits,
@@ -136,6 +124,61 @@ class GCPlus(Encode):
                 'gcplus_c1': c1,
                 'gcplus_n': n_val,
             }
+
+            # Embed position tags into codewords
+            # This allows decoder to know which position each sequence came from
+            # even after clustering combines duplicates, and works with variable-length sequences
+            num_codewords = len(dna_codewords)
+            if num_codewords > 1:
+                # Calculate bits needed for position encoding
+                pos_bits = math.ceil(math.log2(num_codewords))
+                
+                # Use a redundant encoding of the tag for robustness
+                # Repeat each bit 3 times: 0 -> AAA, 1 -> TTT
+                redundancy = 3
+                
+                # Append position tag to each codeword
+                tagged_codewords = []
+                for pos, codeword in enumerate(dna_codewords):
+                    # Convert position to binary, pad to pos_bits
+                    pos_binary = format(pos, f'0{pos_bits}b')
+                    # Convert binary tag to DNA with redundancy (A=0, T=1 for tag)
+                    # Each bit is tripled for error resilience
+                    pos_tag = ''.join(('A' * redundancy if b == '0' else 'T' * redundancy) for b in pos_binary)
+                    # Append tag to codeword (works with variable-length sequences)
+                    tagged_codeword = codeword + pos_tag
+                    tagged_codewords.append(tagged_codeword)
+                
+                dna_codewords = tagged_codewords
+                tag_length = pos_bits * redundancy  # Total tag length in bases
+                
+                if self.logger:
+                    self.logger.info(
+                        f"GC+ embedded position tags: {pos_bits} bits "
+                        f"({tag_length} DNA bases with {redundancy}x redundancy)"
+                    )
+                
+                # Store tag info for decode
+                self.params.gcplus_position_bits = pos_bits
+                self.params.gcplus_tag_redundancy = redundancy
+                self.params.gcplus_tag_length = tag_length
+                info['gcplus_position_bits'] = pos_bits
+                info['gcplus_tag_redundancy'] = redundancy
+                info['gcplus_tag_length'] = tag_length
+
+            # Store metadata on params for decode
+            self.params.gcplus_total_bits = total_bits
+            self.params.gcplus_n = n_val
+            self.params.gcplus_N = N_val
+            self.params.gcplus_K = K_val
+            self.params.gcplus_q = q_val
+
+            if self.logger:
+                self.logger.info(
+                    f"GC+ encoded {len(chunks)} oligos, k={k}, l={l}, c1={c1}, "
+                    f"n={n_val} bases per oligo"
+                )
+
             # print(dna_codewords)
 
             return dna_codewords, info

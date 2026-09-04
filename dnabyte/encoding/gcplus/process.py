@@ -1,5 +1,6 @@
 import os
 from collections import Counter, defaultdict
+from dnabyte.data_classes.insilicodna import InSilicoDNA
 
 
 def process(data, params, logger=None):
@@ -10,16 +11,17 @@ def process(data, params, logger=None):
     is copied many times; sequencing may introduce per-copy errors.
 
     Processing:
-    1. Group identical (or near-identical) sequences together.
-    2. Majority-vote within each group to reconstruct the original oligo.
-    3. Return one consensus sequence per group.
+    1. Extract position tags from sequences if present (variable-length safe).
+    2. Group identical (or near-identical) sequences together.
+    3. Majority-vote within each group to reconstruct the original oligo.
+    4. Return one consensus sequence per group, ordered by position.
 
     GC+ does not use primers by default — processing operates on full
     sequences.
 
     Args:
         data:   Data object with ``data.data`` = list of DNA strings.
-        params: Parameters object.
+        params: Parameters object with optional position tag info.
         logger: Optional logger.
 
     Returns:
@@ -32,7 +34,7 @@ def process(data, params, logger=None):
         if not dna_strands:
             if logger:
                 logger.warning("No DNA sequences to process")
-            return [], {}
+            return InSilicoDNA([]), {}
 
         # Clean
         dna_strands = [seq.replace(' ', '').strip() for seq in dna_strands]
@@ -40,18 +42,53 @@ def process(data, params, logger=None):
         if logger:
             logger.info(f"Processing {total_count} GC+ DNA sequences")
 
-        # ----- Group identical sequences ------------------------------------
+        # Extract position tags if embedded (variable-length safe)
+        pos_bits = int(getattr(params, 'gcplus_position_bits', 0))
+        tag_redundancy = int(getattr(params, 'gcplus_tag_redundancy', 1))
+        tag_length = int(getattr(params, 'gcplus_tag_length', 0))
+        
+        if pos_bits == 0:
+            tag_length = 0
+        elif tag_length == 0:
+            tag_length = pos_bits * tag_redundancy
+        
+        sequence_positions = []  # Store (position, stripped_sequence, original_sequence)
+        
+        for idx, seq in enumerate(dna_strands):
+            position = idx
+            stripped_seq = seq
+            
+            if tag_length > 0 and len(seq) >= tag_length:
+                # Extract tag from end (works with variable-length sequences)
+                tag = seq[-tag_length:]
+                stripped_seq = seq[:-tag_length]
+                
+                # Decode redundant tag with majority voting
+                pos_binary_bits = []
+                for i in range(0, tag_length, tag_redundancy):
+                    tag_segment = tag[i:i+tag_redundancy]
+                    a_count = tag_segment.count('A')
+                    t_count = tag_segment.count('T')
+                    bit = '0' if a_count >= t_count else '1'
+                    pos_binary_bits.append(bit)
+                
+                pos_binary = ''.join(pos_binary_bits[:pos_bits])
+                try:
+                    position = int(pos_binary, 2)
+                except ValueError:
+                    position = idx
+            
+            sequence_positions.append((position, stripped_seq, seq))
+        
+        # ----- Group identical sequences (by stripped sequence) -----------
         groups = defaultdict(list)
-        for seq in dna_strands:
-            groups[seq].append(seq)
+        for position, stripped_seq, original_seq in sequence_positions:
+            groups[stripped_seq].append((position, original_seq))
 
         if logger:
             logger.info(f"Found {len(groups)} unique sequence groups")
 
         # ----- Separate multi-copy groups from singletons -------------------
-        # After synthesis (many copies) + sequencing (errors on some copies):
-        #   - Correct copies are identical → form large groups
-        #   - Corrupted copies are unique  → singletons
         large_groups = {s: c for s, c in groups.items() if len(c) >= 2}
         singletons   = {s: c for s, c in groups.items() if len(c) == 1}
 
@@ -61,19 +98,38 @@ def process(data, params, logger=None):
                 f"singletons: {len(singletons)}"
             )
 
-        if large_groups:
-            consensus_sequences = []
-            for representative, copies in large_groups.items():
-                consensus = _majority_vote(copies)
-                consensus_sequences.append(consensus)
-            if logger:
+        # Consensus: always keep large_groups + singletons
+        consensus_sequences = []
+        position_sequence_list = []
+        
+        # Add consensus from multi-copy groups
+        for representative, position_copies in large_groups.items():
+            copies = [seq for pos, seq in position_copies]
+            consensus = _majority_vote(copies)
+            # Use the position from the first copy
+            position = position_copies[0][0]
+            consensus_sequences.append(consensus)
+            position_sequence_list.append((position, consensus))
+        
+        # Always keep singletons
+        for singleton_seq, position_copies in singletons.items():
+            consensus_sequences.append(singleton_seq)
+            position = position_copies[0][0]
+            position_sequence_list.append((position, singleton_seq))
+
+        if logger:
+            if singletons:
                 logger.info(
-                    f"Filtered {len(singletons)} singleton sequences "
-                    "(likely corrupted)"
+                    f"Kept {len(singletons)} singleton sequences "
+                    "(may be valid or filtered by downstream)"
                 )
-        else:
-            # No multi-copy groups — keep everything (e.g. no synthesis copies)
-            consensus_sequences = list(groups.keys())
+
+        # Reorder by position if tags were present
+        if tag_length > 0 and position_sequence_list:
+            sorted_sequences = [seq for pos, seq in sorted(position_sequence_list, key=lambda x: x[0])]
+            if logger:
+                logger.info(f"Reordered {len(sorted_sequences)} sequences by position tag")
+            consensus_sequences = sorted_sequences
 
         if logger:
             logger.info(
@@ -87,16 +143,17 @@ def process(data, params, logger=None):
             'unique_groups': len(groups),
             'duplicates_removed': total_count - len(consensus_sequences),
             'status': 'consensus',
+            'position_tags_extracted': tag_length > 0,
         }
 
-        return consensus_sequences, info
+        return InSilicoDNA(consensus_sequences), info
 
     except Exception as e:
         if logger:
             logger.error(f"Error processing DNA strands: {e}")
             import traceback
             logger.error(traceback.format_exc())
-        return None, {}
+        return InSilicoDNA([]), {}
 
 
 # --------------------------------------------------------------------------

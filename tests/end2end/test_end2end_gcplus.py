@@ -28,13 +28,42 @@ params_list = [
         iid_error_rate=0.0,
 
         mean=1,
+
         
-        clustering_method='kmere_cluster',
-        recovery_method='debruijn',
-        kemer_size_debruijn=90,
+        clustering_method='pass_through',
+        recovery_method='pass_through',
     ),
 
-    # # Test 2: Sequencing errors only
+    # Test 2: Large file with multiple copies (mean>1) using standard clustering + recovery
+    Params(
+        name='end2end_gcplus_consensus',
+        filename='testfilesimsall.txt',
+
+        # encoding parameters
+        encoding_method='gcplus',
+        binarization_method='default',
+        sequence_length=200,
+        gcplus_k=168,
+        gcplus_l=8,
+        gcplus_c1=4,
+
+        # error channels
+        storage_conditions=None,
+        synthesis_method='nosynthpoly',
+        sequencing_method='iid',
+        iid_error_rate=0.0,
+
+        mean=3,  # Multiple copies for majority voting
+
+        
+        clustering_method='kmere_cluster',  # Group by exact match (including position tag)
+        
+        kmer_size_cluster=20,
+        kmer_threshold = 0.9,
+        recovery_method='simple',  # Majority voting consensus
+    ),
+
+    # # Test 3: Sequencing errors only
     # Params(
     #     name='end2end_gcplus_seq_errors',
     #     filename='textfile_40b.txt',

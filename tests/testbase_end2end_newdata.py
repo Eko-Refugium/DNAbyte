@@ -75,6 +75,7 @@ class TestBase(unittest.TestCase):
                 data_obj = Data(file_paths=file_paths)
                 bin_obj = Binarize(self.params)
                 binary_code = bin_obj.binarize(data_obj)
+                print(f"DEBUG BINARIZE: Bitstream length={len(binary_code.data)}, first 200 chars: {binary_code.data[:200]}")
                 self.testlogger.info('STATUS: SUCCESS')
                 self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
                 self.testlogger.info('LENGTH OF DATA: %d', len(binary_code.data))
@@ -95,6 +96,10 @@ class TestBase(unittest.TestCase):
             try:
                 enc = Encode(self.params, logger=self.testlogger)
                 data_enc, info = enc.encode(binary_code)
+                print(f"DEBUG ENC: type={type(data_enc.data)}, len={len(data_enc.data)}")
+                if len(data_enc.data) > 0:
+                    print(f"DEBUG ENC: first element type={type(data_enc.data[0])}, first few: {data_enc.data[:3]}")
+                print(f"DEBUG ENC: {len(data_enc.data)} codewords, {len(set(data_enc.data))} unique")
                 self.testlogger.info('STATUS: SUCCESS')
                 self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
                 self.testlogger.info('NUMBER OF CODEWORDS: %d', len(data_enc.data))
@@ -120,7 +125,6 @@ class TestBase(unittest.TestCase):
 
                 try:
                     syn = SimulateSynthesis(self.params, logger=self.testlogger)
-                    print("here")
                     data_syn, info = syn.simulate(data_enc)
                     self.testlogger.info('STATUS: SUCCESS')
                     self.testlogger.info('DURATION: %.2f seconds', time.time() - start_time)
@@ -221,6 +225,7 @@ class TestBase(unittest.TestCase):
                 # Convert NucleobaseCode to InSilicoDNA when no sequencing is done
                 if not isinstance(data_seq, InSilicoDNA):
                     data_seq = InSilicoDNA(data_seq.data)
+            
             print("SEQ:", data_seq.data[0])
 
 #######################################################################################################################

@@ -76,18 +76,68 @@ def decode(data, params, logger=None):
         if logger:
             logger.info(f"GC+ decoding {len(clean_sequences)} codewords")
 
+        # Check if position tags are embedded
+        pos_bits = int(getattr(params, 'gcplus_position_bits', 0))
+        tag_redundancy = int(getattr(params, 'gcplus_tag_redundancy', 1))
+        tag_length = int(getattr(params, 'gcplus_tag_length', 0))
+        
+        if pos_bits == 0:
+            tag_length = 0
+        elif tag_length == 0:
+            # Fallback: calculate from pos_bits and redundancy
+            tag_length = pos_bits * tag_redundancy
+        
+        if tag_length > 0 and logger:
+            logger.info(
+                f"GC+ position tags detected: {pos_bits} bits "
+                f"({tag_length} DNA bases with {tag_redundancy}x redundancy)"
+            )
+
         # Determine n from first codeword if not stored
+        # Account for tag length in sequence length calculation (variable-length safe)
         if n_expected == 0:
-            n_expected = len(clean_sequences[0])
+            if tag_length > 0 and len(clean_sequences[0]) > tag_length:
+                n_expected = len(clean_sequences[0]) - tag_length
+            else:
+                n_expected = len(clean_sequences[0])
 
         decoded_bits = []
+        codeword_positions = []  # Track positions if tagged
         success_count = 0
         fail_count = 0
 
         for idx, cw in enumerate(clean_sequences):
             try:
+                # Extract position tag if present (variable-length safe)
+                codeword = cw
+                position = idx
+                
+                if tag_length > 0 and len(cw) >= tag_length:
+                    # Last tag_length bases are the redundant tag
+                    tag = cw[-tag_length:]
+                    codeword = cw[:-tag_length]
+                    
+                    # Decode redundant tag: AAA=0, TTT=1 with majority voting
+                    pos_binary_bits = []
+                    for i in range(0, tag_length, tag_redundancy):
+                        tag_segment = tag[i:i+tag_redundancy]
+                        # Majority vote on the segment
+                        a_count = tag_segment.count('A')
+                        t_count = tag_segment.count('T')
+                        bit = '0' if a_count >= t_count else '1'
+                        pos_binary_bits.append(bit)
+                    
+                    pos_binary = ''.join(pos_binary_bits[:pos_bits])
+                    try:
+                        position = int(pos_binary, 2)
+                    except ValueError:
+                        # Fallback if binary decoding fails
+                        position = idx
+                
+                codeword_positions.append((position, idx))
+                
                 uhat, _ = GCP_Decode_DNA_brute(
-                    cw, n_expected, k, l, N, K, c1, q,
+                    codeword, n_expected, k, l, N, K, c1, q,
                     len_last, lim, patterns, codebook, d_min
                 )
                 if uhat and len(uhat) > 0:
@@ -100,35 +150,38 @@ def decode(data, params, logger=None):
                     decoded_bits.append(bits_str)
                     success_count += 1
                 else:
-                    # Decode failure — skip this codeword (don't zero-fill)
-                    # This makes the decoded result shorter, which correctly indicates an error
+                    # Decode failure — fill with zeros
+                    decoded_bits.append('0' * k)
                     fail_count += 1
             except Exception:
-                # Skip failed codeword instead of zero-filling
+                decoded_bits.append('0' * k)
                 fail_count += 1
 
-        binary_data = ''.join(decoded_bits)
+        # Reorder decoded bits by position if tags were present
+        if tag_length > 0 and len(codeword_positions) == len(decoded_bits):
+            sorted_positions = sorted(codeword_positions, key=lambda x: x[0])
+            decoded_bits_reordered = [decoded_bits[orig_idx] for pos, orig_idx in sorted_positions]
+            binary_data = ''.join(decoded_bits_reordered)
+            if logger:
+                logger.info(f"Reconstructed codeword order from position tags")
+        else:
+            binary_data = ''.join(decoded_bits)
 
         # Truncate to original length
         if total_bits > 0:
             binary_data = binary_data[:total_bits]
 
-        # Mark as valid if we have binary data
-        # The actual correctness check happens in the test harness when comparing decoded vs original
-        total_codewords = success_count + fail_count
-        recovery_rate = success_count / total_codewords if total_codewords > 0 else 0
-        valid = len(binary_data) > 0
+        valid = fail_count == 0 and len(binary_data) > 0
 
         if logger:
             logger.info(
                 f"GC+ decoded: {success_count} ok, {fail_count} failed, "
-                f"recovery_rate={recovery_rate:.1%}, {len(binary_data)} bits, valid={valid}"
+                f"{len(binary_data)} bits"
             )
 
         info = {
             'decoded_codewords': success_count,
             'failed_codewords': fail_count,
-            'recovery_rate': recovery_rate,
             'data_length': len(binary_data),
             'valid': valid,
             'total_bits': total_bits,

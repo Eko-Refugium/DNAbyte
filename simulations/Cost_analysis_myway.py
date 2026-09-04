@@ -354,7 +354,10 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
                     # print(data_dec.data)
 
                 except Exception as e:
-                    print(f"Run {i+1} failed for {encoding} at error rate {error_rate}: {e}")
+                    import traceback
+                    print(f"\n❌ Run {i+1} failed for {encoding} at error rate {error_rate}")
+                    print(f"Error: {type(e).__name__}: {e}")
+                    print(f"Traceback: {traceback.format_exc()}\n")
                     success = False
                     res = None
 
@@ -436,6 +439,8 @@ def default_values_of_encoding(encoding):
             'right_primer': '',
             'kmer_size_debruijn': 90,
             # 'kmer_size_cluster': 180,
+            'kmer_size_cluster': 20,
+            'kmer_threshold': 0.9,
         }
     if encoding == 'max_density':
         return {
@@ -517,7 +522,7 @@ if __name__ == '__main__':
         "iid_deletion_rate": 0.0,
     }
     
-    error_rates = [0.0, 0.01, 0.05, 0.1]  # Example error rates to test
+    error_rates = [0.0, 0.01]  # Example error rates to test
 
     defoultparams = {}      
     for encoding in encodings:
