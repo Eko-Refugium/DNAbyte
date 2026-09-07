@@ -302,6 +302,9 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
             defultparams[encoding].iid_insertion_rate = 0.0
             defultparams[encoding].iid_deletion_rate = 0.0
 
+            if defultparams[encoding].mean > 1:
+                defultparams[encoding].similarity_threshold = 0.75
+
             binarizer = Binarize(defultparams[encoding])
 
             if hasattr(defultparams[encoding], 'file_paths') and defultparams[encoding].file_paths:
@@ -320,6 +323,8 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
             binary_code = binarizer.binarize(data_obj)
             coder = Encode(defultparams[encoding])
             data_enc, info = coder.encode(binary_code)
+
+  
 
             for i in range(5):
                 success = False
@@ -508,9 +513,11 @@ if __name__ == '__main__':
         'sequencing_method': 'iid',
         'recovery_method': 'simple',
         'min_coverage': 1,
-        'clustering_method': 'kmere_cluster',
+        'clustering_method': 'similarity_cluster',
         'storage_conditions': None,
-        'kmer_seed': 42,   
+        'kmer_seed': 42,
+        'similarity_threshold': 1,
+        'gap_penalty': 1.0,
     }
 
     no_error_params = {
@@ -541,6 +548,8 @@ if __name__ == '__main__':
     print(noECencodinglengths)
 
     final_params = encode_and_count_with_error_correction(encodings, defoultparams, noECencodinglengths)
+
+ 
 
     encodings = ['goldman', 'yinyang','gcplus', 'hedges', 'wukong', 'no_homopolymer', 'church', 'max_density']
 

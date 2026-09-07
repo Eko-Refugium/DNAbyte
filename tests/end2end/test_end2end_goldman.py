@@ -19,10 +19,10 @@ params_list = [
         add_primer=False,
         primer_length=0,
 
-        mean=3,
+        mean=1,
         clustering_method='kmere_cluster',
-        kmer_size_cluster=150,
-        recovery_method='debruijn',
+        # kmer_size_cluster=150,
+        recovery_method='simple',
 
         # error channels
         storage_conditions=None,

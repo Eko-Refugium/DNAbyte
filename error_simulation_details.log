@@ -1,0 +1,180 @@
+
+❌ Run 1 failed for goldman at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 2 failed for goldman at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 3 failed for goldman at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 4 failed for goldman at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 5 failed for goldman at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 1 failed for yinyang at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 2 failed for yinyang at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 3 failed for yinyang at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 4 failed for yinyang at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 5 failed for yinyang at error rate 0.01
+Error: ValueError: comparison failed - got ERROR_short instead of SUCCESS
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 364, in simulate_cost_analysis
+    raise ValueError(f"comparison failed - got {comparison} instead of SUCCESS")
+ValueError: comparison failed - got ERROR_short instead of SUCCESS
+
+
+❌ Run 1 failed for no_homopolymer at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 2 failed for no_homopolymer at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 3 failed for no_homopolymer at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 4 failed for no_homopolymer at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 5 failed for no_homopolymer at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 1 failed for max_density at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 2 failed for max_density at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 3 failed for max_density at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 4 failed for max_density at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
+
+❌ Run 5 failed for max_density at error rate 0.01
+Error: ValueError: decoded data invalid - decode() returned valid=False
+Traceback:
+Traceback (most recent call last):
+  File "C:\PhDKaya\MIDNAbyte\DNAbyte\simulations\Cost_analysis_myway.py", line 360, in simulate_cost_analysis
+    raise ValueError("decoded data invalid - decode() returned valid=False")
+ValueError: decoded data invalid - decode() returned valid=False
+
