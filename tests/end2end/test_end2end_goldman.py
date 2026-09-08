@@ -15,14 +15,16 @@ params_list = [
         # encoding parameters
         encoding_method='goldman',
         binarization_method='default',
-        sequence_length=200,
+        sequence_length=100,
         add_primer=False,
         primer_length=0,
 
         mean=1,
-        clustering_method='kmere_cluster',
+        sequencing_method='iid',
+        iid_error_rate=0.001,
+        clustering_method='pass_through',
         # kmer_size_cluster=150,
-        recovery_method='simple',
+        recovery_method='pass_through',
 
         # error channels
         storage_conditions=None,

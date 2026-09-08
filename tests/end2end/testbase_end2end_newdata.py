@@ -250,8 +250,12 @@ class TestBase(unittest.TestCase):
                 # print(data_cor.data)
                 data_dec, valid, info = enc.decode(data_cor)
 
-                # TODO: Add the info to the log
-                #self.testlogger.info(info)
+                print("DECODE RETURNED")
+                print("valid =", valid)
+                print("data_dec type =", type(data_dec))
+                print("data_dec length =", len(data_dec) if data_dec is not None else None)
+                print("info =", info)
+
 
                 if valid:
                     self.testlogger.info('STATUS: SUCCESS')
@@ -276,9 +280,11 @@ class TestBase(unittest.TestCase):
             self.testlogger.info('STEP09: COMPARE DATA')
             start_time = time.time()
             print("Comparing...")
-            # print(data_dec.data, binary_code.data)
+            # print("decoded data: ", data_dec.data)
+            # print("original data: ", binary_code.data)
             try:
                 comparison, res = data_dec.compare(data_dec, binary_code, logger=self.testlogger)
+                print(res)
 
                 if comparison == 'SUCCESS':
                     self.testlogger.info('STATUS: SUCCESS')

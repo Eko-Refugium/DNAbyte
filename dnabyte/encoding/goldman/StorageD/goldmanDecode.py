@@ -87,6 +87,7 @@ def saveResult(byte_list, save_path):
 
 def goldmanDecode(nt_list, save_path, idnex_len, add_len):
     huffman_str_list = []
+    skipped_sequences = 0
     for nt_seq in tqdm(nt_list):
         huffman_str = decodeNt(nt_seq)
         huffman_str_list.append(huffman_str)
@@ -96,7 +97,18 @@ def goldmanDecode(nt_list, save_path, idnex_len, add_len):
     byte_list = huffmanToByte(total_huffman_str)
     # return byte_list
     # print("byte_list", len(byte_list)) #bkp
-    saveResult(byte_list, save_path)
+    saveResult(
+        byte_list,
+        save_path
+    )
+    decode_info = {
+        "valid": True,
+        "decoded_sequences": len(huffman_str_list),
+        "skipped_sequences": skipped_sequences,
+        "decoded_bytes": len(byte_list),
+        "huffman_length": len(total_huffman_str),
+    }
+    return byte_list, decode_info
     
 
 def readInput(input_path):

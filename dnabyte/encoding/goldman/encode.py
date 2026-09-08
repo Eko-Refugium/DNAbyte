@@ -133,18 +133,39 @@ class Goldman(Encode):
         return dna_codewords, info
 
     def decode(self, data):
-        """
-        Decodes DNA sequences using Goldman decoding.
-        """
         try:
             from dnabyte.encoding.goldman.decode import decode as decode_function
-            result = decode_function(data, self.params, self.logger)
+
+            if self.logger:
+                self.logger.info("Calling Goldman decode_function...")
+
+            result = decode_function(
+                data,
+                self.params,
+                self.logger
+            )
+
+            if self.logger:
+                self.logger.info(
+                    f"Goldman decode_function returned: {type(result)}"
+                )
+                self.logger.info(
+                    f"Goldman decode result: {result}"
+                )
+
             return result
+
         except Exception as e:
             if self.logger:
-                self.logger.error(f"Error during decoding: {str(e)}")
-                self.logger.error(traceback.format_exc())
-            return None, False, {}
+                self.logger.error(
+                    f"Error in Goldman wrapper decode: {e}"
+                )
+                self.logger.error(
+                    traceback.format_exc()
+                )
+
+            # IMPORTANT: re-raise during debugging
+            raise
 
     def process(self, data):
         """

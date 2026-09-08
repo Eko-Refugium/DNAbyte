@@ -17,7 +17,7 @@ params_list = [
         max_homopolymer=3,
         max_content=0.6,
         rs_num=0,
-        mean=6,
+        mean=1,
         add_redundancy=False,
         add_primer=False,
         primer_length=20,
@@ -25,8 +25,8 @@ params_list = [
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
-        clustering_method='kmere_cluster',
-        recovery_method='debruijn'
+        clustering_method='pass_through',
+        recovery_method='pass_through'
     ),
 ]
 

@@ -120,6 +120,8 @@ def debug_encoding_pipeline(encoding, params, file_path='./tests/testfiles/testf
             print(f"  ✓ Sample read lengths: {[len(read) for read in data_seq.data[:5]]}")
             print(f"  ✓ Total sequenced reads: {len(data_seq.data)}")
         print(f"  ℹ Info: {info}")
+
+      
         
         # STEP 6: Recovery/Clustering & Consensus (if applicable)
         print_step(6, "RECOVERY PROCESS")
@@ -309,14 +311,18 @@ if __name__ == '__main__':
         'binarization_method': 'default',
         'synthesis_method': 'nosynthpoly',
         'sequencing_method': 'iid',
-        'recovery_method': 'simple',
+        'recovery_method': 'pass_through',
         'min_coverage': 1,
-        'clustering_method': 'similarity_cluster',
+        'clustering_method': 'pass_through',
         'storage_conditions': None,
         'kmer_seed': 42,
         'mean': 1,
         'std_dev': 0,
         "iid_error_rate": 0.0,
+        # 'max_error_rate_cluster': 0.01,
+        'max_edits_cluster': 2,
+        'max_length_difference_cluster': None,
+        'max_error_rate_cluster': None,
         "iid_substitution_rate": 0.0,
         "iid_insertion_rate": 0.0,
         "iid_deletion_rate": 0.0,

@@ -24,41 +24,88 @@ class IID(SimulateSequencing):
         del_rate = getattr(self.params, 'iid_deletion_rate', 0.0)
         
         sequenceserror = []
-        error_counter = 0
-        
+
+        substitution_count = 0
+        insertion_count = 0
+        deletion_count = 0
+
         for sequence in data:
-            new_seq = list(sequence)
+
+            new_seq = []
             i = 0
-            
-            while i < len(new_seq):
+
+            while i < len(sequence):
+
+                base = sequence[i]
                 rand_val = random.random()
-                # Substitution error
+
+                # --------------------------------
+                # SUBSTITUTION
+                # --------------------------------
                 if rand_val < sub_rate:
-                    error_counter += 1
-                    new_base = random.choice(['A', 'C', 'G', 'T'])
-                    new_seq[i] = new_base
+
+                    possible_bases = [
+                        b for b in ['A', 'C', 'G', 'T']
+                        if b != base
+                    ]
+
+                    new_base = random.choice(possible_bases)
+
+                    new_seq.append(new_base)
+
+                    substitution_count += 1
                     i += 1
-                    
-                # # Insertion error
-                # elif rand_val < sub_rate + ins_rate:
-                #     error_counter += 1
-                #     insert_base = random.choice(['A', 'C', 'G', 'T'])
-                #     new_seq.insert(i, insert_base)
-                #     i += 2  # Skip the inserted base
-                    
-                # # Deletion error
-                # elif rand_val < sub_rate + ins_rate + del_rate:
-                #     error_counter += 1
-                #     new_seq.pop(i)
-                #     # Don't increment i, check next base at same position
-                    
+
+                # --------------------------------
+                # INSERTION
+                # --------------------------------
+                elif rand_val < sub_rate + ins_rate:
+
+                    # Keep the original base
+                    new_seq.append(base)
+
+                    # Insert an additional random base
+                    insert_base = random.choice(
+                        ['A', 'C', 'G', 'T']
+                    )
+
+                    new_seq.append(insert_base)
+
+                    insertion_count += 1
+                    i += 1
+
+                # --------------------------------
+                # DELETION
+                # --------------------------------
+                elif rand_val < (
+                    sub_rate + ins_rate + del_rate
+                ):
+
+                    # Don't add the original base
+                    deletion_count += 1
+                    i += 1
+
+                # --------------------------------
+                # NO ERROR
+                # --------------------------------
                 else:
+
+                    new_seq.append(base)
                     i += 1
-            
+
             sequenceserror.append(''.join(new_seq))
-               
+
         info = {
-            'error_counter': error_counter,
+            'substitution_count': substitution_count,
+            'insertion_count': insertion_count,
+            'deletion_count': deletion_count,
+
+            'error_counter': (
+                substitution_count
+                + insertion_count
+                + deletion_count
+            ),
+
             'substitution_rate': sub_rate,
             'insertion_rate': ins_rate,
             'deletion_rate': del_rate,
