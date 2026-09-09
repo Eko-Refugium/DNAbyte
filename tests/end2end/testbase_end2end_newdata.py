@@ -224,6 +224,8 @@ class TestBase(unittest.TestCase):
                    self.params.clustering_method and self.params.recovery_method:
                     processor = Cluster(self.params, logger=self.testlogger)
                     data_cluster, info = processor.process(data_seq)
+                    print("After clustering: ", len(data_cluster.data), " clusters/groups should be", len(data_enc.data))
+                    
                     consensus = Consensus(self.params, logger=self.testlogger)
                     data_cor, info = consensus.simulate(data_cluster)
 

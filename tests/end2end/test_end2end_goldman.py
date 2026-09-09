@@ -19,12 +19,12 @@ params_list = [
         add_primer=False,
         primer_length=0,
 
-        mean=1,
+        mean=500,
         sequencing_method='iid',
-        iid_error_rate=0.001,
-        clustering_method='pass_through',
+        iid_error_rate=0.00,
+        clustering_method='clover',
         # kmer_size_cluster=150,
-        recovery_method='pass_through',
+        recovery_method='simple',
 
         # error channels
         storage_conditions=None,
