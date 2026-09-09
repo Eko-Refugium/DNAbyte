@@ -797,7 +797,7 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                 # IID sequencing errors are random.
                 # ----------------------------------------------------
 
-                for i in range(50):
+                for i in range(200):
 
                     success = False
                     res = None
@@ -914,7 +914,7 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                             encoding,
 
                         "configuration":
-                            config_name,
+                            config.copy(),
                     })
 
                 # ----------------------------------------------------
@@ -941,7 +941,11 @@ if __name__ == '__main__':
     encodings = [
         'goldman',
         'church',
-        'no_homopolymer'
+        'no_homopolymer',
+        'max_density',
+        'gcplus',
+        'wukong',
+        'hedges',
     ]
 
     # ================================================================
@@ -983,10 +987,29 @@ if __name__ == '__main__':
     error_rates = [
         0.0,
         0.0001,
+        0.0002,
+        0.0003,
+        0.0004,
         0.0005,
+        0.0006,
+        0.0007,
+        0.0008,
+        0.0009,
         0.001,
+        0.002,
+        0.003,
+        0.004,
         0.005,
-        0.01
+        0.005,
+        0.006,
+        0.007,
+        0.008,
+        0.009,
+        0.01,
+        0.02,
+        0.03,
+        0.04,
+        0.05
     ]
 
     # ================================================================
@@ -1257,86 +1280,102 @@ if __name__ == '__main__':
 
     # Close after showing
     plt.close()
+    # ============================================================
+    # COST VS ERROR TOLERANCE
+    # Calculate tolerance for BOTH 100% and 90% recovery
+    # ============================================================
 
-    # ================================================================
-    # DNA COST VS ERROR TOLERANCE
-    # ================================================================
-
-    target_recovery = 1
+    target_recoveries = [1.0, 0.90]
 
     cost_vs_tolerance = {}
 
+    for target_recovery in target_recoveries:
 
-    for encoding, config_data in sim_resoults.items():
+        cost_vs_tolerance[target_recovery] = {}
 
-        cost_vs_tolerance[encoding] = {}
+        for encoding, config_data in sim_resoults.items():
 
-        for config_name, error_data in config_data.items():
+            cost_vs_tolerance[target_recovery][encoding] = {}
 
-            # --------------------------------------------------------
-            # DNA cost is independent of sequencing error rate, so
-            # take it from the first available result.
-            # --------------------------------------------------------
+            for config_name, error_data in config_data.items():
 
-            first_error_rate = next(
-                iter(error_data)
-            )
+                # ------------------------------------------------
+                # DNA cost
+                # ------------------------------------------------
 
-            first_run = error_data[first_error_rate][0]
+                first_error_rate = next(iter(error_data))
 
-            dna_cost = first_run[
-                'dna_cost_nt_per_bit'
-            ]
+                first_run = error_data[first_error_rate][0]
 
-            # --------------------------------------------------------
-            # Find the highest tested error rate for which the
-            # configuration still achieves the target recovery rate.
-            # --------------------------------------------------------
+                dna_cost = first_run["dna_cost_nt_per_bit"]
 
-            sorted_error_rates = sorted(
-                error_data.keys()
-            )
+                # ------------------------------------------------
+                # Find highest error rate satisfying
+                # the requested recovery target
+                # ------------------------------------------------
 
-            tolerated_error_rate = None
-            tolerated_success_rate = None
+                sorted_error_rates = sorted(error_data.keys())
 
-            for error_rate in sorted_error_rates:
+                tolerated_error_rate = None
+                tolerated_success_rate = None
 
-                runs = error_data[error_rate]
+                for error_rate in sorted_error_rates:
 
-                successful_runs = sum(
-                    run['success']
-                    for run in runs
-                )
+                    runs = error_data[error_rate]
 
-                total_runs = len(runs)
+                    successful_runs = sum(
+                        run["success"]
+                        for run in runs
+                    )
 
-                success_rate = (
-                    successful_runs / total_runs
-                    if total_runs > 0
-                    else 0
-                )
+                    total_runs = len(runs)
 
-                if success_rate >= target_recovery:
+                    success_rate = (
+                        successful_runs / total_runs
+                        if total_runs > 0
+                        else 0
+                    )
 
-                    tolerated_error_rate = error_rate
-                    tolerated_success_rate = success_rate
+                    if success_rate >= target_recovery:
 
-                else:
+                        tolerated_error_rate = error_rate
+                        tolerated_success_rate = success_rate
 
-                    # Once the success rate drops below the target,
-                    # stop because the error rates are increasing.
-                    break
+                    else:
 
-            cost_vs_tolerance[encoding][config_name] = {
-                'dna_cost': dna_cost,
-                'error_tolerance': tolerated_error_rate,
-                'success_rate': tolerated_success_rate
-            }
+                        # Once recovery drops below the target,
+                        # stop because error rates are increasing.
+                        break
 
-    # ================================================================
-    # SAVE COST VS ERROR TOLERANCE DATA
-    # ================================================================
+                # ------------------------------------------------
+                # Store result
+                # ------------------------------------------------
+
+                cost_vs_tolerance[target_recovery][encoding][
+                    config_name
+                ] = {
+                    "dna_cost": dna_cost,
+                    "error_tolerance": tolerated_error_rate,
+                    "success_rate": tolerated_success_rate,
+
+                    # IMPORTANT:
+                    # Keep the actual configuration dictionary,
+                    # not just config_name.
+                    "configuration": first_run["configuration"]
+                }
+
+
+    print("\nCost vs tolerance calculated for:")
+
+    for target_recovery in target_recoveries:
+
+        print(
+            f"  {target_recovery * 100:.0f}% recovery"
+        )
+    # ============================================================
+    # SAVE COST VS ERROR TOLERANCE SUMMARY
+    # For BOTH 100% and 90% recovery
+    # ============================================================
 
     summary_file = os.path.join(
         output_dir,
@@ -1352,6 +1391,7 @@ if __name__ == '__main__':
         writer = csv.writer(f)
 
         writer.writerow([
+            "target_recovery",
             "encoding",
             "configuration",
             "dna_cost_nt_per_bit",
@@ -1359,173 +1399,226 @@ if __name__ == '__main__':
             "success_rate_at_tolerance"
         ])
 
-        for encoding, config_data in cost_vs_tolerance.items():
+        # Loop over 100% and 90%
+        for target_recovery, target_data in cost_vs_tolerance.items():
 
-            for config_name, result in config_data.items():
+            # Loop over encodings
+            for encoding, config_data in target_data.items():
 
-                writer.writerow([
-                    encoding,
-                    config_name,
-                    result["dna_cost"],
-                    result["error_tolerance"],
-                    result["success_rate"]
-                ])
+                # Loop over configurations
+                for config_name, result in config_data.items():
+
+                    writer.writerow([
+                        target_recovery,
+                        encoding,
+                        config_name,
+                        result["dna_cost"],
+                        result["error_tolerance"],
+                        result["success_rate"]
+                    ])
 
     print(f"Saved summary: {summary_file}")
-    # ================================================================
-    # PRINT COST / ROBUSTNESS RESULTS
-    # ================================================================
+    # # ================================================================
+    # # PRINT COST / ROBUSTNESS RESULTS
+    # # ================================================================
 
-    print("\n")
-    print("=" * 80)
-    print(
-        f"DNA COST VS ERROR TOLERANCE "
-        f"(target recovery = {target_recovery:.0%})"
-    )
-    print("=" * 80)
-
-
-    for encoding, config_data in cost_vs_tolerance.items():
-
-        print(f"\n{encoding}")
-
-        for config_name, result in config_data.items():
-
-            dna_cost = result['dna_cost']
-            tolerance = result['error_tolerance']
-            success_rate = result['success_rate']
-
-            if tolerance is None:
-
-                tolerance_text = (
-                    "not reached within tested range"
-                )
-
-                success_text = "-"
-
-            else:
-
-                tolerance_text = (
-                    f"{tolerance:.5f}"
-                )
-
-                success_text = (
-                    f"{success_rate:.1%}"
-                )
-
-            print(
-                f"  {config_name:<45} "
-                f"cost={dna_cost:.4f} nt/bit   "
-                f"tolerance={tolerance_text:<35} "
-                f"success={success_text}"
-            )
+    # print("\n")
+    # print("=" * 80)
+    # print(
+    #     f"DNA COST VS ERROR TOLERANCE "
+    #     f"(target recovery = {target_recovery:.0%})"
+    # )
+    # print("=" * 80)
 
 
-    # ================================================================
-    # CREATE SCATTER PLOT
-    # ================================================================
+    # for encoding, config_data in cost_vs_tolerance.items():
 
-    plt.figure(figsize=(12, 8))
+    #     print(f"\n{encoding}")
 
+    #     for config_name, result in config_data.items():
 
-    # Short names for the different encodings
-    encoding_prefix = {
-        'goldman': 'G',
-        'church': 'C',
-        'wukong': 'W',
-        'gcplus': 'GC',
-        'hedges': 'H',
-        'max_density': 'MD',
-        'no_homopolymer': 'NH'
+    #         dna_cost = result['dna_cost']
+    #         tolerance = result['error_tolerance']
+    #         success_rate = result['success_rate']
+
+    #         if tolerance is None:
+
+    #             tolerance_text = (
+    #                 "not reached within tested range"
+    #             )
+
+    #             success_text = "-"
+
+    #         else:
+
+    #             tolerance_text = (
+    #                 f"{tolerance:.5f}"
+    #             )
+
+    #             success_text = (
+    #                 f"{success_rate:.1%}"
+    #             )
+
+    #         print(
+    #             f"  {config_name:<45} "
+    #             f"cost={dna_cost:.4f} nt/bit   "
+    #             f"tolerance={tolerance_text:<35} "
+    #             f"success={success_text}"
+    #         )
+
+    # ============================================================
+    # COST VS ERROR TOLERANCE — SEPARATE PLOTS
+    # DIFFERENT COLOURS FOR EACH ENCODING
+    # ============================================================
+
+    prefixes = {
+        "church": "C",
+        "wukong": "W",
+        "goldman": "G",
+        "gcplus": "GC",
+        "hedges": "H",
+        "max_density": "MD",
+        "no_homopolymer": "NH",
     }
 
 
-    # ================================================================
-    # LOOP THROUGH ALL ENCODINGS
-    # ================================================================
+    # ============================================================
+    # COLOUR FOR EACH ENCODING
+    # ============================================================
 
-    for encoding, config_data in cost_vs_tolerance.items():
+    # NEW
+    encoding_colors = {
+        "church": "tab:blue",
+        "wukong": "tab:orange",
+        "goldman": "tab:green",
+        "gcplus": "tab:red",
+        "hedges": "tab:purple",
+        "max_density": "tab:brown",
+        "no_homopolymer": "tab:pink",
+    }
 
-        x = []
-        y = []
-        labels = []
 
-        prefix = encoding_prefix.get(
-            encoding,
-            encoding
-        )
+    # ============================================================
+    # FUNCTION TO CREATE ONE PLOT
+    # ============================================================
 
-        # ------------------------------------------------------------
-        # LOOP THROUGH ALL CONFIGURATIONS OF THIS ENCODING
-        # ------------------------------------------------------------
+    def plot_cost_vs_tolerance(
+        cost_vs_tolerance,
+        target_recovery,
+        output_dir
+    ):
 
-        for config_number, (config_name, result) in enumerate(
-            config_data.items()
-        ):
+        plt.figure(figsize=(14, 9))
 
-            tolerance = result['error_tolerance']
+        target_data = cost_vs_tolerance[target_recovery]
 
-            # --------------------------------------------------------
-            # Configurations that never reach the target recovery
-            # cannot be plotted at a meaningful tolerance value.
-            # --------------------------------------------------------
+        # --------------------------------------------------------
+        # Plot each encoding separately
+        # --------------------------------------------------------
 
-            if tolerance is None:
+        for encoding, config_data in target_data.items():
+
+            x_values = []
+            y_values = []
+            labels = []
+
+            prefix = prefixes.get(
+                encoding,
+                encoding
+            )
+
+            for config_name, result in config_data.items():
+
+                dna_cost = result["dna_cost"]
+                error_tolerance = result["error_tolerance"]
+
+                # Skip configurations that never reach
+                # the requested recovery level.
+                if error_tolerance is None:
+                    continue
+
+                x_values.append(dna_cost)
+                y_values.append(error_tolerance)
+
+                configuration = result["configuration"]
+
+                # ------------------------------------------------
+                # CREATE LABEL FROM ACTUAL CONFIGURATION
+                # ------------------------------------------------
+
+                if encoding in ["church", "wukong"]:
+
+                    redundancy = int(
+                        configuration["add_redundancy"]
+                    )
+
+                    rs_num = configuration["rs_num"]
+
+                    label = (
+                        f"{prefix}{redundancy}-{rs_num}"
+                    )
+
+                elif encoding == "goldman":
+
+                    label = (
+                        f"G{configuration['mean']}"
+                    )
+
+                elif encoding == "gcplus":
+
+                    label = (
+                        f"GC{configuration['gcplus_c1']}"
+                    )
+
+                elif encoding == "hedges":
+
+                    label = (
+                        f"H{configuration['hedges_coderate']}"
+                    )
+
+                elif encoding in [
+                    "max_density",
+                    "no_homopolymer"
+                ]:
+
+                    percentage = configuration[
+                        "reed_solo_percentage"
+                    ]
+
+                    label = f"{prefix}{percentage:g}"
+
+                else:
+
+                    label = prefix
+
+                labels.append(label)
+
+            # ----------------------------------------------------
+            # Plot this encoding
+            # ----------------------------------------------------
+
+            if not x_values:
                 continue
 
-            x.append(
-                result['dna_cost']
+            # NEW — get colour for this encoding
+            encoding_color = encoding_colors.get(
+                encoding,
+                "black"
             )
-
-            y.append(
-                tolerance
-            )
-
-            # --------------------------------------------------------
-            # Short label for this configuration
-            #
-            # Examples:
-            # G1, G2, G3
-            # C1, C2, C3
-            # W1, W2, W3
-            # GC1, GC2, GC3
-            # --------------------------------------------------------
-
-            if encoding in ['church', 'wukong']:
-
-                redundancy = int(
-                    result['configuration']['add_redundancy']
-                )
-
-                rs_num = result['configuration']['rs_num']
-
-                labels.append(
-                    f"{prefix}{redundancy}-{rs_num}"
-                )
-
-            else:
-
-                labels.append(
-                    f"{prefix}{config_number + 1}"
-                )
-
-
-        # ------------------------------------------------------------
-        # PLOT ALL CONFIGURATIONS FOR THIS ENCODING
-        # ------------------------------------------------------------
-
-        if len(x) > 0:
 
             plt.scatter(
-                x,
-                y,
-                s=80,
-                label=encoding
+                x_values,
+                y_values,
+                s=70,
+                alpha=0.8,
+                color=encoding_color,       # NEW
+                label=encoding              # NEW
             )
 
-            # --------------------------------------------------------
-            # Add short labels next to each dot
-            # --------------------------------------------------------
+            # ----------------------------------------------------
+            # LABEL OFFSETS
+            # ----------------------------------------------------
+
             label_offsets = [
                 (7, 7),
                 (7, -12),
@@ -1537,98 +1630,124 @@ if __name__ == '__main__':
                 (0, -15),
             ]
 
-            for label_number, (x_value, y_value, label) in enumerate(
-                zip(x, y, labels)
+            for i, (
+                x_value,
+                y_value,
+                label
+            ) in enumerate(
+                zip(
+                    x_values,
+                    y_values,
+                    labels
+                )
             ):
 
-                offset = label_offsets[label_number % len(label_offsets)]
+                offset = label_offsets[
+                    i % len(label_offsets)
+                ]
 
                 plt.annotate(
                     label,
                     (x_value, y_value),
                     xytext=offset,
-                    textcoords='offset points',
+                    textcoords="offset points",
                     fontsize=8,
-                    ha='center',
-                    va='center',
+                    ha="center",
+                    va="center",
+                    color=encoding_color,    # NEW
                     bbox=dict(
-                        boxstyle='round,pad=0.2',
-                        facecolor='white',
-                        edgecolor='none',
+                        boxstyle="round,pad=0.2",
+                        facecolor="white",
+                        edgecolor="none",
                         alpha=0.8
                     )
                 )
 
+        # ========================================================
+        # AXES / TITLE
+        # ========================================================
 
-    # ================================================================
-    # AXES AND TITLE
-    # ================================================================
+        recovery_percent = int(
+            target_recovery * 100
+        )
 
-    plt.xlabel(
-        "DNA storage cost (nt/bit)"
+        plt.xlabel(
+            "DNA cost (nt/bit)"
+        )
+
+        plt.ylabel(
+            "Tolerated IID substitution error rate"
+        )
+
+        plt.title(
+            f"DNA storage cost vs error tolerance "
+            f"({recovery_percent}% recovery)"
+        )
+
+        plt.grid(
+            True,
+            alpha=0.3
+        )
+
+        # NEW — encoding legend
+        plt.legend(
+            title="Encoding"
+        )
+
+        plt.tight_layout()
+
+        # ========================================================
+        # SAVE
+        # ========================================================
+
+        png_file = os.path.join(
+            output_dir,
+            f"cost_vs_error_tolerance_{recovery_percent}pct.png"
+        )
+
+        pdf_file = os.path.join(
+            output_dir,
+            f"cost_vs_error_tolerance_{recovery_percent}pct.pdf"
+        )
+
+        plt.savefig(
+            png_file,
+            dpi=300,
+            bbox_inches="tight"
+        )
+
+        plt.savefig(
+            pdf_file,
+            bbox_inches="tight"
+        )
+
+        plt.show()
+        plt.close()
+
+        print(f"Saved plot: {png_file}")
+        print(f"Saved plot: {pdf_file}")
+
+
+    # ============================================================
+    # 100% RECOVERY
+    # ============================================================
+
+    plot_cost_vs_tolerance(
+        cost_vs_tolerance,
+        1.0,
+        output_dir
     )
 
-    plt.ylabel(
-        f"Maximum tested error rate with ≥ "
-        f"{target_recovery:.0%} recovery"
+
+    # ============================================================
+    # 90% RECOVERY
+    # ============================================================
+
+    plot_cost_vs_tolerance(
+        cost_vs_tolerance,
+        0.90,
+        output_dir
     )
-
-    plt.title(
-        "DNA storage cost vs sequencing-error tolerance"
-    )
-
-    plt.grid(
-        True,
-        alpha=0.3
-    )
-
-    plt.legend()
-
-    plt.tight_layout()
-
-
-    # ================================================================
-    # SAVE PNG
-    # ================================================================
-
-    cost_png = os.path.join(
-        output_dir,
-        "dna_cost_vs_error_tolerance.png"
-    )
-
-    plt.savefig(
-        cost_png,
-        dpi=300,
-        bbox_inches='tight'
-    )
-
-    print(
-        f"Saved: {cost_png}"
-    )
-
-
-    # ================================================================
-    # SAVE PDF
-    # ================================================================
-
-    cost_pdf = os.path.join(
-        output_dir,
-        "dna_cost_vs_error_tolerance.pdf"
-    )
-
-    plt.savefig(
-        cost_pdf,
-        bbox_inches='tight'
-    )
-
-    print(
-        f"Saved: {cost_pdf}"
-    )
-
-
-    plt.show()
-
-    plt.close()
 # if __name__ == '__main__':
 #     PARAMETER_SWEEPS = {
 
