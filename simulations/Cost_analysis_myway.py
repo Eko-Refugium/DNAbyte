@@ -312,9 +312,9 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
         print(f"Simulating for error rate: {error_rate}")
         for encoding in encodings:
             defultparams[encoding].iid_error_rate = error_rate
-            defultparams[encoding].iid_substitution_rate = error_rate
-            defultparams[encoding].iid_insertion_rate = 0.0
-            defultparams[encoding].iid_deletion_rate = 0.0
+            defultparams[encoding].iid_substitution_rate = error_rate/3
+            defultparams[encoding].iid_insertion_rate = error_rate/3
+            defultparams[encoding].iid_deletion_rate = error_rate/3
 
             if defultparams[encoding].mean > 1:
                 defultparams[encoding].similarity_threshold = 0.75
@@ -567,7 +567,7 @@ def get_parameter_configurations(encoding):
             {
                 'mean': mean
             }
-            for mean in [50]
+            for mean in [1]
         ]
 
     elif encoding == 'gcplus':
@@ -695,10 +695,9 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                 # ----------------------------------------------------
 
                 params.iid_error_rate = error_rate
-                params.iid_substitution_rate = error_rate
-                params.iid_insertion_rate = 0.0
-                params.iid_deletion_rate = 0.0
-                params.max_error_rate_cluster = 2*error_rate
+                params.iid_substitution_rate = error_rate/3
+                params.iid_insertion_rate = error_rate/3
+                params.iid_deletion_rate = error_rate/3
 
                 # ----------------------------------------------------
                 # Adjust similarity threshold for encodings that
@@ -798,7 +797,7 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                 # IID sequencing errors are random.
                 # ----------------------------------------------------
 
-                for i in range(10):
+                for i in range(200):
 
                     success = False
                     res = None
@@ -943,10 +942,10 @@ if __name__ == '__main__':
         'goldman',
         'church',
         'no_homopolymer',
-        # 'max_density',
-        # 'gcplus',
-        # 'wukong',
-        # 'hedges',
+        'max_density',
+        'gcplus',
+        'wukong',
+        'hedges',
     ]
 
     # ================================================================
@@ -958,9 +957,9 @@ if __name__ == '__main__':
         'binarization_method': 'default',
         'synthesis_method': 'nosynthpoly',
         'sequencing_method': 'iid',
-        'recovery_method': 'simple',
+        'recovery_method': 'pass_through',
         'min_coverage': 1,
-        'clustering_method': 'gradhc',
+        'clustering_method': 'pass_through',
         'storage_conditions': None,
         'kmer_seed': 42,
         'similarity_threshold': 1,
@@ -972,7 +971,7 @@ if __name__ == '__main__':
     # ================================================================
 
     no_error_params = {
-        'mean': 5,
+        'mean': 1,
         'std_dev': 0,
 
         'iid_error_rate': 0.0,
@@ -988,29 +987,29 @@ if __name__ == '__main__':
     error_rates = [
         0.0,
         0.0001,
-        # 0.0002,
-        # 0.0003,
-        # 0.0004,
+        0.0002,
+        0.0003,
+        0.0004,
         0.0005,
-        # 0.0006,
-        # 0.0007,
-        # 0.0008,
-        # 0.0009,
+        0.0006,
+        0.0007,
+        0.0008,
+        0.0009,
         0.001,
-        # 0.002,
-        # 0.003,
-        # 0.004,
-        # 0.005,
-        # 0.005,
-        # 0.006,
-        # 0.007,
-        # 0.008,
-        # 0.009,
-        # 0.01,
-        # 0.02,
-        # 0.03,
-        # 0.04,
-        # 0.05
+        0.002,
+        0.003,
+        0.004,
+        0.005,
+        0.005,
+        0.006,
+        0.007,
+        0.008,
+        0.009,
+        0.01,
+        0.02,
+        0.03,
+        0.04,
+        0.05
     ]
 
     # ================================================================
@@ -1749,6 +1748,8 @@ if __name__ == '__main__':
         0.90,
         output_dir
     )
+
+    print(f"Finished plotting cost vs error tolerance, saved all plots to {output_dir}")
 # if __name__ == '__main__':
 #     PARAMETER_SWEEPS = {
 
