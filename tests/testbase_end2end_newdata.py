@@ -239,11 +239,30 @@ class TestBase(unittest.TestCase):
                 if hasattr(self.params, 'clustering_method') and hasattr(self.params, 'recovery_method') and \
                    self.params.clustering_method and self.params.recovery_method:
                     processor = Cluster(self.params, logger=self.testlogger)
+                    
                     data_cluster, info = processor.cluster(data_seq)
-                    print("After clustering: ", len(data_cluster.data), " clusters/groups should be", len(data_enc.data))
+                    print("\n===== CLUSTERING OUTPUT =====")
+                    print("Number of clusters:", data_cluster.num_clusters)
+                    print("Number of sequences:", data_cluster.num_sequences)
+                    print("Total length:", data_cluster.total_length)
+
+                    for i, (cluster_id, reads) in enumerate(data_cluster.data.items()):
+                        print(
+                            f"Cluster {cluster_id}: "
+                            f"{len(reads)} reads, "
+                            f"lengths={sorted(set(len(r) for r in reads))}"
+                        )
+
+                        if i >= 9:
+                            break
+                    
+                    # print(data_cluster.data)s
+                    print("=============================\n")
                     
                     consensus = Consensus(self.params, logger=self.testlogger)
                     data_cor, info = consensus.call(data_cluster)
+                    print(data_cor.data)
+                    print("=============================\n")
 
                     self.testlogger.info('Processing method: %s + %s', self.params.clustering_method, self.params.recovery_method)
                 else:

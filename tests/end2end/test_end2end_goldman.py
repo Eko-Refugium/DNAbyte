@@ -19,10 +19,10 @@ params_list = [
         add_primer=False,
         primer_length=0,
 
-        mean=500,
+        mean=50,
         sequencing_method='iid',
         iid_error_rate=0.00,
-        clustering_method='clover',
+        clustering_method='mmseq',
         # kmer_size_cluster=150,
         recovery_method='simple',
 
