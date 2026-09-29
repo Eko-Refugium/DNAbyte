@@ -1,213 +1,150 @@
-from typing import Dict, List
+"""
+Weighted De Bruijn graph for DNA consensus reconstruction.
+"""
+
 from collections import defaultdict
+from typing import List
+
 
 class DeBruijnGraphGraph:
     """
     Weighted De Bruijn graph.
 
     Nodes are (k-1)-mers.
-    Directed edges connect overlapping nodes and store how many reads
-    support that transition.
+    Edges represent k-mers and store read coverage.
+
+    expected_length is optional. When supplied, consensus()
+    requires an exact-length path.
     """
 
-    def __init__(self, kmer_size, min_coverage, branch_ratio, logger=None):
-
+    def __init__(
+        self,
+        kmer_size,
+        min_coverage,
+        branch_ratio,
+        expected_length=None,
+        logger=None,
+    ):
         self.logger = logger
-        
-        self.logger = logger
-        
-        self.min_coverage = min_coverage
-        self.branch_ratio = branch_ratio
 
         if kmer_size < 2:
             raise ValueError("kmer_size must be at least 2.")
 
-        self.k = kmer_size
+        if min_coverage < 1:
+            raise ValueError("min_coverage must be at least 1.")
+
+        if not 0 < branch_ratio <= 1:
+            raise ValueError("branch_ratio must be between 0 and 1.")
+
+        if expected_length is not None and expected_length < kmer_size:
+            raise ValueError(
+                "expected_length must be >= kmer_size."
+            )
+
+        self.k = int(kmer_size)
+        self.min_coverage = int(min_coverage)
+        self.branch_ratio = float(branch_ratio)
+        self.expected_length = (
+            int(expected_length)
+            if expected_length is not None
+            else None
+        )
 
         # graph[left][right] = coverage
         self.graph = defaultdict(lambda: defaultdict(int))
-        
+
         self.indegree = defaultdict(int)
         self.outdegree = defaultdict(int)
 
-
-
     def clear(self):
-        """Remove all nodes and edges."""
+        """Remove all graph data."""
 
         self.graph.clear()
         self.indegree.clear()
         self.outdegree.clear()
 
-    def build(self, reads: List[str]):
-        """
-        Construct a weighted De Bruijn graph from DNA reads.
-        """
-
-        self.clear()
-        self.indegree.clear()
-        self.outdegree.clear()
-
-        for read in reads:
-
-            if len(read) < self.k:
-                continue
-
-            for i in range(len(read) - self.k + 1):
-
-                left = read[i:i+self.k-1]
-                right = read[i+1:i+self.k]
-
-                self.graph[left][right] += 1
-                self.outdegree[left] += 1
-                self.indegree[right] += 1
-
-    def prune(self, min_coverage=1):
-        """
-        Remove edges with coverage below min_coverage.
-        """
-
-        for left in list(self.graph):
-
-            for right in list(self.graph[left]):
-
-                if self.graph[left][right] < min_coverage:
-                    del self.graph[left][right]
-
-            if len(self.graph[left]) == 0:
-                del self.graph[left]
+    def _rebuild_degrees(self):
+        """Recalculate weighted node degrees."""
 
         self.indegree.clear()
         self.outdegree.clear()
 
         for left, neighbours in self.graph.items():
 
-            self.outdegree[left] = len(neighbours)
+            for right, coverage in neighbours.items():
 
-            for right in neighbours:
-                self.indegree[right] += 1
+                self.outdegree[left] += coverage
+                self.indegree[right] += coverage
 
-    def start_nodes(self):
-        nodes = set(self.graph)
-
-        for n in self.graph.values():
-            nodes.update(n)
-
-        return [n for n in nodes if self.indegree[n] == 0]
-
-    def end_nodes(self):
+    def build(self, reads: List[str]):
         """
-        Return nodes with outdegree zero.
+        Build the weighted De Bruijn graph.
         """
 
-        nodes = set(self.graph.keys())
+        self.clear()
 
-        for neighbors in self.graph.values():
-            nodes.update(neighbors.keys())
+        for read in reads:
 
-        return [
-            node
-            for node in nodes
-            if self.outdegree[node] == 0
-        ]
+            if read is None:
+                continue
 
-    def best_successor(self, node):
+            read = str(read).strip().upper()
 
-        if node not in self.graph:
-            return None
+            if len(read) < self.k:
+                continue
 
-        if not self.graph[node]:
-            return None
+            if any(base not in "ACGT" for base in read):
+                continue
 
-        def score(neighbour):
+            for i in range(len(read) - self.k + 1):
 
-            weight = self.graph[node][neighbour]
+                left = read[i:i + self.k - 1]
+                right = read[i + 1:i + self.k]
 
-            future = sum(
-                self.graph.get(neighbour, {}).values()
+                self.graph[left][right] += 1
+
+        self._rebuild_degrees()
+
+        if self.logger:
+            self.logger.debug(
+                f"Built De Bruijn graph: "
+                f"{self.node_count()} nodes, "
+                f"{self.edge_count()} edges"
             )
 
-            return (weight, future, neighbour)
-
-        return max(self.graph[node], key=score)
-
-    def __len__(self):
-        return len(self.graph)
-
-    def __str__(self):
-
-        edges = sum(len(v) for v in self.graph.values())
-
-        return (
-            f"DeBruijnGraph("
-            f"k={self.k}, "
-            f"nodes={len(self.graph)}, "
-            f"edges={edges})"
-        )
-    
-    def consensus(self):
-
-        if len(self.graph) == 0:
-            return ""
-
-        starts = self.start_nodes()
-
-        if starts:
-            start = max(
-                starts,
-                key=lambda n: sum(self.graph[n].values())
-            )
-        else:
-            start = max(
-                self.graph,
-                key=lambda n: sum(self.graph[n].values())
-            )
-
-        sequence = start
-        current = start
-
-        visited_edges = set()
-
-        while True:
-
-            nxt = self.best_successor(current)
-
-            if nxt is None:
-                break
-
-            edge = (current, nxt)
-
-            if edge in visited_edges:
-                break
-
-            visited_edges.add(edge)
-
-            sequence += nxt[-1]
-            current = nxt
-
-        return sequence
-    
-    def remove_branches(self, ratio: float = 0.2):
+    def prune(self, min_coverage=None):
         """
-        Remove weak competing branches.
-
-        For every node with multiple outgoing edges, keep only edges whose
-        coverage is at least `ratio` times the strongest outgoing edge.
-
-        Example
-        -------
-        A -> B (100)
-        A -> C (18)
-        A -> D (4)
-
-        ratio = 0.2
-
-        Keeps:
-            A -> B
-        Removes:
-            A -> C
-            A -> D
+        Remove edges below the coverage threshold.
         """
+
+        if min_coverage is None:
+            min_coverage = self.min_coverage
+
+        min_coverage = int(min_coverage)
+
+        for left in list(self.graph):
+
+            neighbours = self.graph[left]
+
+            for right in list(neighbours):
+
+                if neighbours[right] < min_coverage:
+                    del neighbours[right]
+
+            if not neighbours:
+                del self.graph[left]
+
+        self._rebuild_degrees()
+
+    def remove_branches(self, ratio=None):
+        """
+        Remove weak outgoing branches.
+        """
+
+        if ratio is None:
+            ratio = self.branch_ratio
+
+        removed = 0
 
         for node in list(self.graph):
 
@@ -217,52 +154,323 @@ class DeBruijnGraphGraph:
                 continue
 
             strongest = max(neighbours.values())
-
             threshold = strongest * ratio
 
             for nxt in list(neighbours):
 
                 if neighbours[nxt] < threshold:
                     del neighbours[nxt]
+                    removed += 1
 
-            if len(neighbours) == 0:
+            if not neighbours:
                 del self.graph[node]
 
-        # Recompute degrees
-        self.indegree.clear()
-        self.outdegree.clear()
+        self._rebuild_degrees()
 
-        for left, neighbours in self.graph.items():
+        if self.logger:
+            self.logger.debug(
+                f"Removed {removed} weak branch edges"
+            )
 
-            self.outdegree[left] = len(neighbours)
+    def start_nodes(self):
+        """Return nodes without incoming edges."""
 
-            for right in neighbours:
-                self.indegree[right] += 1
-    
+        nodes = set(self.graph.keys())
+
+        for neighbours in self.graph.values():
+            nodes.update(neighbours.keys())
+
+        return [
+            node
+            for node in nodes
+            if self.indegree[node] == 0
+        ]
+
+    def end_nodes(self):
+        """Return nodes without outgoing edges."""
+
+        nodes = set(self.graph.keys())
+
+        for neighbours in self.graph.values():
+            nodes.update(neighbours.keys())
+
+        return [
+            node
+            for node in nodes
+            if self.outdegree[node] == 0
+        ]
+
+    def _candidate_starts(self):
+        """
+        Return possible starting nodes.
+
+        Prefer true graph starts, but allow cyclic graphs.
+        """
+
+        starts = self.start_nodes()
+
+        if starts:
+            return starts
+
+        return list(self.graph.keys())
+
+    def _find_exact_path(self, start, target_length):
+        """
+        Find a path producing exactly target_length bases.
+
+        Search is coverage-guided but length-constrained.
+
+        Returns:
+            sequence or None
+        """
+
+        sequence = start
+        current = start
+
+        # Number of added bases still required.
+        remaining = target_length - len(sequence)
+
+        if remaining < 0:
+            return None
+
+        visited_edges = set()
+
+        def search(node, seq, remaining):
+
+            if remaining == 0:
+                return seq
+
+            neighbours = self.graph.get(node)
+
+            if not neighbours:
+                return None
+
+            candidates = []
+
+            for nxt, coverage in neighbours.items():
+
+                edge = (node, nxt)
+
+                if edge in visited_edges:
+                    continue
+
+                candidates.append(
+                    (
+                        coverage,
+                        sum(
+                            self.graph.get(nxt, {}).values()
+                        ),
+                        nxt,
+                    )
+                )
+
+            # Strongest-supported paths first.
+            candidates.sort(
+                key=lambda x: (x[0], x[1], x[2]),
+                reverse=True,
+            )
+
+            for _, _, nxt in candidates:
+
+                # Every graph edge adds exactly one base.
+                if remaining < 1:
+                    continue
+
+                edge = (node, nxt)
+
+                visited_edges.add(edge)
+
+                result = search(
+                    nxt,
+                    seq + nxt[-1],
+                    remaining - 1,
+                )
+
+                if result is not None:
+                    return result
+
+                visited_edges.remove(edge)
+
+            return None
+
+        return search(
+            current,
+            sequence,
+            remaining,
+        )
+
+    def _best_unconstrained_path(self):
+        """
+        Generate the strongest path when no exact length is required.
+        """
+
+        starts = self._candidate_starts()
+
+        if not starts:
+            return ""
+
+        start = max(
+            starts,
+            key=lambda node: self.outdegree[node]
+        )
+
+        sequence = start
+        current = start
+
+        visited_edges = set()
+
+        while True:
+
+            neighbours = self.graph.get(current)
+
+            if not neighbours:
+                break
+
+            candidates = [
+                nxt
+                for nxt in neighbours
+                if (current, nxt) not in visited_edges
+            ]
+
+            if not candidates:
+                break
+
+            nxt = max(
+                candidates,
+                key=lambda n: (
+                    self.graph[current][n],
+                    sum(self.graph.get(n, {}).values()),
+                    n,
+                )
+            )
+
+            edge = (current, nxt)
+
+            visited_edges.add(edge)
+
+            sequence += nxt[-1]
+            current = nxt
+
+        return sequence
+
+    def consensus(self, expected_length=None):
+        """
+        Generate a consensus sequence.
+
+        If expected_length is supplied, the returned sequence must
+        have exactly that length.
+
+        If no exact-length path exists, return "".
+        """
+
+        if not self.graph:
+            return ""
+
+        if expected_length is None:
+            expected_length = self.expected_length
+
+        if expected_length is not None:
+
+            expected_length = int(expected_length)
+
+            if expected_length < self.k:
+                return ""
+
+            starts = self._candidate_starts()
+
+            # Try the strongest starts first.
+            starts = sorted(
+                starts,
+                key=lambda node: self.outdegree[node],
+                reverse=True,
+            )
+
+            for start in starts:
+
+                sequence = self._find_exact_path(
+                    start,
+                    expected_length,
+                )
+
+                if sequence is not None:
+
+                    if len(sequence) == expected_length:
+                        return sequence
+
+            if self.logger:
+                self.logger.warning(
+                    "No exact-length De Bruijn path found "
+                    f"for length {expected_length}"
+                )
+
+            return ""
+
+        return self._best_unconstrained_path()
+
+    def edge_count(self):
+        """Return number of unique edges."""
+
+        return sum(
+            len(neighbours)
+            for neighbours in self.graph.values()
+        )
+
+    def node_count(self):
+        """Return number of graph nodes."""
+
+        nodes = set(self.graph.keys())
+
+        for neighbours in self.graph.values():
+            nodes.update(neighbours.keys())
+
+        return len(nodes)
+
+    def total_coverage(self):
+        """Return total edge coverage."""
+
+        return sum(
+            sum(neighbours.values())
+            for neighbours in self.graph.values()
+        )
+
+    def stats(self):
+        """Return graph statistics."""
+
+        return {
+            "nodes": self.node_count(),
+            "edges": self.edge_count(),
+            "coverage": self.total_coverage(),
+            "starts": len(self.start_nodes()),
+            "ends": len(self.end_nodes()),
+            "expected_length": self.expected_length,
+        }
+
     def print_graph(self):
 
         for node in sorted(self.graph):
 
             print(node)
 
-            for nxt, weight in self.graph[node].items():
+            neighbours = sorted(
+                self.graph[node].items(),
+                key=lambda item: (-item[1], item[0])
+            )
+
+            for nxt, coverage in neighbours:
 
                 print(
-                    f"   -> {nxt} ({weight})"
+                    f"   -> {nxt} ({coverage})"
                 )
-        
-    def stats(self):
 
-        edges = sum(len(v) for v in self.graph.values())
-        coverage = sum(
-            sum(v.values())
-            for v in self.graph.values()
+    def __len__(self):
+        return self.node_count()
+
+    def __str__(self):
+
+        return (
+            f"DeBruijnGraph("
+            f"k={self.k}, "
+            f"nodes={self.node_count()}, "
+            f"edges={self.edge_count()}, "
+            f"expected_length={self.expected_length})"
         )
-
-        return {
-            "nodes": len(self.graph),
-            "edges": edges,
-            "coverage": coverage,
-            "starts": len(self.start_nodes()),
-            "ends": len(self.end_nodes())
-        }

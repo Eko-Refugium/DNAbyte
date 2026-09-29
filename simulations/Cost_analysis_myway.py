@@ -601,6 +601,230 @@ def get_parameter_configurations(encoding):
             f"No parameter sweep defined for {encoding}"
         )
 
+def plot_cost_vs_tolerance(
+        cost_vs_tolerance,
+        target_recovery,
+        output_dir
+    ):
+
+    plt.figure(figsize=(14, 9))
+
+    target_data = cost_vs_tolerance[target_recovery]
+
+    # --------------------------------------------------------
+    # Plot each encoding separately
+    # --------------------------------------------------------
+
+    for encoding, config_data in target_data.items():
+
+        x_values = []
+        y_values = []
+        labels = []
+
+        prefix = prefixes.get(
+            encoding,
+            encoding
+        )
+
+        for config_name, result in config_data.items():
+
+            dna_cost = result["dna_cost"]
+            error_tolerance = result["error_tolerance"]
+
+            # Skip configurations that never reach
+            # the requested recovery level.
+            if error_tolerance is None:
+                continue
+
+            x_values.append(dna_cost)
+            y_values.append(error_tolerance)
+
+            configuration = result["configuration"]
+
+            # ------------------------------------------------
+            # CREATE LABEL FROM ACTUAL CONFIGURATION
+            # ------------------------------------------------
+
+            if encoding in ["church", "wukong"]:
+
+                redundancy = int(
+                    configuration["add_redundancy"]
+                )
+
+                rs_num = configuration["rs_num"]
+
+                label = (
+                    f"{prefix}{redundancy}-{rs_num}"
+                )
+
+            elif encoding == "goldman":
+
+                label = (
+                    f"G{configuration['mean']}"
+                )
+
+            elif encoding == "gcplus":
+
+                label = (
+                    f"GC{configuration['gcplus_c1']}"
+                )
+
+            elif encoding == "hedges":
+
+                label = (
+                    f"H{configuration['hedges_coderate']}"
+                )
+
+            elif encoding in [
+                "max_density",
+                "no_homopolymer"
+            ]:
+
+                percentage = configuration[
+                    "reed_solo_percentage"
+                ]
+
+                label = f"{prefix}{percentage:g}"
+
+            else:
+
+                label = prefix
+
+            labels.append(label)
+
+        # ----------------------------------------------------
+        # Plot this encoding
+        # ----------------------------------------------------
+
+        if not x_values:
+            continue
+
+        # NEW — get colour for this encoding
+        encoding_color = encoding_colors.get(
+            encoding,
+            "black"
+        )
+
+        plt.scatter(
+            x_values,
+            y_values,
+            s=70,
+            alpha=0.8,
+            color=encoding_color,       # NEW
+            label=encoding              # NEW
+        )
+
+        # ----------------------------------------------------
+        # LABEL OFFSETS
+        # ----------------------------------------------------
+
+        label_offsets = [
+            (7, 7),
+            (7, -12),
+            (-7, 7),
+            (-7, -12),
+            (12, 0),
+            (-12, 0),
+            (0, 12),
+            (0, -15),
+        ]
+
+        for i, (
+            x_value,
+            y_value,
+            label
+        ) in enumerate(
+            zip(
+                x_values,
+                y_values,
+                labels
+            )
+        ):
+
+            offset = label_offsets[
+                i % len(label_offsets)
+            ]
+
+            plt.annotate(
+                label,
+                (x_value, y_value),
+                xytext=offset,
+                textcoords="offset points",
+                fontsize=8,
+                ha="center",
+                va="center",
+                color=encoding_color,    # NEW
+                bbox=dict(
+                    boxstyle="round,pad=0.2",
+                    facecolor="white",
+                    edgecolor="none",
+                    alpha=0.8
+                )
+            )
+
+    # ========================================================
+    # AXES / TITLE
+    # ========================================================
+
+    recovery_percent = int(
+        target_recovery * 100
+    )
+
+    plt.xlabel(
+        "DNA cost (nt/bit)"
+    )
+
+    plt.ylabel(
+        "Tolerated IID substitution error rate"
+    )
+
+    plt.title(
+        f"DNA storage cost vs error tolerance "
+        f"({recovery_percent}% recovery)"
+    )
+
+    plt.grid(
+        True,
+        alpha=0.3
+    )
+
+    # NEW — encoding legend
+    plt.legend(
+        title="Encoding"
+    )
+
+    plt.tight_layout()
+
+    # ========================================================
+    # SAVE
+    # ========================================================
+
+    png_file = os.path.join(
+        output_dir,
+        f"cost_vs_error_tolerance_{recovery_percent}pct.png"
+    )
+
+    pdf_file = os.path.join(
+        output_dir,
+        f"cost_vs_error_tolerance_{recovery_percent}pct.pdf"
+    )
+
+    plt.savefig(
+        png_file,
+        dpi=300,
+        bbox_inches="tight"
+    )
+
+    plt.savefig(
+        pdf_file,
+        bbox_inches="tight"
+    )
+
+    plt.show()
+    # plt.close()
+
+    print(f"Saved plot: {png_file}")
+    print(f"Saved plot: {pdf_file}")
 
 
 def simulate_cost_analysis(encodings, base_params, error_rates):
@@ -797,7 +1021,7 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                 # IID sequencing errors are random.
                 # ----------------------------------------------------
 
-                for i in range(200):
+                for i in range(20):
 
                     success = False
                     res = None
@@ -1263,6 +1487,8 @@ if __name__ == '__main__':
     )
 
 
+
+
     # Confirm that the files actually exist
     print()
     print("================================================")
@@ -1279,7 +1505,7 @@ if __name__ == '__main__':
     plt.show()
 
     # Close after showing
-    plt.close()
+    # plt.close()
     # ============================================================
     # COST VS ERROR TOLERANCE
     # Calculate tolerance for BOTH 100% and 90% recovery
@@ -1502,231 +1728,7 @@ if __name__ == '__main__':
     # FUNCTION TO CREATE ONE PLOT
     # ============================================================
 
-    def plot_cost_vs_tolerance(
-        cost_vs_tolerance,
-        target_recovery,
-        output_dir
-    ):
-
-        plt.figure(figsize=(14, 9))
-
-        target_data = cost_vs_tolerance[target_recovery]
-
-        # --------------------------------------------------------
-        # Plot each encoding separately
-        # --------------------------------------------------------
-
-        for encoding, config_data in target_data.items():
-
-            x_values = []
-            y_values = []
-            labels = []
-
-            prefix = prefixes.get(
-                encoding,
-                encoding
-            )
-
-            for config_name, result in config_data.items():
-
-                dna_cost = result["dna_cost"]
-                error_tolerance = result["error_tolerance"]
-
-                # Skip configurations that never reach
-                # the requested recovery level.
-                if error_tolerance is None:
-                    continue
-
-                x_values.append(dna_cost)
-                y_values.append(error_tolerance)
-
-                configuration = result["configuration"]
-
-                # ------------------------------------------------
-                # CREATE LABEL FROM ACTUAL CONFIGURATION
-                # ------------------------------------------------
-
-                if encoding in ["church", "wukong"]:
-
-                    redundancy = int(
-                        configuration["add_redundancy"]
-                    )
-
-                    rs_num = configuration["rs_num"]
-
-                    label = (
-                        f"{prefix}{redundancy}-{rs_num}"
-                    )
-
-                elif encoding == "goldman":
-
-                    label = (
-                        f"G{configuration['mean']}"
-                    )
-
-                elif encoding == "gcplus":
-
-                    label = (
-                        f"GC{configuration['gcplus_c1']}"
-                    )
-
-                elif encoding == "hedges":
-
-                    label = (
-                        f"H{configuration['hedges_coderate']}"
-                    )
-
-                elif encoding in [
-                    "max_density",
-                    "no_homopolymer"
-                ]:
-
-                    percentage = configuration[
-                        "reed_solo_percentage"
-                    ]
-
-                    label = f"{prefix}{percentage:g}"
-
-                else:
-
-                    label = prefix
-
-                labels.append(label)
-
-            # ----------------------------------------------------
-            # Plot this encoding
-            # ----------------------------------------------------
-
-            if not x_values:
-                continue
-
-            # NEW — get colour for this encoding
-            encoding_color = encoding_colors.get(
-                encoding,
-                "black"
-            )
-
-            plt.scatter(
-                x_values,
-                y_values,
-                s=70,
-                alpha=0.8,
-                color=encoding_color,       # NEW
-                label=encoding              # NEW
-            )
-
-            # ----------------------------------------------------
-            # LABEL OFFSETS
-            # ----------------------------------------------------
-
-            label_offsets = [
-                (7, 7),
-                (7, -12),
-                (-7, 7),
-                (-7, -12),
-                (12, 0),
-                (-12, 0),
-                (0, 12),
-                (0, -15),
-            ]
-
-            for i, (
-                x_value,
-                y_value,
-                label
-            ) in enumerate(
-                zip(
-                    x_values,
-                    y_values,
-                    labels
-                )
-            ):
-
-                offset = label_offsets[
-                    i % len(label_offsets)
-                ]
-
-                plt.annotate(
-                    label,
-                    (x_value, y_value),
-                    xytext=offset,
-                    textcoords="offset points",
-                    fontsize=8,
-                    ha="center",
-                    va="center",
-                    color=encoding_color,    # NEW
-                    bbox=dict(
-                        boxstyle="round,pad=0.2",
-                        facecolor="white",
-                        edgecolor="none",
-                        alpha=0.8
-                    )
-                )
-
-        # ========================================================
-        # AXES / TITLE
-        # ========================================================
-
-        recovery_percent = int(
-            target_recovery * 100
-        )
-
-        plt.xlabel(
-            "DNA cost (nt/bit)"
-        )
-
-        plt.ylabel(
-            "Tolerated IID substitution error rate"
-        )
-
-        plt.title(
-            f"DNA storage cost vs error tolerance "
-            f"({recovery_percent}% recovery)"
-        )
-
-        plt.grid(
-            True,
-            alpha=0.3
-        )
-
-        # NEW — encoding legend
-        plt.legend(
-            title="Encoding"
-        )
-
-        plt.tight_layout()
-
-        # ========================================================
-        # SAVE
-        # ========================================================
-
-        png_file = os.path.join(
-            output_dir,
-            f"cost_vs_error_tolerance_{recovery_percent}pct.png"
-        )
-
-        pdf_file = os.path.join(
-            output_dir,
-            f"cost_vs_error_tolerance_{recovery_percent}pct.pdf"
-        )
-
-        plt.savefig(
-            png_file,
-            dpi=300,
-            bbox_inches="tight"
-        )
-
-        plt.savefig(
-            pdf_file,
-            bbox_inches="tight"
-        )
-
-        plt.show()
-        plt.close()
-
-        print(f"Saved plot: {png_file}")
-        print(f"Saved plot: {pdf_file}")
-
+    
 
     # ============================================================
     # 100% RECOVERY

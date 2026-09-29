@@ -16,8 +16,8 @@ params_list = [
         sequence_length=200,
         max_homopolymer=3,
         max_content=0.6,
-        rs_num=0,
-        mean=1,
+        rs_num=2,
+        mean=500,
         add_redundancy=False,
         add_primer=False,
         primer_length=20,
@@ -25,8 +25,14 @@ params_list = [
         # error channels
         storage_conditions=None,
         synthesis_method='nosynthpoly',
-        clustering_method='pass_through',
-        recovery_method='pass_through'
+        sequencing_method='iid',
+        iid_error_rate=0.05,
+        mmseqs_identity=0.8,
+        mmseq_min=470,
+        
+        clustering_method='mmseq',
+        
+        recovery_method='debruijn',
     ),
 ]
 

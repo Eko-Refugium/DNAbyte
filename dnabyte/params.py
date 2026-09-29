@@ -147,13 +147,20 @@ class Params:
         else:
             if self.clustering_method:
                 raise ValueError(f"Invalid clustering method: {self.clustering_method}")
-        
+
+        print(f"Checking recovery method: {self.recovery_method}")
         # Check post-sequencing recovery parameters
+        if self.recovery_method is not None:
+            self.recovery_method = self.recovery_method.lower()
         if self.recovery_method is None or not hasattr(self, 'recovery_method'):
             pass
         elif self.recovery_method in self.recovery_plugins:
+            
+            print(f"Found recovery method: {self.recovery_method}")
             recovery = importlib.import_module(f"dnabyte.recovery.{self.recovery_method}.recovery")
+            print(f"Loading recovery module for method: {self.recovery_method}")
             attributes_recovery = recovery.attributes(self)
+            print(f"Attributes for recovery method {self.recovery_method}: {attributes_recovery}")
             for keys, value in attributes_recovery.items():
                 setattr(self, keys, value)
         else:

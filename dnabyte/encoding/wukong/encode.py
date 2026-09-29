@@ -2,9 +2,13 @@ import tempfile
 import os
 import traceback
 
+
 from dnabyte.encode import Encode
 from dnabyte.encoding.wukong.StorageD.codec import WukongEncode
 
+def reverse_complement(seq):
+    complement_map = str.maketrans('ACGTacgt', 'TGCAtgca')
+    return seq.translate(complement_map)[::-1]
 
 class Wukong(Encode):
     """
@@ -119,12 +123,17 @@ class Wukong(Encode):
 
             metadata = original_fasta_metadata
 
+
+            # self.params.left_primer = left_primer
+            # self.params.right_primer = reverse_complement(right_primer)
+
             # Create info dictionary
             info = {
                 "number_of_codewords": len(dna_codewords),
                 "result_file": result_file,
                 "data_length": len(data.data),
                 "barcode_length": barcode_length,
+                "sequence_length": len(data.data[0]) if data.data else 0,
                 "metadata": metadata,
                 "left_primer": left_primer,
                 "right_primer": right_primer,

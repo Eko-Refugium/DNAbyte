@@ -14,7 +14,7 @@ params_list = [
         encoding_method='hedges',
         binarization_method='default',
         rs_num=0,
-        mean=50,
+        mean=1,
         add_redundancy=False,
         add_primer=False,
         primer_length=50,
@@ -24,11 +24,11 @@ params_list = [
 
         # error channels
         storage_conditions=None,
-        sequencing_method=None,
+        sequencing_method='iid',
         iid_error_rate=0.01,
-        clustering_method='simple',
+        clustering_method='pass_through',
         kmer_size_cluster=250,
-        recovery_method='mmseq'
+        recovery_method='pass_through'
         
     ),
 ]

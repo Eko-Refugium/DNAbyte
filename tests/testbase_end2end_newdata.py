@@ -256,13 +256,21 @@ class TestBase(unittest.TestCase):
                         if i >= 9:
                             break
                     
-                    # print(data_cluster.data)s
-                    print("=============================\n")
                     
                     consensus = Consensus(self.params, logger=self.testlogger)
+                    print("\n===== PRIOR TO CONSENSUS =====")
+                    print("Number of clusters:", len(data_cluster.data))
                     data_cor, info = consensus.call(data_cluster)
-                    print(data_cor.data)
-                    print("=============================\n")
+                    print("\n===== CONSENSUS OUTPUT =====")
+                    print("Number of sequences after consensus:", len(data_cor.data))
+                    print("Consensus data:", data_cor.data)
+
+                    # print("Number of sequences after consensus:", data_cor.num_sequences)
+                    for i, seq in enumerate(data_cor.data):
+                        print(f"Sequence {i}: {seq}")
+                        if i >= 9:
+                            break
+                    
 
                     self.testlogger.info('Processing method: %s + %s', self.params.clustering_method, self.params.recovery_method)
                 else:

@@ -21,9 +21,9 @@ params_list = [
         rule_num=1,
         rs_num=0,
         add_redundancy=False,
-        add_primer=True,
+        add_primer=False,
         primer_length=20,
-        mean=50,
+        mean=500,
 
         # error channels
         storage_conditions=None,
@@ -31,10 +31,13 @@ params_list = [
 
         sequencing_method='iid',
         iid_error_rate=0.01,
+        iid_insertion_rate=0.01,
+        iid_deletion_rate=0.01,
+
         
         clustering_method='mmseq',
         
-        recovery_method='simple',
+        recovery_method='debruijn',
     ),
 
     # # Test 2: Sequencing errors only (substitutions, insertions, deletions)

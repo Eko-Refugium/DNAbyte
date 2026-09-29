@@ -14,6 +14,7 @@ class MMseqsClusterer(Cluster):
         self.cov_mode = getattr(params, "mmseqs_cov_mode", 0)
         self.threads = getattr(params, "mmseqs_threads", 1)
         self.mmseqs_bin = getattr(params, "mmseqs_bin", "mmseqs")
+        self.mmseq_min = getattr(params, "mmseq_min", 2)
 
         self.logger = logger
 
@@ -74,6 +75,11 @@ class MMseqsClusterer(Cluster):
                 sequences
             )
 
+        clusters = {
+            i: members
+            for i, members in clusters.items()
+            if len(members) >= self.mmseq_min
+        }
         info = {
             "method": "mmseqs2",
             "identity": self.identity,
@@ -164,5 +170,10 @@ def attributes(params):
             params,
             "mmseqs_bin",
             "mmseqs"
+        ),
+        "mmseq_min": getattr(
+            params,
+            "mmseq_min",
+            2
         ),
     }

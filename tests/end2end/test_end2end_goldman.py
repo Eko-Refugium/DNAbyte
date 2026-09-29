@@ -19,16 +19,16 @@ params_list = [
         add_primer=False,
         primer_length=0,
 
-        mean=50,
+        mean=500,
         sequencing_method='iid',
-        iid_error_rate=0.00,
+        # iid_error_rate=0.00,
+        iid_error_rate=0.0,
+        mmseqs_identity=0.99,
+        mmseq_min=40,
+        
         clustering_method='mmseq',
-        # kmer_size_cluster=150,
-        recovery_method='simple',
-
-        # error channels
-        storage_conditions=None,
-        synthesis_method='nosynthpoly',
+        
+        recovery_method='debruijn',
     ),
 
     # # Test 2: Sequencing errors only (substitutions, insertions, deletions)

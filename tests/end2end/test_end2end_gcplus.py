@@ -16,7 +16,7 @@ params_list = [
         # encoding parameters
         encoding_method='gcplus',
         binarization_method='default',
-        sequence_length=200,
+        sequence_length=100,
         gcplus_k=168,
         gcplus_l=8,
         gcplus_c1=4,
@@ -25,43 +25,47 @@ params_list = [
         storage_conditions=None,
         synthesis_method='nosynthpoly',
         sequencing_method='iid',
+        # iid_error_rate=0.0,
+
+        mean=500,
+
         iid_error_rate=0.0,
-
-        mean=1,
-
+        mmseqs_identity=0.99,
+        mmseq_min=470,
         
-        clustering_method='pass_through',
-        recovery_method='pass_through',
+        clustering_method='mmseq',
+        
+        recovery_method='simple',
     ),
 
-    # Test 2: Large file with multiple copies (mean>1) using standard clustering + recovery
-    Params(
-        name='end2end_gcplus_consensus',
-        filename='testfilesimsall.txt',
+    # # Test 2: Large file with multiple copies (mean>1) using standard clustering + recovery
+    # Params(
+    #     name='end2end_gcplus_consensus',
+    #     filename='testfilesimsall.txt',
 
-        # encoding parameters
-        encoding_method='gcplus',
-        binarization_method='default',
-        sequence_length=200,
-        gcplus_k=168,
-        gcplus_l=8,
-        gcplus_c1=4,
+    #     # encoding parameters
+    #     encoding_method='gcplus',
+    #     binarization_method='default',
+    #     sequence_length=200,
+    #     gcplus_k=168,
+    #     gcplus_l=8,
+    #     gcplus_c1=4,
 
-        # error channels
-        storage_conditions=None,
-        synthesis_method='nosynthpoly',
-        sequencing_method='iid',
-        iid_error_rate=0.0,
+    #     # error channels
+    #     storage_conditions=None,
+    #     synthesis_method='nosynthpoly',
+    #     sequencing_method='iid',
+    #     iid_error_rate=0.0,
 
-        mean=3,  # Multiple copies for majority voting
+    #     mean=3,  # Multiple copies for majority voting
 
         
-        clustering_method='kmere_cluster',  # Group by exact match (including position tag)
+    #     clustering_method='kmere_cluster',  # Group by exact match (including position tag)
         
-        kmer_size_cluster=20,
-        kmer_threshold = 0.9,
-        recovery_method='simple',  # Majority voting consensus
-    ),
+    #     kmer_size_cluster=20,
+    #     kmer_threshold = 0.9,
+    #     recovery_method='simple',  # Majority voting consensus
+    # ),
 
     # # Test 3: Sequencing errors only
     # Params(
