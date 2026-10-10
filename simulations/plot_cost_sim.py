@@ -394,7 +394,7 @@ def plot_cost_vs_tolerance_csv(
 # USAGE
 # ============================================================
 
-csv_file = "simulation_results_costs/cost_vs_error_tolerance.csv"
+csv_file = "c:\\PhDKaya\\MIDNAbyte\\DNAbyte\\simulations\\simulation_results_costs\\cost_vs_error_tolerance.csv"
 
 output_dir = "plots"
 

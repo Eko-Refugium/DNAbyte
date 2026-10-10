@@ -46,6 +46,8 @@ static unsigned char dna_value(char c)
 
 static void initialize_hedges(const HedgesConfig& cfg)
 {
+    std::cerr << ">>> INIT 1: entered" << std::endl;
+
     Doub coderates_[] =
     {
         0.,
@@ -59,32 +61,31 @@ static void initialize_hedges(const HedgesConfig& cfg)
 
     VecDoub coderates(7, coderates_);
 
+    std::cerr << ">>> INIT 2: coderates created" << std::endl;
 
     std::vector<char> leftprimer(
         cfg.left_primer.begin(),
         cfg.left_primer.end()
     );
-
     leftprimer.push_back('\0');
-
 
     std::vector<char> rightprimer(
         cfg.right_primer.begin(),
         cfg.right_primer.end()
     );
-
     rightprimer.push_back('\0');
 
+    std::cerr << ">>> INIT 3: primers created" << std::endl;
 
     totstrandlen = cfg.total_strand_length;
-
     strandIDbytes = cfg.strand_id_bytes;
-
     strandrunoutbytes = cfg.strand_runout_bytes;
 
+    std::cerr << ">>> INIT 4: globals set" << std::endl;
 
     Getparams_out params = getparams();
 
+    std::cerr << ">>> INIT 5: getparams returned" << std::endl;
 
     setparams(
         8 * strandIDbytes,
@@ -93,6 +94,7 @@ static void initialize_hedges(const HedgesConfig& cfg)
         cfg.heap_limit
     );
 
+    std::cerr << ">>> INIT 6: setparams returned" << std::endl;
 
     setcoderate(
         cfg.coderate,
@@ -100,10 +102,9 @@ static void initialize_hedges(const HedgesConfig& cfg)
         rightprimer.data()
     );
 
+    std::cerr << ">>> INIT 7: setcoderate returned" << std::endl;
 
-    Int min_GC =
-        cfg.gc_window - cfg.gc_max;
-
+    Int min_GC = cfg.gc_window - cfg.gc_max;
 
     setdnaconstraints(
         cfg.gc_window,
@@ -112,24 +113,15 @@ static void initialize_hedges(const HedgesConfig& cfg)
         cfg.max_homopolymer
     );
 
+    std::cerr << ">>> INIT 8: setdnaconstraints returned" << std::endl;
 
-    leftlen =
-        Int(cfg.left_primer.size());
+    leftlen = Int(cfg.left_primer.size());
+    rightlen = Int(cfg.right_primer.size());
 
-    rightlen =
-        Int(cfg.right_primer.size());
-
-
-    strandlen =
-        totstrandlen
-        - leftlen
-        - rightlen;
-
+    strandlen = totstrandlen - leftlen - rightlen;
 
     strandsperpacketmessage =
-        strandsperpacket
-        - strandsperpacketcheck;
-
+        strandsperpacket - strandsperpacketcheck;
 
     bytesperstrand =
         Int(
@@ -138,16 +130,16 @@ static void initialize_hedges(const HedgesConfig& cfg)
             / 4.
         );
 
-
     messbytesperstrand =
         bytesperstrand
         - strandIDbytes
         - strandrunoutbytes;
 
-
     messbytesperpacket =
         strandsperpacketmessage
         * messbytesperstrand;
+
+    std::cerr << ">>> INIT 9: initialization complete" << std::endl;
 }
 
 
@@ -156,30 +148,37 @@ std::vector<uint8_t> hedges_decode(
     const HedgesConfig& cfg
 )
 {
-    initialize_hedges(cfg);
+    std::cerr << ">>> DECODE 1: entered hedges_decode" << std::endl;
 
+    std::cerr << ">>> DECODE 2: before initialize_hedges" << std::endl;
+    initialize_hedges(cfg);
+    std::cerr << ">>> DECODE 3: after initialize_hedges" << std::endl;
 
     std::vector<uint8_t> result;
 
-
-    //
-    // Input consists of complete DNA strands.
-    // Every 255 strands belong to one HEDGES packet.
-    //
     size_t offset = 0;
 
+    std::cerr << ">>> DECODE 4: input.size = "
+              << input.size() << std::endl;
 
     while (offset < input.size())
     {
-        size_t remaining =
-            input.size() - offset;
+        std::cerr << ">>> DECODE 5: packet offset = "
+                  << offset << std::endl;
 
+        size_t remaining = input.size() - offset;
 
         size_t count =
             std::min(
                 static_cast<size_t>(strandsperpacket),
                 remaining
             );
+
+        std::cerr << ">>> DECODE 6: count = "
+                  << count
+                  << ", strandsperpacket = "
+                  << strandsperpacket
+                  << std::endl;
 
 
         if (count != strandsperpacket)
@@ -201,7 +200,8 @@ std::vector<uint8_t> hedges_decode(
         //
         MatUchar dna(
             strandsperpacket,
-            input[offset].size()
+            totstrandlen,
+            Uchar(0)
         );
 
 
@@ -210,8 +210,13 @@ std::vector<uint8_t> hedges_decode(
             const std::string& strand =
                 input[offset + r];
 
+            size_t len =
+                std::min(
+                    strand.size(),
+                    static_cast<size_t>(totstrandlen)
+                );
 
-            for (size_t c = 0; c < strand.size(); ++c)
+            for (size_t c = 0; c < len; ++c)
             {
                 dna[r][c] =
                     dna_value(strand[c]);
@@ -240,6 +245,8 @@ std::vector<uint8_t> hedges_decode(
             << std::endl;
 
 
+        std::cout << ">>> BEFORE correctmesspacket" << std::endl;
+
         //
         // Reed-Solomon correction
         //
@@ -249,7 +256,7 @@ std::vector<uint8_t> hedges_decode(
                 decoded.epacket
             );
 
-
+        std::cout << ">>> AFTER correctmesspacket" << std::endl;
         //
         // Extract the actual message bytes
         //
@@ -258,7 +265,7 @@ std::vector<uint8_t> hedges_decode(
                 corrected.packet
             );
 
-
+        std::cout << ">>> AFTER extractplaintext" << std::endl;
         //
         // Append this packet to the FINAL result.
         //
@@ -268,6 +275,8 @@ std::vector<uint8_t> hedges_decode(
                 plain[i]
             );
         }
+
+        std::cout << ">>> HEDGES PACKET LOOP FINISHED" << std::endl;
 
 
         //
@@ -316,6 +325,11 @@ std::vector<uint8_t> hedges_decode(
         original_size
     );
 
+    std::cout
+        << ">>> HEDGES DECODE RETURNING "
+        << result.size()
+        << " BYTES"
+        << std::endl;
 
     return result;
 }

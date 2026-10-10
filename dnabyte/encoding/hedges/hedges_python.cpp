@@ -5,6 +5,7 @@
 #include "hedges_encode.h"
 #include "hedges_decode.h"
 #include "hedges_config.h"
+#include <iostream>
 
 namespace py = pybind11;
 
@@ -62,7 +63,18 @@ PYBIND11_MODULE(hedges_python, m)
         "decode_hedges",
         [](std::vector<std::string> strands, const HedgesConfig& cfg)
         {
-            return hedges_decode(strands, cfg);
+            std::cout << ">>> PYBIND BEFORE hedges_decode"
+                    << std::endl;
+
+            std::vector<uint8_t> result =
+                hedges_decode(strands, cfg);
+
+            std::cout << ">>> PYBIND AFTER hedges_decode: "
+                    << result.size()
+                    << " bytes"
+                    << std::endl;
+
+            return result;
         }
     );
 }

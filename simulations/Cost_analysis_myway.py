@@ -311,7 +311,7 @@ def simulate_cost_analysis(encodings, defultparams, error_rates):
     for error_rate in error_rates:
         print(f"Simulating for error rate: {error_rate}")
         for encoding in encodings:
-            defultparams[encoding].iid_error_rate = error_rate
+            defultparams[encoding].iid_error_rate = error_rate/3
             defultparams[encoding].iid_substitution_rate = error_rate/3
             defultparams[encoding].iid_insertion_rate = error_rate/3
             defultparams[encoding].iid_deletion_rate = error_rate/3
@@ -583,7 +583,7 @@ def get_parameter_configurations(encoding):
             {
                 'hedges_coderate': rate
             }
-            for rate in [1, 2, 3, 4, 5, 6]
+            for rate in [1,2,3,4,5,6]
         ]
 
     elif encoding in ['max_density', 'no_homopolymer']:
@@ -918,7 +918,7 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                 # Set IID sequencing error parameters
                 # ----------------------------------------------------
 
-                params.iid_error_rate = error_rate
+                # params.iid_error_rate = error_rate
                 params.iid_substitution_rate = error_rate/3
                 params.iid_insertion_rate = error_rate/3
                 params.iid_deletion_rate = error_rate/3
@@ -1021,7 +1021,7 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                 # IID sequencing errors are random.
                 # ----------------------------------------------------
 
-                for i in range(20):
+                for i in range(100):
 
                     success = False
                     res = None
@@ -1141,10 +1141,58 @@ def simulate_cost_analysis(encodings, base_params, error_rates):
                             config.copy(),
                     })
 
-                # ----------------------------------------------------
-                # Store all 50 runs for this error rate
-                # ----------------------------------------------------
-
+                # ====================================================
+                # AFTER ALL 100 RUNS: Check if all failed (0/100)
+                # ====================================================
+                if not any(run["success"] for run in results_for_runs):
+                    print(
+                        f"  ⚠️  All 100 runs FAILED for {encoding}, "
+                        f"{config_name}, error rate {error_rate} (0/100)"
+                    )
+                    print(
+                        f"     → Assuming all higher error rates will also "
+                        f"fail. Filling remaining rates and moving to next config."
+                    )
+                    
+                    # Store this failed error rate
+                    error_simulation_results[
+                        encoding
+                    ][
+                        config_name
+                    ][
+                        error_rate
+                    ] = results_for_runs
+                    
+                    # Fill all remaining error rates with 0/100 failures
+                    current_error_rate_index = error_rates.index(error_rate)
+                    for remaining_error_rate in error_rates[current_error_rate_index + 1:]:
+                        failed_runs = []
+                        for run_num in range(1, 101):
+                            failed_runs.append({
+                                "run": run_num,
+                                "success": False,
+                                "results": None,
+                                "information_bits": information_bits,
+                                "dna_length": dna_length,
+                                "dna_cost_nt_per_bit": dna_cost_nt_per_bit,
+                                "expected_errors": dna_length * remaining_error_rate,
+                                "error_rate": remaining_error_rate,
+                                "encoding": encoding,
+                                "configuration": config.copy(),
+                            })
+                        
+                        error_simulation_results[
+                            encoding
+                        ][
+                            config_name
+                        ][
+                            remaining_error_rate
+                        ] = failed_runs
+                    
+                    # Break out of error_rate loop to move to next configuration
+                    break
+                
+                # Store successful/mixed results
                 error_simulation_results[
                     encoding
                 ][
@@ -1168,8 +1216,8 @@ if __name__ == '__main__':
         'no_homopolymer',
         'max_density',
         'gcplus',
-        'wukong',
         'hedges',
+        'wukong',
     ]
 
     # ================================================================
@@ -1233,7 +1281,21 @@ if __name__ == '__main__':
         0.02,
         0.03,
         0.04,
-        0.05
+        0.05,
+        0.06,
+        0.07,
+        0.08,
+        0.09,
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
     ]
 
     # ================================================================
@@ -1295,12 +1357,18 @@ if __name__ == '__main__':
     # simulate_cost_analysis() makes its own deepcopy for every
     # configuration.
     # ================================================================
+    print(">>> BEFORE SIMULATION", flush=True)
 
     sim_resoults = simulate_cost_analysis(
         encodings,
         defoultparams,
         error_rates
     )
+
+    print(">>> AFTER SIMULATION", flush=True)
+    print(">>> RESULT ENCODINGS:", list(sim_resoults.keys()), flush=True)
+
+    print(">>> STARTING PLOTTING", flush=True)
 
     print("\n")
     print("=" * 80)
